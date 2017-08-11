@@ -38,5 +38,5 @@ require_once $path.'/config/autoload.php';
 require_once $path.'/error/errorPHP.php';
 require_once $path.'/config/eloquent.php';
 require_once $path.'/config/session.php';
-
+//echo 'in maintenance';
 $app->run();
