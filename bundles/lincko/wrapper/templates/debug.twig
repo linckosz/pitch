@@ -1,0 +1,42 @@
+{#
+	How to use:
+	$abc = 'A variable'
+	$app->render('/bundles/lincko/wrapper/templates/debug.twig', array(
+		'data' => $abc,
+	));
+
+	Then open the link (change the domain name according to dev(.net)/stage(.co)/production(.com) server)
+	https://lincko.co/debug/twig
+#}
+<!doctype html>
+<html>
+<head>
+
+
+<script>
+
+
+</script>
+
+<style type="text/css">
+	body {
+		margin: 0;
+		padding: 0;
+	}
+</style>
+
+</head>
+<body>
+
+Hello
+<br />
+<div id="ok">abc</div>
+
+<iframe width="560" height="315" src="https://bruno-bruno.lincko.cafe/debug/twig"></iframe>
+
+</body>
+<script>
+
+
+</script>
+</html>

@@ -1,0 +1,9 @@
+{% extends '/bundles/lincko/wrapper/templates/wrapper.twig' %}
+{% block base %}
+	<script>
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/login.js') }}");
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/base.css') }}" type="text/css" />
+	{% include '/bundles/lincko/app/templates/generic/account.twig' %}
+	<div id="base_error"></div>
+{% endblock %}

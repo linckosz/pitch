@@ -1,0 +1,28 @@
+{# category 3 #}
+<div id="begin_app_layers" class="visibility_hidden">
+	<script>
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/layers.js') }}", 40);
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/layers.css') }}" type="text/css" />
+</div>
+
+{% set bundle = 'lincko/app' %}
+
+{# MODELS #}
+{# Loop the folder to include automaticaly all files #}
+{% set folder = '/models' %}
+{% set files = _loop_twig_folder(bundle, folder) %}
+{% for key, value in files %}
+	{% include value %}
+{% endfor %}
+
+{# LAYERS #}
+{# Loop the folder to include automaticaly all files #}
+{% set folder = '/app/layers' %}
+{% set files = _loop_twig_folder(bundle, folder) %}
+{% for key, value in files %}
+	{% include value %}
+{% endfor %}
+
+<div id="app_layers_content"></div>
+<div id="end_app_layers" class="visibility_hidden"></div>

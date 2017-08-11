@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% if get_refresh and get_style == 'stats' %}
+	<meta http-equiv="refresh" content="3" />
+{% endif %}
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+<title>{{ title }}</title>
+<link rel="shortcut icon" href="{{ _filelatest('/favicon.ico') }}" />
+<link rel="icon" href="{{ _filelatest('/favicon.png') }}" type="image/png" />
+<link rel="apple-touch-icon" href="{{ _filelatest('/favicon.png') }}" type="image/png" />
+{# remove address bar for some mobile browsers #}
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-barstyle" content="default">
+
+<meta name="format-detection" content="telephone=no">
+<meta name="format-detection" content="date=no">
+<meta name="format-detection" content="address=no">
+
+<!-- Start SEO -->
+<meta name="description" content="Make your pitch more interactive and please your audience!" />
+<meta name="Keywords" content="pitch" />
+<!-- End SEO -->
+
+<link rel="stylesheet" href="{{ _filelatest('/styles/libs/font-awesome.min.css') }}" type="text/css" />
+<link rel="stylesheet" href="{{ _filelatest('/lincko/quiz/styles/font-icon/style.css') }}" type="text/css" />
+<link rel="stylesheet" href="{{ _filelatest('/lincko/wrapper/styles/responsive.css') }}" type="text/css" />
+<link rel="stylesheet" href="{{ _filelatest('/lincko/quiz/styles/base.css') }}" type="text/css" />
+
+<style type="text/css">
+
+	.base_color_bg_main_gradient {
+		background-image: url("{{ _filelatest('/lincko/quiz/images/bg02.png') }}"), linear-gradient(140deg, #023762, #00719C) !important;
+	}
+
+</style>
+
+<script src="{{ _filelatest('/scripts/libs/jquery-3.2.1.min.js') }}" type="text/javascript"></script>
+
+{# can only regroup files that does not have absolute path access #}
+<script src="{{ _grouplatest('quiz.base.js', [
+	'/lincko/wrapper/scripts/polyfill.js',
+	'/scripts/libs/blueimp.md5.min.js',
+	'/scripts/libs/js.cookie.js',
+	'/scripts/libs/json3.min.js',
+	'/scripts/libs/fastclick.min.js',
+	'/lincko/wrapper/scripts/php.js',
+	'/lincko/wrapper/scripts/error.js',
+	'/lincko/wrapper/scripts/static.js',
+	'/lincko/wrapper/scripts/responsive.js',
+	'/lincko/quiz/scripts/base.js',
+	'/lincko/quiz/scripts/wechat.js',
+]) }}" type="text/javascript"></script>
+
+<script>
+
+var wrapper_href = window.location.href;
+//Delete URI
+//window.history.replaceState(null, null, document.location.pathname);
+
+window.name = 'pitchenhancerquiz';
+document.domainRoot = '{{ domain }}';
+document.linckoWechat = '{{ lincko_wechat }}';
+
+//In IE console is undefined if the dev tool is closed
+if(!window.console){
+	console = {
+		log: function() {
+			return true;
+		}
+	};
+}
+
+var account_integration = {
+	wechat: {
+		stop: true,
+		public_appid: "{{ integration_wechat_public_appid }}",
+		redirect: btoa(wrapper_href),
+	},
+};
+
+{% if not integration_wechat_stop %}
+	account_integration.wechat.stop = false;
+{% endif %}
+
+integration_wechat();
+
+</script>
+
+</head>
+<body id="body_lincko" class="base_color_text_white unselectable base_tapHighlight_off base_color_bg_main_gradient">
+	
+	{% block frame %}
+	{% endblock %}
+
+</body>
+</html>

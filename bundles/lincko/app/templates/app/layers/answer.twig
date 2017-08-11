@@ -1,0 +1,63 @@
+{# category ? #}
+<div id="begin_app_layers_answer" class="visibility_hidden">
+	<script>
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/layers/answer.js') }}");
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/layers/answer.css') }}" type="text/css" />
+</div>
+<div id="end_app_layers_answer" class="visibility_hidden"></div>
+
+<div class="display_none">
+
+	<div id="-app_layers_answer" class="app_layers_answer">
+	</div>
+
+	<div id="-app_layers_answer_style" class="app_layers_answer_style">
+		<select find="select_style" class="app_layers_answer_style_select" >
+			<option value="1" title="{{ _trans('app', 4, 13, 'html') }}{# Questions #}">{{ _trans('app', 4, 13, 'html') }}{# Questions #}</option>
+			<option value="2" title="{{ _trans('app', 4, 14, 'html') }}{# Pictures #}">{{ _trans('app', 4, 14, 'html') }}{# Pictures #}</option>
+			<option value="3" title="{{ _trans('app', 4, 15, 'html') }}{# Statistics #}">{{ _trans('app', 4, 15, 'html') }}{# Statistics #}</option>
+		</select>
+	</div>
+
+	<div id="-app_layers_answer_question" class="app_layers_answer_question">
+		<img find="image" class="app_layers_answer_question_image display_none" />
+		<span find="add" class="app_layers_answer_question_icon fa fa-picture-o" title="{{ _trans('app', 4, 16, 'html') }}{# Add image #}"></span>
+	</div>
+
+	<div id="-app_layers_answer_answers" find="answer" class="app_layers_answer_answers app_layers_answer_answers_table questions">
+		<div find="row" class="app_layers_answer_answers_row">
+			<div find="tickbox" class="app_layers_answer_answers_select app_layers_answer_answers_cell">
+				<div find="answer_select" class="app_layers_answer_answers_select_icon">
+					<div find="answer_letter" class="app_layers_answer_answers_select_icon_letter perfect_center"></div>
+					<div find="answer_correct" class="app_layers_answer_answers_select_icon_correct fa fa-check perfect_center"></div>
+				</div>
+			</div>
+			<div find="answer" class="app_layers_answer_answers_answer app_layers_answer_answers_cell">
+				<div class="app_layers_answer_answers_number_wrapper">
+					<div find="number" class="app_layers_answer_answers_number">
+					</div>
+				</div>
+				<textarea find="input_textarea" class="app_layers_answer_answers_answer_textarea font_sans_serif selectable" rows="1"></textarea>
+			</div>
+			<div find="preview" class="app_layers_answer_answers_picture app_layers_answer_answers_cell">
+				<img find="answer_image" class="app_layers_answer_answers_picture_image display_none" />
+				<span find="answer_add" class="app_layers_answer_answers_picture_icon fa fa-picture-o" title="{{ _trans('app', 4, 16, 'html') }}{# Add image #}"></span>
+			</div>
+		</div>
+	</div>
+
+	<span id="-app_layers_answer_preview" class="app_layers_answer_preview"><span class="fa fa-eye app_layers_answer_preview_eye"></span>{{ _trans('app', 1, 11, 'html') }}{# Preview #}</span>
+
+	<div id="-app_layers_answer_url" class="app_layers_answer_url">
+		<span find="question_wrapper" class="app_layers_answer_url_wrapper app_layers_answer_url_wrapper_question">
+			<span find="question" class="app_layers_answer_url_button">{{ _trans('app', 4, 17, 'html') }}{# Copy Question URL #}</span>
+			<span find="question_url" class="app_layers_answer_url_link selectable"></span>
+		</span>
+		<span find="answer_wrapper" class="app_layers_answer_url_wrapper app_layers_answer_url_wrapper_answer">
+			<span find="answer" class="app_layers_answer_url_button">{{ _trans('app', 4, 18, 'html') }}{# Copy Answer URL #}</span>
+			<span find="answer_url" class="app_layers_answer_url_link selectable"></span>
+		</span>
+	</div>
+
+</div>

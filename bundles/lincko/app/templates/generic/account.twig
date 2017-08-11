@@ -1,0 +1,76 @@
+{# category 5 #}
+<div id="begin_account" class="visibility_hidden">
+	<script>
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/account.js') }}");
+		
+		var account_integration = {
+			wechat: {
+				stop: false,
+				base: true,
+				public_appid: "{{ integration_wechat_public_appid }}",
+				dev_appid: "{{ integration_wechat_dev_appid }}",
+				href: 'https://'+document.domain+"{{ _filelatest('/lincko/app/styles/integration/wechat.css') }}",
+				redirect: btoa(wrapper_href),
+			},
+		};
+		{% if integration_wechat_new %}
+			{% set integration_connection_error = false %}
+			account_integration.wechat.base = false;
+		{% endif %}
+		{% if integration_wechat_stop %}
+			{% set integration_connection_error = true %}
+			account_integration.wechat.stop = true;
+		{% endif %}
+		{% if integration_connection_error %}
+			JSfiles.finish(function(){
+				if(!account_integration.wechat.base || account_integration.wechat.stop){
+					base_show_error("{{ _trans('base', 5, 1, 'js') }}", true); //You were not able to login using Wechat.
+				}
+			});
+		{% endif %}
+	</script>
+	
+	{# Integration - Wechat autolog redirection #}
+	<script src="{{ _filelatest('/scripts/libs/integration/wxLogin.js') }}" type="text/javascript"></script>
+	
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/account.css') }}" type="text/css" />
+	<style type="text/css">
+		#account_integration_top_info > img {
+			background-image: url("{{ _filelatest('/lincko/app/images/base/loading_bar.gif') }}");
+		}
+	</style>
+</div>
+<div id="account_wrapper" class="account_wrapper">
+
+	<span id="account_language">
+		<select id="account_language_select" name="translation_language" class="account_language_select" >
+			{% set language = _language() %}
+			{% set languages = _languages_short('app') %}
+			{% for key, value in languages %}
+				<option value="{{ key }}" title="{{ value }}" {% if key == language %}selected="selected"{% endif %} >{{ value }}</option>
+			{% endfor %}
+		</select>
+	</span>
+
+	<div>
+		<div class="account_tab" id="account_tab_lincko">
+			<div>
+				{{ title }}
+			</div>
+		</div>
+		<div id="account_error_mobile" class="maxMobile"></div>
+		<div id="account_integration_box" class="account_form"> 
+			<div>
+				<div id="account_integration_top">
+					<span id="account_integration_top_text"></span>
+					<div id="account_integration_top_info"></div>
+				</div>
+			</div>
+		</div>
+		<div id="account_error" class="minMobileL"></div>
+	</div>
+	
+</div>
+<div id="end_account" class="visibility_hidden">
+	<img id="-submit_progress_bar" class="submit_progress_bar" find="submit_progress_bar" src="{{ _filelatest('/lincko/app/images/base/loading_bar.gif') }}"/>
+</div>

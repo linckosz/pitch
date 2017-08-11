@@ -1,0 +1,39 @@
+<div id="begin_models_showppt" class="visibility_hidden">
+	<script>
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/showppt.js') }}");
+
+		var showppt_pitch = new Image();
+		showppt_pitch.src = "{{ _filelatest('/lincko/app/images/generic/pitch.png') }}";
+
+		var video_webviewer = "{{ _filelatest('/lincko/app/images/generic/webviewer.mp4') }}";
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/showppt.css') }}" type="text/css" />
+</div>
+
+<div id="showppt" class="display_none">
+	
+	<div id="showppt_picture"></div>
+	
+	<div class="showppt_top">
+		<span id="showppt_top_question" class="showppt_top_wrapper display_none">
+			<span find="question" class="showppt_button showppt_button_url">
+				<div>{{ _trans('app', 4, 17, 'html') }}{# Copy Question URL #}</div>
+				<div find="question_url" class="showppt_link"></div>
+			</span>
+		</span>
+		<span id="showppt_top_answer" class="showppt_top_wrapper display_none">
+			<span find="answer" class="showppt_button showppt_button_url">
+				<div>{{ _trans('app', 4, 18, 'html') }}{# Copy Answer URL #}</div>
+				<div find="answer_url" class="showppt_link"></div>
+			</span>
+		</span>
+	</div>
+	
+	<span id="showppt_webviewer" class="showppt_button">{{ _trans('app', 4, 20, 'html') }}{# Use WebViewer with PowerPoint #}</span>
+
+	<span id="showppt_next" class="showppt_button">{{ _trans('app', 4, 19, 'html') }}{# Next Page #}</span>
+
+	<iframe id="showppt_iframe" name="showppt_iframe" frameborder="0" scrolling="no" src=""></iframe>
+</div>
+
+<div id="end_models_showppt" class="visibility_hidden"></div>

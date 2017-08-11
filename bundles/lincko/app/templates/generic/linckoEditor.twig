@@ -1,0 +1,17 @@
+<div id="begin_linckoEditor" class="visibility_hidden">
+	<script>
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/linckoEditor.js') }}",30);
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/linckoEditor.css') }}" type="text/css" />
+</div>
+<div id="end_linckoEditor" class="visibility_hidden"></div>
+
+<div class="display_none">
+	<input id="-linckoEditor_focusControl" type="text" tabindex="-1" readonly />
+	<div id="-linckoEditor_fileWrapper" class="linckoEditor_fileWrapper base_pointer" contenteditable="false">
+		<span find="icon">
+		</span>
+		<span find="name">
+		</span>
+	</div>
+</div>

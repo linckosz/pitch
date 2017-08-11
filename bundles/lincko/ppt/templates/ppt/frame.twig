@@ -1,0 +1,45 @@
+{% extends '/bundles/lincko/ppt/templates/base.twig' %}
+{% block frame %}
+	<div id="begin_ppt_frame" class="visibility_hidden">
+		<link rel="stylesheet" href="{{ _filelatest('/lincko/ppt/styles/ppt/frame.css') }}" type="text/css" />
+		<style type="text/css">
+			#ppt_frame_right_top {
+				background-image: url("{{ data_pitch_url }}");
+			}
+		</style>
+	</div>
+
+	<div id="ppt_frame">
+		<div id="ppt_frame_left">
+			<div id="ppt_frame_left_top">
+				{% if data_question_picture %}
+					<img id="quiz_question_picture" src="{{ data_question_picture }}" />
+				{% endif %}
+				<span id="ppt_question_prefix" class="display_none">{{ _trans('ppt', 0, 2, 'html') }}{# Q: #}</span>
+				<span id="ppt_question_title">{{ data_question_title }}</span>
+			</div>
+			<div id="ppt_frame_left_bottom">
+				{% block qanda %}
+				{% endblock %}
+			</div>
+		</div>
+		<div id="ppt_frame_right">
+			<div id="ppt_frame_right_top_scan" class="{{ get_style }} {% if data_pitch_url_hide %}hidden{% endif %}">
+				<span class="fa fa-mobile" id="ppt_frame_right_top_scan_qrcode"></span>{{ _trans('ppt', 0, 4, 'html') }}{# Scan to Answer #}
+			</div>
+			<div id="ppt_frame_right_top" class="{{ get_style }} {% if data_pitch_url_hide %}hidden{% endif %}">
+			</div>
+			<div id="ppt_frame_right_bottom">
+				{#{% if get_style=='question' %}#}
+					<iframe id="ppt_stats_iframe" name="ppt_stats_iframe" frameborder="0" scrolling="no" src="{{ data_stats_iframe }}"></iframe>
+				{#{% endif %}#}
+			</div>
+		</div>
+	</div>
+
+	<div id="ppt_frame_website">
+		<span id="ppt_frame_website_logo" class="icon-projectBlack"></span><span id="ppt_frame_website_link">pitch.lincko.com</span>
+	</div>
+
+	<div id="end_ppt_frame" class="visibility_hidden"></div>
+{% endblock %}

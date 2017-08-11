@@ -1,0 +1,115 @@
+{% extends '/bundles/lincko/ppt/templates/base.twig' %}
+{% block frame %}
+	<div id="begin_ppt_stats_statistics" class="visibility_hidden">
+		<link rel="stylesheet" href="{{ _filelatest('/lincko/ppt/styles/ppt/stats/statistics.css') }}" type="text/css" />
+		<style type="text/css">
+			#ppt_stats_statistics_1 {
+				height: {{ data_number_1 }}%;
+			}
+			#ppt_stats_statistics_2 {
+				height: {{ data_number_2 }}%;
+			}
+			#ppt_stats_statistics_3 {
+				height: {{ data_number_3 }}%;
+			}
+			#ppt_stats_statistics_4 {
+				height: {{ data_number_4 }}%;
+			}
+		</style>
+		<script type="text/javascript">
+			//Play with the transparency of the letter to not affect the readability
+			var ppt_stats_statistics_letter_opacity = function(value){
+				var opacity = 1;
+				if(value<15){
+					opacity = value/15;
+					opacity = Math.round(100*opacity)/100;
+				}
+				if(opacity<0.2){
+					opacity = 0.2;
+				}
+				return opacity;
+			};
+
+			var ppt_stats_statistics_refresh = function(){
+				$.getScript("/ppt/statsjs/{{ data_questionid_enc }}.js", function(){
+
+					if(typeof statsjs_data_participants != 'undefined'){
+						$("#ppt_stats_statistics_participants").html(statsjs_data_participants);
+					}
+					if(typeof statsjs_data_number_1 != 'undefined'){
+						$("#ppt_stats_statistics_1_number").html(statsjs_data_number_1+"%");
+						$("#ppt_stats_statistics_1").stop(true).animate({height: statsjs_data_number_1+"%"}, 1000);
+						$("#ppt_stats_statistics_1_letter").css('opacity', ppt_stats_statistics_letter_opacity(statsjs_data_number_1));
+					}
+					if(typeof statsjs_data_number_2 != 'undefined'){
+						$("#ppt_stats_statistics_2_number").html(statsjs_data_number_2+"%");
+						$("#ppt_stats_statistics_2").stop(true).animate({height: statsjs_data_number_2+"%"}, 1000);
+						$("#ppt_stats_statistics_2_letter").css('opacity', ppt_stats_statistics_letter_opacity(statsjs_data_number_2));
+					}
+					if(typeof statsjs_data_number_3 != 'undefined'){
+						$("#ppt_stats_statistics_3_number").html(statsjs_data_number_3+"%");
+						$("#ppt_stats_statistics_3").stop(true).animate({height: statsjs_data_number_3+"%"}, 1000);
+						$("#ppt_stats_statistics_3_letter").css('opacity', ppt_stats_statistics_letter_opacity(statsjs_data_number_3));
+					}
+					if(typeof statsjs_data_number_4 != 'undefined'){
+						$("#ppt_stats_statistics_4_number").html(statsjs_data_number_4+"%");
+						$("#ppt_stats_statistics_4").stop(true).animate({height: statsjs_data_number_4+"%"}, 1000);
+						$("#ppt_stats_statistics_4_letter").css('opacity', ppt_stats_statistics_letter_opacity(statsjs_data_number_4));
+					}
+
+				});
+			};
+		</script>
+	</div>
+
+	<div id="ppt_stats_statistics_participants" title="{{ _trans('ppt', 0, 3, 'html') }}{# Participants #}">{{ data_participants }}</div>
+
+	<div id="ppt_stats_statistics_wrapper">
+		{% if data_number_1 %}
+			<div id="ppt_stats_statistics_1">
+				<div id="ppt_stats_statistics_1_number" />{{ data_number_1 }}%</div>
+				<div id="ppt_stats_statistics_1_letter" class="ppt_stats_statistics_letter">A</div>
+			</div>
+		{% endif %}
+		{% if data_number_2 %}
+			<div id="ppt_stats_statistics_2">
+				<div id="ppt_stats_statistics_2_number" />{{ data_number_2 }}%</div>
+				<div id="ppt_stats_statistics_2_letter" class="ppt_stats_statistics_letter">B</div>
+			</div>
+		{% endif %}
+		{% if data_number_3 %}
+			<div id="ppt_stats_statistics_3">
+				<div id="ppt_stats_statistics_3_number" />{{ data_number_3 }}%</div>
+				<div id="ppt_stats_statistics_3_letter" class="ppt_stats_statistics_letter">C</div>
+			</div>
+		{% endif %}
+		{% if data_number_4 %}
+			<div id="ppt_stats_statistics_4">
+				<div id="ppt_stats_statistics_4_number" />{{ data_number_4 }}%</div>
+				<div id="ppt_stats_statistics_4_letter" class="ppt_stats_statistics_letter">D</div>
+			</div>
+		{% endif %}
+	</div>
+
+	<div id="end_ppt_stats_statistics" class="visibility_hidden">
+		<script type="text/javascript">
+			{% if get_refresh %}
+				$("#ppt_stats_statistics_participants").html("");
+				$("#ppt_stats_statistics_1_number").html("");
+				$("#ppt_stats_statistics_2_number").html("");
+				$("#ppt_stats_statistics_3_number").html("");
+				$("#ppt_stats_statistics_4_number").html("");
+				$("#ppt_stats_statistics_1").css('height', "0%");
+				$("#ppt_stats_statistics_2").css('height', "0%");
+				$("#ppt_stats_statistics_3").css('height', "0%");
+				$("#ppt_stats_statistics_4").css('height', "0%");
+				ppt_stats_statistics_refresh();
+				setInterval(ppt_stats_statistics_refresh, 2500);
+			{% else %}
+				ppt_stats_statistics_refresh();
+				setInterval(ppt_stats_statistics_refresh, 2500);
+			{% endif %}
+		</script>
+	</div>
+{% endblock %}
+

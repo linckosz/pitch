@@ -1,0 +1,77 @@
+{% extends '/bundles/lincko/quiz/templates/quiz/frame.twig' %}
+{% block qanda %}
+	<div id="begin_quiz_qanda_questions" class="visibility_hidden">
+		<link rel="stylesheet" href="{{ _filelatest('/lincko/quiz/styles/quiz/qanda/questions.css') }}" type="text/css" />
+		{% if data_question_style == 2 %}
+			<style type="text/css">
+				.quiz_qanda_questions_picture_img {
+					max-width: 100%;
+					max-height: 40%;
+					max-height: 40vh;
+				}
+			</style>
+		{% endif %}
+		<script type="text/javascript">
+			var base_answer_url = "https://pitch.lincko.com/quiz/answer/{{ data_sessionid_enc }}/";
+		</script>
+	</div>
+
+	<div class="quiz_qanda_questions_wrapper_separate"></div>
+
+	{% set has_picture = false %}
+	{% for number, prefix in data_answers %}
+		{% set id = attribute(_context, prefix~'_id') %}
+		{% set title = attribute(_context, prefix~'_title') %}
+		{% set picture = attribute(_context, prefix~'_picture') %}
+		{% set correct = attribute(_context, prefix~'_correct') %}
+		{% set class_correct = '' %}
+		{% if get_style == 'answer' %}
+			{% set class_correct = 'not_correct' %}
+			{% if correct %}
+					{% set class_correct = 'correct' %}
+			{% endif %}
+		{% endif %}
+		{% set braket = ')' %}
+		{% if data_question_style == 3 %}
+			{% set braket = '.' %}
+		{% endif %}
+		<div find="quiz_answer" answerid="{{ id }}" class="quiz_qanda_questions_wrapper {{ class_correct }}">
+			<div class="quiz_qanda_questions_cell quiz_qanda_questions_number">{{ number }}{{ braket }}</div>
+			<div class="quiz_qanda_questions_cell quiz_qanda_questions_title">
+				{% if data_question_style != 2 %}
+					<div>{{ title }}</div>
+				{% endif %}
+				{% if picture %}
+					{% set has_picture = true %}
+					<img class="quiz_qanda_questions_picture_img" src="{{ picture }}" />
+				{% endif %}
+			</div>
+			<div class="quiz_qanda_questions_cell quiz_qanda_questions_tickbox">
+				<div class="quiz_qanda_questions_tickbox_icon">
+					<div find="check" class="quiz_qanda_questions_tickbox_check fa fa-check display_none"></div>
+				</div>
+			</div>
+		</div>
+		<div class="quiz_qanda_questions_wrapper_separate"></div>
+	{% endfor %}
+
+	<div class="quiz_qanda_questions_wrapper_separate bottom"></div>
+
+	<span id="quiz_confirm" class="showppt_button display_none">{{ _trans('quiz', 0, 3, 'html') }}{# Confirm #}</span>
+
+	<div id="end_quiz_qanda_questions" class="visibility_hidden">
+		{% if has_picture %}
+			<style type="text/css">
+				.quiz_qanda_questions_cell {
+					display: table-cell;
+					padding-top: 0.5vw;
+					padding-top: 0.5vmin;
+					padding-bottom: 0.5vw;
+					padding-bottom: 0.5vmin;
+				}
+			</style>
+		{% endif %}
+		<script src="{{ _filelatest('/lincko/quiz/scripts/quiz/qanda/questions.js') }}" type="text/javascript"></script>
+	</div>
+{% endblock %}
+

@@ -1,0 +1,144 @@
+#showppt {
+	font-size: 0;
+	background-color: rgba(44, 44, 44, 0.94);
+	position: fixed;
+	z-index: 10000;
+	width: 100%;
+	height: 100%;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.showppt_top {
+	z-index: 3;
+	position: absolute;
+	top: 6%;
+	text-align: center;
+	width: 100%;
+	white-space: nowrap;
+}
+
+#showppt_png, #showppt_picture {
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+#showppt_png {
+	z-index: 1;
+}
+
+#showppt_picture {
+	z-index: 2;
+}
+
+.showppt_top_wrapper {
+	display: inline-block;
+	padding: 0;
+	text-align: center;
+}
+
+.showppt_button {
+	z-index: 3;
+	position: relative;
+	display: inline-block;
+	color: rgba(255, 255, 255, 0.65);
+	border: 1px solid rgba(255, 255, 255, 0.65);
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 16px;
+	background-color: rgba(143, 143, 143, 0.6);
+	text-align: center;
+	padding: 4px 20px;
+	margin: 2px 4px;
+}
+
+.showppt_button:hover {
+	color: rgba(255, 255, 255, 0.80);
+	border: 1px solid rgba(255, 255, 255, 0.80);
+	background-color: rgba(143, 143, 143, 0.7);
+}
+
+.showppt_button:active {
+	color: rgba(255, 255, 255, 1);
+	border: 1px solid rgba(255, 255, 255, 1);
+	background-color: rgba(143, 143, 143, 0.9);
+}
+
+.showppt_button.showppt_button_url {
+	padding: 4px 60px;
+}
+
+#showppt_next {
+	padding: 6px 32px;
+	font-size: 18px;
+	position: absolute;
+	right: 5%;
+	bottom: 5%;
+}
+
+#showppt_webviewer {
+	padding: 6px;
+	font-size: 14px;
+	position: absolute;
+	left: 5%;
+	bottom: 5%;
+	cursor: pointer;
+}
+
+.showppt_link {
+	font-size: 13px;
+	color: rgba(255, 255, 255, 0.50);
+	padding: 0 6px;
+	text-align: center;
+}
+
+#showppt_iframe {
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+	border: none;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+
+/* Mobile phone in Portrait */
+@media only screen and (max-width: 479px){
+	#showppt_next {
+		padding: 6px 26px;
+		font-size: 16px;
+	}
+	.showppt_button.showppt_button_url {
+		padding: 4px 20px;
+	}
+	.showppt_top {
+		top: 1%;
+	}
+	.showppt_link {
+		font-size: 12px;
+	}
+}
+
+/* Mobile phone in Landscape and Tablet in Portrait */
+@media only screen and (min-width: 480px) and (max-width: 900px){
+	.showppt_button.showppt_button_url {
+		padding: 4px 40px;
+	}
+}
