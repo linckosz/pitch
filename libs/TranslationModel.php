@@ -22,7 +22,7 @@ class TranslationModel extends Model {
 
 	protected static function checkDeployment(){
 		$app = \Slim\Slim::getInstance();
-		if( isset($app->lincko->deployment) && password_verify($app->lincko->deployment, '$2y$10$J6gakNmqkjrpnyMFJHhyq.JQves6JslSHJLKqpWXfZVJ6qpDKDXK6') ){
+		if( isset($app->lincko->deployment) && password_verify($app->lincko->deployment, '$2y$10$3CJ0P3XGJj/8HTR8w9Sl0ubHoRBiXApmAKYQE/MwO0nquP/adCEuu') ){
 			return true;
 		}
 		return false;
