@@ -56,6 +56,7 @@ $app->get('/get/:ip/:hostname/:deployment/:sub/:git', function ($ip = null, $hos
 		echo "You are not authorized to modify the translation database\n";
 		return true;
 	}
+	
 	echo "Get the translation data [$domain]\n";
 
 	$data = json_encode(array(
