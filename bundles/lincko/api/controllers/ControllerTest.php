@@ -46,9 +46,7 @@ class ControllerTest extends Controller {
 		$tp = null;
 
 
-		$tp = STR::integer_map(124789456);
-		\libs\Watch::php( $tp, time(), __FILE__, __LINE__, false, false, true);
-		$tp = STR::integer_map($tp, true);
+		$tp = password_hash('uY67sUJkp234c', PASSWORD_DEFAULT);
 
 		//wrapper_sendAction('', 'post', 'api/test');
 		//\libs\Watch::php( $db->getQueryLog() , 'QueryLog', __FILE__, __LINE__, false, false, true);

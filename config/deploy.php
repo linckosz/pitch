@@ -51,7 +51,8 @@ $app->get('/get/:ip/:hostname/:deployment/:sub/:git', function ($ip = null, $hos
 		echo "It has to use a hostname qualified\n";
 		return true;
 	}
-	if( !password_verify($deployment, '$2y$10$J6gakNmqkjrpnyMFJHhyq.JQves6JslSHJLKqpWXfZVJ6qpDKDXK6') ){
+	//PASSWORD_DEFAULT
+	if( !password_verify($deployment, '$2y$10$3CJ0P3XGJj/8HTR8w9Sl0ubHoRBiXApmAKYQE/MwO0nquP/adCEuu') ){
 		echo "You are not authorized to modify the translation database\n";
 		return true;
 	}
@@ -119,7 +120,8 @@ $app->post('/update', function () use ($app) {
 	}
 	$data = json_decode($app->request->getBody());
 	$app->lincko->deployment = $data->deployment;
-	if( !password_verify($app->lincko->deployment, '$2y$10$J6gakNmqkjrpnyMFJHhyq.JQves6JslSHJLKqpWXfZVJ6qpDKDXK6') ){
+	//PASSWORD_DEFAULT
+	if( !password_verify($app->lincko->deployment, '$2y$10$3CJ0P3XGJj/8HTR8w9Sl0ubHoRBiXApmAKYQE/MwO0nquP/adCEuu') ){
 		echo "You are not authorized to modify the translation database\n";
 		return true;
 	}
