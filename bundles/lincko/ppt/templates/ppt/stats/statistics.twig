@@ -31,7 +31,7 @@
 			};
 
 			var ppt_stats_statistics_refresh = function(){
-				$.getScript("/ppt/statsjs/{{ data_questionid_enc }}.js", function(){
+				$.getScript("/ppt/statsjs/{{ data_statisticsid_enc }}.js", function(){
 
 					if(typeof statsjs_data_participants != 'undefined'){
 						$("#ppt_stats_statistics_participants").html(statsjs_data_participants);

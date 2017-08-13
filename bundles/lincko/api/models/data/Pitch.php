@@ -91,20 +91,6 @@ class Pitch extends ModelLincko {
 			$pivot->{'user>access'}->{$app->lincko->data['uid']} = true;
 			$model->pivots_format($pivot);
 		}
-		
-		if(!$new && isset($form->question_id) && isset($form->question_md5)){
-			$error = true;
-			if(isset($model->id) && is_numeric($form->question_id) && is_string($form->question_md5)){
-				if(Question::Where('id', $form->question_id)->where('md5', $form->question_md5)->where('pitch_id', $model->id)->first()){
-					$error = false;
-					$model->question_id = (int) $form->question_id;
-				}
-			}
-			if($error){
-				$errfield = 'question_id';
-				goto failed;
-			}
-		}
 
 		if(isset($form->title)){
 			$error = true;

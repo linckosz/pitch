@@ -81,6 +81,8 @@ function SetData(){
 			if(!$guest_temp_id){
 				$app->lincko->data['guest_id'] = $guest_temp_id = md5(uniqid('', true));
 				Vanquish::set(array('guest_temp_id' => $guest_temp_id,));
+			} else {
+				$app->lincko->data['guest_id'] = $guest_temp_id;
 			}
 		}
 

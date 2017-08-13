@@ -61,8 +61,8 @@ class ControllerPPT extends Controller {
 		$app->lincko->data['get_style'] = $style;
 		$app->lincko->data['get_refresh'] = false;
 		$app->lincko->data['data_pitch_url_hide'] = false;
-		$questionid = STR::integer_map($questionid_enc, true);
-		if($question = Question::Where('id', $questionid)->first(array('id', 'updated_ms', 'parent_id', 'answer_id', 'file_id', 'title', 'style'))){
+		$question_id = STR::integer_map($questionid_enc, true);
+		if($question = Question::Where('id', $question_id)->first(array('id', 'updated_ms', 'parent_id', 'answer_id', 'file_id', 'title', 'style'))){
 
 			if($question->style==3){ //For Statistics we only display Questions
 				$style = 'question';
@@ -70,18 +70,6 @@ class ControllerPPT extends Controller {
 			}
 
 			$base_url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'];
-
-			$app->lincko->data['data_stats_iframe'] = $base_url.'/ppt/stats/'.$questionid_enc;
-			if($static){
-				//Do not refresh for answer
-				$app->lincko->data['data_stats_iframe'] .= '/static';
-				$app->lincko->data['data_pitch_url_hide'] = true;
-			}
-
-			if(isset($app->lincko->data['body_preview']) && $app->lincko->data['body_preview']){
-				//Just simulate some data for preview purpose
-				$app->lincko->data['data_stats_iframe'] .= '?preview=1';
-			}
 
 			$app->lincko->data['data_question'] = true;
 			$app->lincko->data['data_question_title'] = STR::sql_to_html($question->title);
@@ -91,12 +79,47 @@ class ControllerPPT extends Controller {
 				$app->lincko->data['data_question_picture'] = $base_url.'/files/'.$file->uploaded_by.'/'.$file->link.'.'.$file->ori_ext.'?'.$file->updated_ms;
 			}
 
-			$app->lincko->data['data_pitch_url'] = $base_url.'/ppt/qrcode/'.STR::integer_map($question->parent_id).'/'.STR::integer_map($question->id).'.jpg?'.$question->updated_ms;
+			$session = false;
+			$statistics = false;
+			if(isset($_SESSION['session_id'])){
+				if($session = Session::find($_SESSION['session_id'])){
+					$statistics = Statistics::Where('session_id', $session->id)->where('question_id', $question->id)->first();
+					if(!$statistics){
+						$statistics = new Statistics;
+						$statistics->session_id = $session->id;
+						$statistics->question_id = $question->id;
+						$statistics->save();
+					}
+				}
+			}
 
-			//This should be exported to another table because of conflict wth multi user on same pitch
-			if($pitch = Pitch::find($question->parent_id)){
-				$pitch->question_id = $question->id;
-				$pitch->save();
+			if(!$session || !$statistics){
+				$session = new Session;
+				$session->save();
+				$_SESSION['session_id'] = $session->id;
+				$statistics = new Statistics;
+				$statistics->session_id = $session->id;
+				$statistics->question_id = $question->id;
+				$statistics->save();
+			}
+
+			$session->statistics_id = $statistics->id; //Current question
+			$session->save();
+
+			$statisticsid_enc = STR::integer_map($statistics->id);
+
+			$app->lincko->data['data_pitch_url'] = $base_url.'/ppt/qrcode/'.$statisticsid_enc.'.jpg?'.$statistics->created_at;
+
+			$app->lincko->data['data_stats_iframe'] = $base_url.'/ppt/stats/'.$statisticsid_enc;
+			if($static){
+				//Do not refresh for answer
+				$app->lincko->data['data_stats_iframe'] .= '/static';
+				$app->lincko->data['data_pitch_url_hide'] = true;
+			}
+
+			if(isset($app->lincko->data['body_preview']) && $app->lincko->data['body_preview']){
+				//Just simulate some data for preview purpose
+				$app->lincko->data['data_stats_iframe'] .= '?preview=1';
 			}
 
 			if($question->style==2){
@@ -180,9 +203,9 @@ class ControllerPPT extends Controller {
 		$app->render('/bundles/lincko/ppt/templates/generic/sorry.twig');
 	}
 
-	public function stats_get($questionid_enc, $refresh='refresh'){
+	public function stats_get($statisticsid_enc, $refresh='refresh'){
 		$app = ModelLincko::getApp();
-		$data = $this->stats_data($questionid_enc);
+		$data = $this->stats_data($statisticsid_enc);
 		$app->lincko->data['get_refresh'] = true;
 		if($refresh=='static'){
 			$app->lincko->data['get_refresh'] = false;
@@ -202,24 +225,24 @@ class ControllerPPT extends Controller {
 		$app->render('/bundles/lincko/ppt/templates/generic/blanc.twig');
 	}
 
-	public function statsjson_get($questionid_enc){
-		$msg = array('data' => $this->stats_data($questionid_enc),);
+	public function statsjson_get($statisticsid_enc){
+		$msg = array('data' => $this->stats_data($statisticsid_enc),);
 		(new Json($msg))->render();
 		return exit(0);
 	}
 
-	public function statsjs_get($questionid_enc){
+	public function statsjs_get($statisticsid_enc){
 		$app = ModelLincko::getApp();
 		$app->response->headers->set('Content-Type', 'application/javascript');
 		$app->response->headers->set('Cache-Control', 'no-cache, must-revalidate');
 		$app->response->headers->set('Expires', 'Fri, 12 Aug 2011 14:57:00 GMT');
-		$data = $this->stats_data($questionid_enc);
+		$data = $this->stats_data($statisticsid_enc);
 		foreach ($data as $key => $value) {
 			echo 'var statsjs_'.$key.'="'.$value.'";';
 		}
 	}
 
-	public function stats_data($questionid_enc){
+	public function stats_data($statisticsid_enc){
 		$app = ModelLincko::getApp();
 		$get = ModelLincko::getData();
 		$preview = false;
@@ -228,36 +251,19 @@ class ControllerPPT extends Controller {
 		}
 		$data['data_preview'] = $app->lincko->data['data_preview'] = $preview;
 		$data = array();
-		$data['data_questionid_enc'] = $app->lincko->data['data_questionid_enc'] = $questionid_enc;
-		$questionid = STR::integer_map($questionid_enc, true);
+		$data['data_statisticsid_enc'] = $app->lincko->data['data_statisticsid_enc'] = $statisticsid_enc;
+		$statistics_id = STR::integer_map($statisticsid_enc, true);
 		$data['get_style'] = $app->lincko->data['get_style'] = 'stats';
 		$data['data_question_style'] = $app->lincko->data['data_question_style'] = false;
-		if($preview){
-			$data['data_participants'] = $app->lincko->data['data_participants'] = rand(200, 299);
-		}
-		if($question = Question::Where('id', $questionid)->first(array('id', 'style', 'answer_id', 'parent_id'))){
+		
+		$statistics = Statistics::find($statistics_id);
+		if($statistics && $question = Question::Where('id', $statistics->question_id)->first(array('id', 'style', 'answer_id', 'parent_id'))){
 			$data['data_question_style'] = $app->lincko->data['data_question_style'] = $question->style;
 
-			$data['data_participants'] = $app->lincko->data['data_participants'] = $total = 0;
-			$session = false;
-			$statistics = false;
-			if(!$preview){
-				/*
-				if(isset($_COOKIE['session_id']) && isset($_COOKIE['session_md5']) && $_COOKIE['session_id'] && $_COOKIE['session_md5']){
-					if($session = Session::Where('id', $_COOKIE['session_id'])->where('md5', $_COOKIE['session_md5'])->first(array('id', 'statistics_id'))){
-						if($statistics = Statistics::find($session->statistics_id)){
-							$data['data_participants'] = $app->lincko->data['data_participants'] = $total = intval($statistics->a) + intval($statistics->b) + intval($statistics->c) + intval($statistics->d);
-						}
-					}
-				}
-				*/
-				if($pitch = Pitch::find($question->parent_id)){
-					if($session = Session::Where('pitch_id', $pitch->id)->orderBy('id', 'desc')->first(array('id', 'statistics_id'))){
-						if($statistics = Statistics::find($session->statistics_id)){
-							$data['data_participants'] = $app->lincko->data['data_participants'] = $total = intval($statistics->a) + intval($statistics->b) + intval($statistics->c) + intval($statistics->d);
-						}
-					}
-				}
+			if($preview){
+				$data['data_participants'] = $app->lincko->data['data_participants'] = rand(200, 299);
+			} else {
+				$data['data_participants'] = $app->lincko->data['data_participants'] = $total = intval($statistics->a) + intval($statistics->b) + intval($statistics->c) + intval($statistics->d);
 			}
 
 			if($question->style==1){
@@ -334,117 +340,24 @@ class ControllerPPT extends Controller {
 		return $data;
 	}
 
-	public function qrcode_get($pitchid_enc, $questionid_enc){
+	public function qrcode_get($statisticsid_enc){
 		$app = ModelLincko::getApp();
-		$questionid = STR::integer_map($questionid_enc, true);
-		$question = Question::Where('id', $questionid)->first(array('id'));
-		$pitchid = STR::integer_map($pitchid_enc, true);
-		$pitch = Pitch::Where('id', $pitchid)->first(array('id', 'created_at'));
-		if($pitch && $question){
-			
-			/*
-			$statistics = false;
-			$session = false;
-			$session_id = false;
-			$session_md5 = false;
-			//Cannot work with SESSION (or Vanquish) because exit(0) skip the session recording
-			if(isset($_COOKIE['session_id'])){
-				$session_id = $_COOKIE['session_id'];
-			}
-			if(isset($_COOKIE['session_md5'])){
-				$session_md5 = $_COOKIE['session_md5'];
-			}
-			if($session_id && $session_md5){
-				$limit_ms = \micro_seconds() - 15*60*1000; //If over 15min inactive, we launch new statistics
-				if($session = Session::Where('id', $session_id)->where('md5', $session_md5)->where('updated_ms', '>', $limit_ms)->first()){
-					if($session->pitch_id != $pitch->id){
-						$session = false;
-						$session_id = false;
-					} else {
-						$limit_ms = \micro_seconds() - 5*60*1000; //If over 5min inactive, we launch new statistics
-						$statistics = Statistics::Where('id', $session->statistics_id)->where('session_id', $session->id)->where('question_id', $question->id)->where('updated_ms', '>', $limit_ms)->first();
-					}
-				}
-			}
-			if(!$session_id || !$session){
-				$session = new Session;
-				$session->pitch_id = $pitch->id;
-				$session->save();
-			}
-			if(!$statistics){
-				$statistics = new Statistics;
-				$statistics->session_id = $session->id;
-				$statistics->question_id = $question->id;
-			}
-			$statistics->save(); //Make sure we update the updated_ms
-			$session->statistics_id = $statistics->id;
-			$session->save(); //Make sure we update the updated_ms
+		$base_url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'];
+		$url = $base_url.'/quiz/question/'.$statisticsid_enc;
 
-			$session_id = $session->id;
-			$session_md5 = $session->md5;
+		$statistics_id = STR::integer_map($statisticsid_enc, true);
+		$statistics = Statistics::find($statistics_id);
 
-			$cookies_lifetime = time()+4*3600;
-			setcookie('session_id', $session->id, $cookies_lifetime, '/', '.'.$app->lincko->domain);
-			setcookie('session_md5', $session->md5, $cookies_lifetime, '/', '.'.$app->lincko->domain);
-			*/
-
-
-
-			$statistics = false;
-			$session = false;
-			$pitch_id = false;
-			//Cannot work with SESSION (or Vanquish) because exit(0) skip the session recording
-			if(isset($_COOKIE['pitch_id'])){
-				$pitch_id = $_COOKIE['pitch_id'];
-			}
-			$pitch_id = $pitch->id;
-			if($pitch_id){
-				$limit_ms = \micro_seconds() - 15*60*1000; //If over 15min inactive, we launch new statistics
-				if($session = Session::Where('pitch_id', $pitch_id)->where('updated_ms', '>', $limit_ms)->first()){
-					if($session->pitch_id != $pitch->id){
-						$session = false;
-						$pitch_id = false;
-					} else {
-						$limit_ms = \micro_seconds() - 5*60*1000; //If over 5min inactive, we launch new statistics
-						$statistics = Statistics::Where('id', $session->statistics_id)->where('session_id', $session->id)->where('question_id', $question->id)->where('updated_ms', '>', $limit_ms)->first();
-					}
-				}
-			}
-			if(!$pitch_id || !$session){
-				$session = new Session;
-				$session->pitch_id = $pitch->id;
-				$session->save();
-			}
-			if(!$statistics){
-				$statistics = new Statistics;
-				$statistics->session_id = $session->id;
-				$statistics->question_id = $question->id;
-			}
-			$statistics->save(); //Make sure we update the updated_ms
-			$session->statistics_id = $statistics->id;
-			$session->save(); //Make sure we update the updated_ms
-
-			$cookies_lifetime = time()+4*3600;
-			setcookie('pitch_id', $pitch->id, $cookies_lifetime, '/', '.'.$app->lincko->domain);
-
-
-
-
-
-			$base_url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'];
-
-			$sessionid_inc = STR::integer_map($session->id);
-			$url = $base_url.'/quiz/question/'.$sessionid_inc;
-
+		if($statistics){
 			ob_clean();
 			flush();
-			$timestamp = $session->created_ms;
-			$gmt_mtime = gmdate('r', $timestamp);
+			$timestamp = $statistics->created_ms;
+			$gmt_mtime = gmdate('r', round($timestamp/1000));
 			header('Last-Modified: '.$gmt_mtime);
 			header('Expires: '.gmdate(DATE_RFC1123, time()+16000000)); //About 6 months cached
-			header('ETag: "'.md5($session->id.'-'.$timestamp).'"');
+			header('ETag: "'.md5($statistics->id.'-'.$timestamp).'"');
 			if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
-				if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmt_mtime || str_replace('"', '', stripslashes($_SERVER['HTTP_IF_NONE_MATCH'])) == md5($session->id.'-'.$timestamp)) {
+				if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmt_mtime || str_replace('"', '', stripslashes($_SERVER['HTTP_IF_NONE_MATCH'])) == md5($statistics->id.'-'.$timestamp)) {
 					header('HTTP/1.1 304 Not Modified');
 					return exit(0);
 				}
@@ -453,6 +366,8 @@ class ControllerPPT extends Controller {
 			//https://packagist.org/packages/endroid/qrcode
 			$qrCode = new QrCode();
 			$qrCode
+				->setLogo($app->lincko->path.'/bundles/lincko/ppt/public/images/logo/wechat2.png')
+				->setLogoSize(120)
 				->setText($url)
 				->setSize(640)
 				->setPadding(20)
@@ -465,7 +380,6 @@ class ControllerPPT extends Controller {
 			$qrCode->render();
 			
 			return exit(0);
-
 		}
 		$app->render('/bundles/lincko/ppt/templates/generic/blanc.twig');
 	}

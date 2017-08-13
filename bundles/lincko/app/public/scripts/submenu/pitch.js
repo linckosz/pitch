@@ -26,13 +26,6 @@ submenu_list['app_pitch_new'] = {
 		},
 
 	},
-	"cancel": {
-		"style": "bottom_button",
-		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
-		"action": function(Elem, subm){
-			subm.Hide();
-		},
-	},
 	"create": {
 		"style": "bottom_button",
 		"title": Lincko.Translation.get('app', 41, 'html'), //Create
@@ -71,6 +64,13 @@ submenu_list['app_pitch_new'] = {
 		},
 		"now": function(Elem, subm){
 			Elem.find("[find=submenu_bottom_button]").attr('form', 'submit');
+		},
+	},
+	"cancel": {
+		"style": "bottom_button",
+		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
+		"action": function(Elem, subm){
+			subm.Hide();
 		},
 	},
 };
@@ -133,13 +133,6 @@ submenu_list['app_pitch_edit'] = {
 			}
 		},
 	},
-	"cancel": {
-		"style": "bottom_button",
-		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
-		"action": function(Elem, subm){
-			subm.Hide();
-		},
-	},
 	"edit": {
 		"style": "bottom_button",
 		"title": Lincko.Translation.get('app', 43, 'html'), //Edit
@@ -171,6 +164,13 @@ submenu_list['app_pitch_edit'] = {
 		},
 		"now": function(Elem, subm){
 			Elem.find("[find=submenu_bottom_button]").attr('form', 'submit');
+		},
+	},
+	"cancel": {
+		"style": "bottom_button",
+		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
+		"action": function(Elem, subm){
+			subm.Hide();
 		},
 	},
 };

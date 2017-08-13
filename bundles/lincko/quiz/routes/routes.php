@@ -9,20 +9,20 @@ $app = \Slim\Slim::getInstance();
 $app->group('/quiz', function () use ($app) {
 
 	$app->get(
-		'/question/:sessionid',
+		'/question/:statisticsid',
 		'\bundles\lincko\quiz\controllers\ControllerQuiz:question_get'
 	)
 	->conditions(array(
-		'sessionid' => '[a-z0-9]+',
+		'statisticsid' => '[a-z0-9]+',
 	))
 	->name('quiz_question_get');
 
 	$app->get(
-		'/answer/:sessionid/:answerid',
+		'/answer/:statisticsid/:answerid',
 		'\bundles\lincko\quiz\controllers\ControllerQuiz:answer_get'
 	)
 	->conditions(array(
-		'sessionid' => '[a-z0-9]+',
+		'statisticsid' => '[a-z0-9]+',
 		'answerid' => '[a-z0-9]+',
 	))
 	->name('quiz_answer_get');
