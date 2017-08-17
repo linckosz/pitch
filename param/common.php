@@ -53,6 +53,8 @@ if(isset($_SERVER['SERVER_HOST'])){
 	$app->lincko->domain = $_SERVER['HTTP_HOST'];
 }
 
+$app->lincko->http_host = $_SERVER['HTTP_HOST'];
+
 //$app->lincko->cookies_lifetime = time()+1200; //Valid 20 minutes
 $app->lincko->cookies_lifetime = time()+(3600*24*90); //Valid 3 months
 

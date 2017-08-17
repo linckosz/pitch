@@ -458,9 +458,9 @@ $(window).resize(function(){
 var app_application_save_page = function(type, id){
 	var url = Lincko.storage.geHash(type, id);
 	if(url){
-		setCookie('pitch_page', url);
+		setCookie(document.linckoDev+'_pitch_page', url);
 	} else {
-		setCookie('pitch_page', false, -1);
+		setCookie(document.linckoDev+'_pitch_page', false, -1);
 	}
 }
 

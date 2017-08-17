@@ -40,4 +40,15 @@ class Answered extends Model {
 		}
 	}
 
+	public static function isAuthorized($guest_id, $statistics_id, $question_id){
+		if(Answered::Where('guest_id', $guest_id)->where('statistics_id', $statistics_id)->where('question_id', $question_id)->first(array('id'))){
+			return false;
+		}
+		$timems_limit = \micro_seconds() - 8*3600*1000; //Gap of 8H
+		if(Answered::Where('guest_id', $guest_id)->where('created_ms', '>', $timems_limit)->where('question_id', $question_id)->first(array('id'))){
+			return false;
+		}
+		return true;
+	}
+
 }

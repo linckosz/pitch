@@ -44,6 +44,44 @@ class ControllerPPT extends Controller {
 		$app->lincko->data['get_style'] = false;
 	}
 
+	public function get_session_md5(){
+		$app = ModelLincko::getApp();
+		if(isset($_COOKIE[$app->lincko->data['lincko_dev'].'_ppt_session_md5'])){
+			$md5 = $_COOKIE[$app->lincko->data['lincko_dev'].'_ppt_session_md5'];
+		} else {
+			$md5 = md5(uniqid('', true));
+			//Find a unique md5
+			while(Session::Where('id', $md5)->first(array('id'))){
+				$md5 = md5(uniqid('', true));
+			}
+		}
+		$timelimit = time()+(8*3600); //8H maximum
+		setcookie($app->lincko->data['lincko_dev'].'_ppt_session_md5', $md5, $timelimit, '/', '.'.$app->lincko->http_host);
+		$_COOKIE[$app->lincko->data['lincko_dev'].'_ppt_session_md5'] = $md5;
+		return $md5;
+	}
+
+	public function get_session(){
+		$app = ModelLincko::getApp();
+		$md5 = $this->get_session_md5();
+		$session = false;
+		if(isset($_COOKIE[$app->lincko->data['lincko_dev'].'_ppt_session_id'])){
+			$session = Session::Where('id', $_COOKIE[$app->lincko->data['lincko_dev'].'_ppt_session_id'])->where('md5', $md5)->first();
+		}
+		if(!$session){
+			$session = Session::Where('md5', $md5)->orderBy('created_ms', 'desc')->first();
+		}
+		if(!$session){
+			$session = new Session;
+			$session->md5 = $md5;
+			$session->save();
+		}
+		$timelimit = time()+(8*3600); //8H maximum
+		setcookie($app->lincko->data['lincko_dev'].'_ppt_session_id', $session->id, $timelimit, '/', '.'.$app->lincko->http_host);
+		$_COOKIE[$app->lincko->data['lincko_dev'].'_ppt_session_id'] = $session->id;
+		return $session;
+	}
+
 	public function question_get($questionid_enc){
 		$app = ModelLincko::getApp();
 		$this->prepare();
@@ -79,47 +117,28 @@ class ControllerPPT extends Controller {
 				$app->lincko->data['data_question_picture'] = $base_url.'/files/'.$file->uploaded_by.'/'.$file->link.'.'.$file->ori_ext.'?'.$file->updated_ms;
 			}
 
-			$session = false;
-			$statistics = false;
-			if(isset($_SESSION['session_id'])){
-				if($session = Session::find($_SESSION['session_id'])){
-					$statistics = Statistics::Where('session_id', $session->id)->where('question_id', $question->id)->first();
-					if(!$statistics){
-						$statistics = new Statistics;
-						$statistics->session_id = $session->id;
-						$statistics->question_id = $question->id;
-						$statistics->save();
-					}
-				}
-			}
+			
+			$app->lincko->data['data_stats_iframe'] = $base_url.'/ppt/stats/'.$questionid_enc;
 
-			if(!$session || !$statistics){
-				$session = new Session;
-				$session->save();
-				$_SESSION['session_id'] = $session->id;
-				$statistics = new Statistics;
-				$statistics->session_id = $session->id;
-				$statistics->question_id = $question->id;
-				$statistics->save();
-			}
-
-			$session->statistics_id = $statistics->id; //Current question
-			$session->save();
-
-			$statisticsid_enc = STR::integer_map($statistics->id);
-
-			$app->lincko->data['data_pitch_url'] = $base_url.'/ppt/qrcode/'.$statisticsid_enc.'.jpg?'.$statistics->created_at;
-
-			$app->lincko->data['data_stats_iframe'] = $base_url.'/ppt/stats/'.$statisticsid_enc;
 			if($static){
 				//Do not refresh for answer
 				$app->lincko->data['data_stats_iframe'] .= '/static';
 				$app->lincko->data['data_pitch_url_hide'] = true;
+				$app->lincko->data['data_pitch_url_raw'] = $base_url.'/lincko/wrapper/images/generic/neutral.png?time=0';
+				$app->lincko->data['data_pitch_url'] = $app->lincko->data['data_pitch_url_raw'].'?time=0';
+			} else {
+				$app->lincko->data['data_pitch_url_raw'] = $base_url.'/ppt/qrcode/'.$questionid_enc.'.jpg';
+				$app->lincko->data['data_pitch_url'] = $app->lincko->data['data_pitch_url_raw'].'?time='.time();
 			}
 
 			if(isset($app->lincko->data['body_preview']) && $app->lincko->data['body_preview']){
 				//Just simulate some data for preview purpose
 				$app->lincko->data['data_stats_iframe'] .= '?preview=1';
+				$app->lincko->data['data_pitch_url'] .= '&preview=1';
+			} else {
+				if($style=='question'){
+					$this->get_session_md5(); //Prepare cookie
+				}
 			}
 
 			if($question->style==2){
@@ -203,9 +222,9 @@ class ControllerPPT extends Controller {
 		$app->render('/bundles/lincko/ppt/templates/generic/sorry.twig');
 	}
 
-	public function stats_get($statisticsid_enc, $refresh='refresh'){
+	public function stats_get($questionid_enc, $refresh='refresh'){
 		$app = ModelLincko::getApp();
-		$data = $this->stats_data($statisticsid_enc);
+		$data = $this->stats_data($questionid_enc);
 		$app->lincko->data['get_refresh'] = true;
 		if($refresh=='static'){
 			$app->lincko->data['get_refresh'] = false;
@@ -222,46 +241,63 @@ class ControllerPPT extends Controller {
 				return true;
 			}
 		}
-		$app->render('/bundles/lincko/ppt/templates/generic/blanc.twig');
+		$app->render('/bundles/lincko/ppt/templates/generic/blank.twig');
 	}
 
-	public function statsjson_get($statisticsid_enc){
-		$msg = array('data' => $this->stats_data($statisticsid_enc),);
+	public function statsjson_get($questionid_enc){
+		$msg = array('data' => $this->stats_data($questionid_enc),);
 		(new Json($msg))->render();
 		return exit(0);
 	}
 
-	public function statsjs_get($statisticsid_enc){
+	public function statsjs_get($questionid_enc){
 		$app = ModelLincko::getApp();
 		$app->response->headers->set('Content-Type', 'application/javascript');
 		$app->response->headers->set('Cache-Control', 'no-cache, must-revalidate');
 		$app->response->headers->set('Expires', 'Fri, 12 Aug 2011 14:57:00 GMT');
-		$data = $this->stats_data($statisticsid_enc);
+		$data = $this->stats_data($questionid_enc);
 		foreach ($data as $key => $value) {
 			echo 'var statsjs_'.$key.'="'.$value.'";';
 		}
 	}
 
-	public function stats_data($statisticsid_enc){
+	public function stats_data($questionid_enc){
 		$app = ModelLincko::getApp();
 		$get = ModelLincko::getData();
+		$question_id = STR::integer_map($questionid_enc, true);
+		$question = Question::Where('id', $question_id)->first(array('id', 'style', 'answer_id', 'parent_id'));
+		$statistics = false;
 		$preview = false;
+		$statisticsid_enc = 0;
 		if(isset($get->preview) && $get->preview){
 			$preview = true;
+		} else {
+			if(isset($_COOKIE[$app->lincko->data['lincko_dev'].'_ppt_session_id'])){
+				if($session = Session::find($_COOKIE[$app->lincko->data['lincko_dev'].'_ppt_session_id'])){
+					if($statistics = Statistics::Where('session_id', $session->id)->where('question_id', $question_id)->where('open', 1)->first()){
+						$statisticsid_enc = STR::integer_map($statistics->id);
+					}
+				}
+			}
 		}
-		$data['data_preview'] = $app->lincko->data['data_preview'] = $preview;
+
+
 		$data = array();
-		$data['data_statisticsid_enc'] = $app->lincko->data['data_statisticsid_enc'] = $statisticsid_enc;
-		$statistics_id = STR::integer_map($statisticsid_enc, true);
+		$data['data_preview'] = $app->lincko->data['data_preview'] = $preview;
+
+		$data['data_questionid_enc'] = $app->lincko->data['data_questionid_enc'] = $questionid_enc;
+		
 		$data['get_style'] = $app->lincko->data['get_style'] = 'stats';
 		$data['data_question_style'] = $app->lincko->data['data_question_style'] = false;
-		
-		$statistics = Statistics::find($statistics_id);
-		if($statistics && $question = Question::Where('id', $statistics->question_id)->first(array('id', 'style', 'answer_id', 'parent_id'))){
+
+		if($question){
+
 			$data['data_question_style'] = $app->lincko->data['data_question_style'] = $question->style;
 
 			if($preview){
 				$data['data_participants'] = $app->lincko->data['data_participants'] = rand(200, 299);
+			} else if(!$statistics){
+				$data['data_participants'] = 0;
 			} else {
 				$data['data_participants'] = $app->lincko->data['data_participants'] = $total = intval($statistics->a) + intval($statistics->b) + intval($statistics->c) + intval($statistics->d);
 			}
@@ -271,6 +307,9 @@ class ControllerPPT extends Controller {
 					$random = rand(30, 70);
 					$data['data_correct'] = $app->lincko->data['data_correct'] = $random;
 					$data['data_not_correct'] = $app->lincko->data['data_not_correct'] = 100-$random;
+				} else if(!$statistics){
+					$data['data_correct'] = 0;
+					$data['data_not_correct'] = 0;
 				} else {
 					$data['data_correct'] = $app->lincko->data['data_correct'] = 0;
 					$data['data_not_correct'] = $app->lincko->data['data_not_correct'] = 0;
@@ -289,6 +328,9 @@ class ControllerPPT extends Controller {
 					$random = rand(30, 70);
 					$data['data_correct'] = $app->lincko->data['data_correct'] = $random;
 					$data['data_not_correct'] = $app->lincko->data['data_not_correct'] = 100-$random;
+				} else if(!$statistics){
+					$data['data_correct'] = 0;
+					$data['data_not_correct'] = 0;
 				} else {
 					$data['data_correct'] = $app->lincko->data['data_correct'] = 0;
 					$data['data_not_correct'] = $app->lincko->data['data_not_correct'] = 0;
@@ -303,6 +345,10 @@ class ControllerPPT extends Controller {
 					}
 				}
 			} else if($question->style==3){
+				$data['data_number_1'] = $app->lincko->data['data_number_1'] = 0;
+				$data['data_number_2'] = $app->lincko->data['data_number_2'] = 0;
+				$data['data_number_3'] = $app->lincko->data['data_number_3'] = 0;
+				$data['data_number_4'] = $app->lincko->data['data_number_4'] = 0;
 				if($preview){
 					$total = 0;
 					$random_1 = min(rand(10, 50), 100-$total);
@@ -316,6 +362,8 @@ class ControllerPPT extends Controller {
 					$data['data_number_2'] = $app->lincko->data['data_number_2'] = $random_2;
 					$data['data_number_3'] = $app->lincko->data['data_number_3'] = $random_3;
 					$data['data_number_4'] = $app->lincko->data['data_number_4'] = $random_4;
+				} else if(!$statistics){
+					//Just display nothing
 				} else {
 					if($total>0){
 						$answers = Answer::Where('parent_id', $question->id)
@@ -340,29 +388,12 @@ class ControllerPPT extends Controller {
 		return $data;
 	}
 
-	public function qrcode_get($statisticsid_enc){
+	public function qrcode_get($questionid_enc){
 		$app = ModelLincko::getApp();
-		$base_url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'];
-		$url = $base_url.'/quiz/question/'.$statisticsid_enc;
-
-		$statistics_id = STR::integer_map($statisticsid_enc, true);
-		$statistics = Statistics::find($statistics_id);
-
-		if($statistics){
-			ob_clean();
-			flush();
-			$timestamp = $statistics->created_ms;
-			$gmt_mtime = gmdate('r', round($timestamp/1000));
-			header('Last-Modified: '.$gmt_mtime);
-			header('Expires: '.gmdate(DATE_RFC1123, time()+16000000)); //About 6 months cached
-			header('ETag: "'.md5($statistics->id.'-'.$timestamp).'"');
-			if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
-				if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmt_mtime || str_replace('"', '', stripslashes($_SERVER['HTTP_IF_NONE_MATCH'])) == md5($statistics->id.'-'.$timestamp)) {
-					header('HTTP/1.1 304 Not Modified');
-					return exit(0);
-				}
-			}
-
+		$get = ModelLincko::getData();
+		if(isset($get->preview) && $get->preview){
+			$base_url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'];
+			$url = $base_url.'/quiz/question/0/'.$questionid_enc;
 			//https://packagist.org/packages/endroid/qrcode
 			$qrCode = new QrCode();
 			$qrCode
@@ -380,8 +411,52 @@ class ControllerPPT extends Controller {
 			$qrCode->render();
 			
 			return exit(0);
+		} else {
+			$session = $this->get_session();
+			if($session){
+				ob_clean();
+				flush();
+				$timestamp = $session->created_ms;
+				$gmt_mtime = gmdate('r', round($timestamp/1000));
+				header('Last-Modified: '.$gmt_mtime);
+				header('Expires: '.gmdate(DATE_RFC1123, time()+16000000)); //About 6 months cached
+				header('ETag: "'.md5($session->id.'-'.$timestamp).'"');
+				if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
+					if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmt_mtime || str_replace('"', '', stripslashes($_SERVER['HTTP_IF_NONE_MATCH'])) == md5($session->id.'-'.$timestamp)) {
+						header('HTTP/1.1 304 Not Modified');
+						session_write_close();
+						return exit(0);
+					}
+				}
+				$base_url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'];
+				$url = $base_url.'/quiz/question/'.STR::integer_map($session->id).'/'.$questionid_enc;
+				//https://packagist.org/packages/endroid/qrcode
+				$qrCode = new QrCode();
+				$qrCode
+					->setLogo($app->lincko->path.'/bundles/lincko/ppt/public/images/logo/wechat2.png')
+					->setLogoSize(120)
+					->setText($url)
+					->setSize(640)
+					->setPadding(20)
+					->setErrorCorrection('medium')
+					->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
+					->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
+					->setImageType(QrCode::IMAGE_TYPE_PNG)
+				;
+				header('Content-Type: '.$qrCode->getContentType());
+				$qrCode->render();
+				session_write_close();
+				return exit(0);
+			} else {
+				$path = $app->lincko->path.'/bundles/lincko/wrapper/public/images/generic/neutral.png';
+				if(is_file($path) && filesize($path)!==false){
+					WideImage::load($path)->output('png');
+					session_write_close();
+					return exit(0);
+				}
+			}
 		}
-		$app->render('/bundles/lincko/ppt/templates/generic/blanc.twig');
+		$app->render('/bundles/lincko/ppt/templates/generic/blank.twig');
 	}
 
 }

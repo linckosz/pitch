@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-{% if get_refresh and get_style == 'stats' %}
-	<meta http-equiv="refresh" content="3" />
-{% endif %}
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
@@ -63,6 +60,7 @@ var wrapper_href = window.location.href;
 
 window.name = 'pitchenhancerquiz';
 document.domainRoot = '{{ domain }}';
+document.linckoDev = '{{ lincko_dev }}';
 document.linckoWechat = '{{ lincko_wechat }}';
 
 //In IE console is undefined if the dev tool is closed

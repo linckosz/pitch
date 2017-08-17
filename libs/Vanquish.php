@@ -50,7 +50,7 @@ class Vanquish {
 		//Assign only once all real cookies to memory
 		if(self::$first || count(self::$cookies)<=0){
 			$app = \Slim\Slim::getInstance();
-			if($vanquish = $app->getCookie('vanquish', false)){
+			if($vanquish = $app->getCookie($app->lincko->data['lincko_dev'].'_vanquish', false)){
 				$vanquish = json_decode($vanquish);
 				foreach($vanquish as $key => $value) {
 					if(!isset(self::$cookies[$key])){
@@ -118,11 +118,11 @@ class Vanquish {
 				$_SESSION['vanquish'] = self::$cookies;
 				//Do no use " $app->setCookie('vanquish', json_encode(self::$cookies)); " avoid cookie issue that keep its status accross non-ssl and ssl site and different subdomains
 				$json = self::encodeSecureCookie(json_encode(self::$cookies), $app->lincko->cookies_lifetime);
-				setcookie('vanquish', $json, $app->lincko->cookies_lifetime, '/', '.'.$app->lincko->domain);
+				setcookie($app->lincko->data['lincko_dev'].'_vanquish', $json, $app->lincko->cookies_lifetime, '/', '.'.$app->lincko->http_host);
 			} else {
 				unset($_SESSION['vanquish']);
-				$app->deleteCookie('vanquish');
-				setcookie('vanquish', null, time()-3600, '/', '.'.$app->lincko->domain);
+				$app->deleteCookie($app->lincko->data['lincko_dev'].'_vanquish');
+				setcookie($app->lincko->data['lincko_dev'].'_vanquish', null, time()-3600, '/', '.'.$app->lincko->http_host);
 				self::$first = true;
 			}
 		}

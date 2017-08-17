@@ -42,4 +42,20 @@ class Statistics extends Model {
 		return parent::save($options);
 	}
 
+	public static function unlock($session_id, $question_id){
+		$statistics = Statistics::Where('session_id', $session_id)->where('question_id', $question_id)->where('open', '>=', 1)->first();
+		if(!$statistics){
+			$statistics = new Statistics;
+			$statistics->session_id = $session_id;
+			$statistics->question_id = $question_id;
+			$statistics->open = 1; //Ready
+			if($statistics->save() && $session_id > 0){
+				//Lock any other statistics previously opened (session_id 0 is a public one that never cose for advertising)
+				$time_ms = \micro_seconds();
+				Statistics::Where('session_id', $session_id)->where('id', '!=', $statistics->id)->where('open', 1)->getQuery()->update(['open' => 0, 'updated_ms' => $time_ms]);
+			}
+		}
+		return $statistics;
+	}
+
 }

@@ -281,7 +281,7 @@ var app_generic_state = {
 		this.allowed = true;
 		if(!this.started && !storage_first_launch){
 			this.started = true;
-			var pitch_page = getCookie('pitch_page');
+			var pitch_page = getCookie(document.linckoDev+'_pitch_page');
 			if(pitch_page){
 				this.getItem(pitch_page);
 			} else {
