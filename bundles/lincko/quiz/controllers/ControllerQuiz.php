@@ -149,7 +149,7 @@ class ControllerQuiz extends Controller {
 			$statistics_id = STR::integer_map($statisticsid_enc, true);
 			if($statistics = Statistics::Where('id', $statistics_id)->where('open', 1)->first()){
 				//Check if already answered
-				if(false && !Answered::isAuthorized($guest_id, $statistics->id, $statistics->question_id)){
+				if(!Answered::isAuthorized($guest_id, $statistics->id, $statistics->question_id)){
 					$app->lincko->data['data_answered'] = true;
 					$app->render('/bundles/lincko/quiz/templates/quiz/result/wait.twig');
 					return true;
