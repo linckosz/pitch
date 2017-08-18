@@ -136,7 +136,7 @@ Lincko.storage.onboarding = function(){
 		} else if(Lincko.storage.get('user', wrapper_localstorage.user_id)){
 			Lincko.storage.onboarding_stop = true;
 		}
-	}, 300);
+	}, 100);
 	return true;
 }
 app_application_lincko.add(Lincko.storage.onboarding, "user");
