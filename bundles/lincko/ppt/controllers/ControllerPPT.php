@@ -18,7 +18,6 @@ use \bundles\lincko\api\models\data\Guest;
 use WideImage\WideImage;
 use Endroid\QrCode\QrCode;
 
-
 class ControllerPPT extends Controller {
 
 	protected function prepare(array $attributes = array()){
