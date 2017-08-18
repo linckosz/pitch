@@ -46,7 +46,8 @@ class ControllerTest extends Controller {
 		$tp = null;
 
 
-		$tp = password_hash('uY67sUJkp234c', PASSWORD_DEFAULT);
+		//$user = User::getUser();
+		//$user->onboarding();
 
 		//wrapper_sendAction('', 'post', 'api/test');
 		//\libs\Watch::php( $db->getQueryLog() , 'QueryLog', __FILE__, __LINE__, false, false, true);

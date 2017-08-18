@@ -110,7 +110,7 @@ class ControllerPPT extends Controller {
 			$base_url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'];
 
 			$app->lincko->data['data_question'] = true;
-			$app->lincko->data['data_question_title'] = STR::sql_to_html($question->title);
+			$app->lincko->data['data_question_title'] = $question->title; //Twig will do HTML encoding
 			$app->lincko->data['data_question_picture'] = false;
 			$app->lincko->data['data_question_style'] = $question->style;
 			if($question->file_id && $file = File::Where('id', $question->file_id)->first(array('id', 'uploaded_by', 'link', 'ori_ext', 'updated_ms'))){
@@ -165,7 +165,7 @@ class ControllerPPT extends Controller {
 				$prefix = 'data_answer_'.$answer->number;
 				$data_answers[$answer->number] = $prefix;
 				$app->lincko->data[$prefix] = true;
-				$app->lincko->data[$prefix.'_title'] = STR::sql_to_html($answer->title);
+				$app->lincko->data[$prefix.'_title'] = $answer->title; //Twig will do HTML encoding
 				$app->lincko->data[$prefix.'_picture'] = false;
 				$app->lincko->data[$prefix.'_correct'] = false;
 				if($answer->file_id && $file = File::Where('id', $answer->file_id)->first(array('id', 'uploaded_by', 'link', 'ori_ext', 'updated_ms'))){

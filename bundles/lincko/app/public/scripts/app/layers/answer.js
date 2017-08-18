@@ -147,7 +147,7 @@ var app_layers_answer_feedPage = function(param){
 
 	//Preview button
 	Elem = $('#-app_layers_answer_preview').clone();
-	Elem.prop('id', '');
+	Elem.prop('id', 'app_layers_answer_preview');
 	Elem.on('click', question['id'], function(event){
 		showppt(event.data);
 	});
@@ -285,7 +285,7 @@ var app_layers_answer_feedPage = function(param){
 
 	//URL buttons
 	Elem = $('#-app_layers_answer_url').clone();
-	Elem.prop('id', '');
+	Elem.prop('id', 'app_layers_answer_url');
 
 	var question_url = Lincko.storage.getURL(question['id'], 'question');
 	Elem.find("[find=question_url]").html(question_url);
@@ -401,6 +401,95 @@ var app_layers_answer_feedPage = function(param){
 
 	app_application_lincko.prepare("answer", true);
 
+	//Launch onboarding
+	if(!Lincko.storage.onboarding_stop){
+		var tuto = Lincko.storage.get('user', wrapper_localstorage.user_id, 'tuto');
+		if(tuto){
+			var item = app_generic_state.getItem(tuto);
+			if(typeof item.id != 'undefined' && item.id == param && item._type == 'question'){
+				Lincko.storage.onboarding_stop = true;
+				setTimeout(function(){
+					//app_layers_answer_grumble_mask(); //Note: Can be annoying for UX because of the double click
+					app_layers_answer_grumble_1();
+					app_layers_answer_grumble_2();
+				}, 400);
+			}
+		}
+	}
+};
+
+var app_layers_answer_grumble_mask = function(){
+	Elem = $('#-app_layers_answer_mask').clone();
+	Elem.prop('id', 'app_layers_answer_mask');
+	Elem.on('click', function(event){
+		$(document.body).trigger('click.bubble');
+		event.stopPropagation();
+		return false;
+	});
+	$('#app_layers_answer').find("[find=wrapper]").append(Elem);
+};
+
+var app_layers_answer_grumble_mask_hide = function(){
+	if($("#app_layers_answer_mask").length>0){
+		$("#app_layers_answer_mask").recursiveRemove();
+	}
+};
+
+var app_layers_answer_grumble_action = function(){return; //toto
+	var data = {};
+	data.set = {};
+	data.set.user = {};
+	var item = Lincko.storage.get('user', wrapper_localstorage.user_id);
+	data.set.user[item['id']] = {
+		id: item['id'],
+		md5: item['md5'],
+		tuto: null,
+	};
+	
+	if(storage_offline(data)){
+		wrapper_sendAction(data, 'post', 'api/data/set', storage_cb_success, storage_cb_error, storage_cb_begin, storage_cb_complete);
+	}
+};
+
+var app_layers_answer_grumble_1 = function(){
+	//http://jamescryer.github.io/grumble.js/
+	$('#app_layers_answer_preview').find("[find=eye]").grumble(
+		{
+			text: Lincko.Translation.get('app', 125, 'html'), //See how cool it will be!
+			size: 150,
+			sizeRange: [150],
+			angle: 200,
+			distance: 8,
+			showAfter: 200,
+			hideOnClick: true,
+			type: 'alt-',
+			useRelativePositioning: true,
+			onBeginHide: function(){
+				app_layers_answer_grumble_mask_hide();
+				app_layers_answer_grumble_action();
+			},
+		}
+	);
+};
+
+var app_layers_answer_grumble_2 = function(){
+	var grumble_2_distance = 2 + $('#app_layers_answer_url').find("[find=question]").outerHeight();
+	$('#app_layers_answer_url').find("[find=question_wrapper]").grumble(
+		{
+			text: Lincko.Translation.get('app', 126, 'html'), //Paste the link to your PPT Web Viewer plugin
+			size: 150,
+			sizeRange: [150],
+			angle: 340,
+			distance: grumble_2_distance,
+			showAfter: 200,
+			hideOnClick: true,
+			type: 'alt-',
+			useRelativePositioning: true,
+			onBeginHide: function(){
+				app_layers_answer_grumble_mask_hide();
+			},
+		}
+	);
 };
 
 app_application_lincko.add(function(){

@@ -278,6 +278,10 @@ class File extends ModelLincko {
 		return array($flip_x, $flip_y, $angle);
 	}
 
+	public function saveParent(){
+		return parent::save();
+	}
+
 	public function save(array $options = array()){
 		$app = ModelLincko::getApp();
 		$new = false;

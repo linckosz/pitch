@@ -63,6 +63,11 @@ class Question extends ModelLincko {
 		return $this->hasOne('\\bundles\\lincko\\api\\models\\data\\File', 'id', 'file_id');
 	}
 
+	//Many(Question) to One(Answer)
+	public function answer(){
+		return $this->hasMany('\\bundles\\lincko\\api\\models\\data\\Answer', 'parent_id'); //parent_id => question_id
+	}
+
 ////////////////////////////////////////////
 
 	public static function setItem($form){

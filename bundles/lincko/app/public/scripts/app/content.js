@@ -19,11 +19,15 @@ var app_content_menu = {
 
 	menu: null,
 
+	param: null,
+
+	param_md5: null,
+
 	selection: function(menu, param){
 		if(typeof menu == 'undefined'){ menu = 'pitch'; }
 		if(typeof param == 'undefined'){ param = null; }
 
-		if(app_content_menu.menu == menu){
+		if(app_content_menu.menu == menu && app_content_menu.param_md5 == md5(param)){
 			return true;
 		}
 

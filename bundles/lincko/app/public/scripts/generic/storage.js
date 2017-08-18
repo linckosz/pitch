@@ -121,6 +121,24 @@ var storage_cb_complete = function(msg, err, status, data){
 	storage_show_offline = false;
 };
 
+Lincko.storage.onboarding_stop = false;
+Lincko.storage.onboarding = function(){
+	if(Lincko.storage.onboarding_stop){
+		return false;
+	}
+	var tuto = Lincko.storage.get('user', wrapper_localstorage.user_id, 'tuto');
+	if(tuto){
+		var item = app_generic_state.getItem(tuto);
+		if(typeof item.id != 'undefined' && item._type == 'question'){
+			app_generic_state.openItem(true);
+		}
+	} else {
+		Lincko.storage.onboarding_stop = true;
+	}
+	return true;
+}
+app_application_lincko.add(Lincko.storage.onboarding, "user");
+
 Lincko.storage.getMD5 = function(category){
 	var md5id = md5(Math.random());
 	if(typeof category == 'string' && typeof Lincko.storage.data[category] != 'undefined'){
