@@ -126,15 +126,17 @@ Lincko.storage.onboarding = function(){
 	if(Lincko.storage.onboarding_stop){
 		return false;
 	}
-	var tuto = Lincko.storage.get('user', wrapper_localstorage.user_id, 'tuto');
-	if(tuto){
-		var item = app_generic_state.getItem(tuto);
-		if(typeof item.id != 'undefined' && item._type == 'question'){
-			app_generic_state.openItem(true);
+	setTimeout(function(){
+		var tuto = Lincko.storage.get('user', wrapper_localstorage.user_id, 'tuto');
+		if(tuto){
+			var item = app_generic_state.getItem(tuto);
+			if(typeof item.id != 'undefined' && item._type == 'question'){
+				app_generic_state.openItem(true);
+			}
+		} else if(Lincko.storage.get('user', wrapper_localstorage.user_id)){
+			Lincko.storage.onboarding_stop = true;
 		}
-	} else {
-		Lincko.storage.onboarding_stop = true;
-	}
+	}, 300);
 	return true;
 }
 app_application_lincko.add(Lincko.storage.onboarding, "user");
