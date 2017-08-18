@@ -435,7 +435,7 @@ var app_layers_answer_grumble_mask_hide = function(){
 	}
 };
 
-var app_layers_answer_grumble_action = function(){return; //toto
+var app_layers_answer_grumble_action = function(){
 	var data = {};
 	data.set = {};
 	data.set.user = {};
