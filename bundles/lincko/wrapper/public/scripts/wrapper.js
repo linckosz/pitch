@@ -150,7 +150,7 @@ $("#wrapper_offline").on('click', function(){
 
 var wrapper_time_server = function(){
 	wrapper_sendAction(null, 'post', 'wrapper/info/timems', function(msg, error, status, extra){
-		if(typeof extra.timems != 'undefined'){
+		if(typeof extra.timems != 'undefined' && typeof Lincko.now != 'undefined'){
 			Lincko.now.setServerOffset(extra.timems);
 		}
 	});

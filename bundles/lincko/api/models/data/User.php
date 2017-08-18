@@ -186,6 +186,8 @@ class User extends ModelLincko {
 		}
 		$result = parent::save($options);
 		if($new){
+			$app = ModelLincko::getApp();
+			$app->lincko->data['uid'] = $this->id;
 			//Prepare onboarding
 			$this->onboarding();
 		}
@@ -202,7 +204,7 @@ class User extends ModelLincko {
 			$pitch->title = $app->trans->getBRUT('data', 4, 0); //My Pitch
 			$pivot = new \stdClass;
 			$pivot->{'user>access'} = new \stdClass;
-			$pivot->{'user>access'}->{$app->lincko->data['uid']} = true;
+			$pivot->{'user>access'}->{$this->id} = true;
 			$pitch->pivots_format($pivot);
 			$pitch->save();
 
