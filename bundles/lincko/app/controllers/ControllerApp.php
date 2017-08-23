@@ -39,13 +39,9 @@ class ControllerApp extends Controller {
 				if($tbs_bis->Plugin(OPENTBS_FILEEXISTS, $subfile)){
 					if($tbs_bis->Plugin(OPENTBS_SELECT_FILE, $subfile)){
 						$change = $tbs_bis->Source;
-						$question_url = $app->lincko->domain.'/ppt/question/'.$questionid_enc;
-						$answer_url = $app->lincko->domain.'/ppt/answer/'.$questionid_enc;
+						$question_url = $app->lincko->http_host.'/ppt/question/'.$questionid_enc;
+						$answer_url = $app->lincko->http_host.'/ppt/answer/'.$questionid_enc;
 						$info = $app->trans->getBRUT('app', 6, 1); //Please use PowerPoint 2013 or later, with its Add-in Web Viewer installed. And click on "Enable Editing" if you see the notification.
-						if(!empty($app->lincko->data['lincko_dev'])){
-							$question_url = $app->lincko->data['lincko_dev'].'.'.$question_url;
-							$answer_url = $app->lincko->data['lincko_dev'].'.'.$answer_url;
-						}
 						$change = preg_replace("/&lt;lincko_question&gt;.*?&lt;\/lincko_question&gt;/i", $question_url, $change);
 						$change = preg_replace("/&lt;lincko_answer&gt;.*?&lt;\/lincko_answer&gt;/i", $answer_url, $change);
 						$change = preg_replace("/&lt;lincko_info&gt;.*?&lt;\/lincko_info&gt;/i", $info, $change);
