@@ -10,7 +10,6 @@ use \libs\STR;
 use \libs\Network;
 use \libs\Datassl;
 use \libs\Translation;
-//use \libs\clsTinyButStrong;
 use \bundles\lincko\api\models\Data;
 use \bundles\lincko\api\models\Inform;
 use \bundles\lincko\api\models\ModelLincko;
@@ -26,16 +25,9 @@ use \bundles\lincko\api\models\data\User;
 use \bundles\lincko\api\models\data\Guest;
 use GeoIp2\Database\Reader;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Carbon\Carbon;
 use WideImage\WideImage;
-
-use Illuminate\Database\Eloquent\Relations\Pivot;
-
-$app = ModelLincko::getApp();
-include_once($app->lincko->path.'/libs/TinyButStrong.php');
-
-//include_once('/glusterfs/.luyan.co/web/share/dev/bruno/tbs/tbs_class.php');
-//include_once('/glusterfs/.luyan.co/web/share/dev/bruno/tbs/tbs_plugin_opentbs.php');
 
 class ControllerTest extends Controller {
 
@@ -51,7 +43,7 @@ class ControllerTest extends Controller {
 		$db->enableQueryLog();
 		$app->lincko->time_record = true; //Display timing
 		$tp = null;
-		
+
 
 		//wrapper_sendAction('', 'post', 'api/test');
 		//\libs\Watch::php( $db->getQueryLog() , 'QueryLog', __FILE__, __LINE__, false, false, true);

@@ -421,8 +421,7 @@ var app_layers_answer_feedPage = function(param){
 	Elem.find("[find=ppt]").on('click', question['id'], function(event){
 		event.stopPropagation();
 		var ppt_url = top.location.protocol+'//'+document.domain+"/app/sample/"+wrapper_integer_map(event.data);
-		console.log(ppt_url);
-		device_download(ppt_url, "_blank", "SamplePPT.pptx");
+		device_download(ppt_url, "_blank", "sample.pptx");
 	});
 
 	Elem.appendTo(position_wrapper);
