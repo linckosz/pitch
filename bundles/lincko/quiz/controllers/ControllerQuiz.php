@@ -131,7 +131,6 @@ class ControllerQuiz extends Controller {
 			if($wechat_package = WechatPublic::getPackage()){
 				foreach ($wechat_package as $key => $value) {
 					$app->lincko->data['wechat_package_'.$key] = $value;
-					\libs\Watch::php($value, $key, __FILE__, __LINE__, false, false, true);
 				}
 			}
 		}
