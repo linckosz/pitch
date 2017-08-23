@@ -5,3 +5,9 @@ var quiz_result_wait_statistics = function(){
 		//Check if the statistics page is using new question
 	}, 3000);
 };
+
+$(function() {
+	$('#quiz_result_wait_scan_picture').on('click', function(){
+		base_scanner();
+	});
+});
