@@ -44,31 +44,75 @@ var app_layers_answer_feedPage = function(param){
 		pitch = Lincko.storage.getParent('question', question['id']);
 	}
 
+	var pitch_timer = {};
 	if(pitch){
-		app_content_top_title._set('pitch', pitch['id']);
+		var item = pitch;
+		app_content_top_title._set('pitch', item['id']);
 		Elem = $('#-models_pitch_top').clone();
-		Elem.prop('id', 'models_pitch_top_'+pitch['id']).find("[find=title]").html( wrapper_to_html(pitch['title']) );
-		Elem.attr('padding_top', "1");
-		Elem.find("[find=edit]").click(
-			pitch['id'],
-			function(event){
-				event.stopPropagation();
-				submenu_Build("app_pitch_edit", 1, true, event.data);
+		Elem.prop('id', 'models_pitch_top_'+item['id']);
+		
+		Elem.find("[find=input_textarea]").val(item['title']);
+		//Create new item
+		pitch_timer[item['id']] = null;
+		Elem.find("[find=input_textarea]").on('blur keyup input', item['id'], function(event){
+			var str = $(this).val();
+			var pitch_id = event.data;
+			var pitch = Lincko.storage.get('pitch', pitch_id);
+			if(pitch){
+				title = str.replace(/(\r\n|\n|\r)/gm, " ");
+				var data = {};
+				data.set = {};
+				data.set.pitch = {};
+				data.set.pitch[pitch['id']] = {
+					id: pitch['id'],
+					md5: pitch['md5'],
+					title: title,
+				};
 			}
-		);
-		Elem.addClass('models_pitch_top_hover');
-		Elem.click(
-			pitch['id'],
-			function(event){
-				event.stopPropagation();
-				app_content_menu.selection("question", event.data);
+			clearTimeout(pitch_timer[pitch_id]);
+			pitch_timer[pitch_id] = setTimeout(function(pitch_id, data){
+				if(storage_offline(data)){
+					wrapper_sendAction(data, 'post', 'api/data/set', storage_cb_success, storage_cb_error, storage_cb_begin, storage_cb_complete);
+				}
+			}, 2000, pitch_id, data);
+		});
+		//Disable New Line
+		Elem.find("[find=input_textarea]").on('keydown keypress change copy paste cut input', function(event){
+			if(event.type=="copy" || event.type=="paste" || event.type=="cut"){
+				setTimeout(function(that){
+					var str = that.val();
+					if(str.match(/(\r\n|\n|\r)/gm)){
+						str = str.replace(/(\r\n|\n|\r)/gm, " ");
+						that.val(str);
+					}
+					var rows_prev = parseInt(that.attr('rows'), 10);
+					that.textareaRows(3);
+					if(rows_prev != parseInt(that.attr('rows'), 10)){
+						wrapper_IScroll();
+					}
+				}, 0, $(this));
+			} else {
+				var str = $(this).val();
+				if(str.match(/(\r\n|\n|\r)/gm)){
+					str = str.replace(/(\r\n|\n|\r)/gm, " ");
+					$(this).val(str);
+				}
 			}
-		);
+			if(event.which == 13 || event.which == 27){
+				$(this).blur();
+			}
+			var rows_prev = parseInt($(this).attr('rows'), 10);
+			$(this).textareaRows(3);
+			if(rows_prev != parseInt($(this).attr('rows'), 10)){
+				wrapper_IScroll();
+			}
+		});
+
 		Elem.appendTo(position_wrapper);
 		app_application_lincko.add('models_pitch_top_'+pitch['id'], "pitch_"+pitch['id'], function(){
 			var item = Lincko.storage.get('pitch', this.action_param);
 			if(item){
-				$("#"+this.id).find("[find=title]").html( wrapper_to_html(item['title']) );
+				$("#"+this.id).find("[find=title]").val( item['title'] );
 			}
 		}, pitch['id']);
 	} else {
@@ -79,24 +123,75 @@ var app_layers_answer_feedPage = function(param){
 		return false;
 	}
 
-	
+	var question_timer = {};
 	if(question){
-		app_content_top_title._set('question', question['id']);
+		var item = question;
+		app_content_top_title._set('question', item['id']);
 		Elem = $('#-models_question_top').clone();
-		Elem.prop('id', 'models_question_top_'+question['id']).find("[find=title]").html( wrapper_to_html(question['title']) );
-		Elem.attr('padding_top', "1");
-		Elem.find("[find=edit]").click(
-			question['id'],
-			function(event){
-				event.stopPropagation();
-				submenu_Build("app_question_edit", 1, true, event.data);
+		Elem.prop('id', 'models_question_top_'+item['id']);
+
+		Elem.find("[find=input_textarea]").val(item['title']);
+		//Create new item
+		question_timer[item['id']] = null;
+		Elem.find("[find=input_textarea]").on('blur keyup input', item['id'], function(event){
+			var str = $(this).val();
+			var question_id = event.data;
+			var question = Lincko.storage.get('question', question_id);
+			if(question){
+				title = str.replace(/(\r\n|\n|\r)/gm, " ");
+				var data = {};
+				data.set = {};
+				data.set.question = {};
+				data.set.question[question['id']] = {
+					id: question['id'],
+					md5: question['md5'],
+					title: title,
+				};
 			}
-		);
+			clearTimeout(question_timer[question_id]);
+			question_timer[question_id] = setTimeout(function(question_id, data){
+				if(storage_offline(data)){
+					wrapper_sendAction(data, 'post', 'api/data/set', storage_cb_success, storage_cb_error, storage_cb_begin, storage_cb_complete);
+				}
+			}, 2000, question_id, data);
+		});
+		//Disable New Line
+		Elem.find("[find=input_textarea]").on('keydown keypress change copy paste cut input', function(event){
+			if(event.type=="copy" || event.type=="paste" || event.type=="cut"){
+				setTimeout(function(that){
+					var str = that.val();
+					if(str.match(/(\r\n|\n|\r)/gm)){
+						str = str.replace(/(\r\n|\n|\r)/gm, " ");
+						that.val(str);
+					}
+					var rows_prev = parseInt(that.attr('rows'), 10);
+					that.textareaRows(3);
+					if(rows_prev != parseInt(that.attr('rows'), 10)){
+						wrapper_IScroll();
+					}
+				}, 0, $(this));
+			} else {
+				var str = $(this).val();
+				if(str.match(/(\r\n|\n|\r)/gm)){
+					str = str.replace(/(\r\n|\n|\r)/gm, " ");
+					$(this).val(str);
+				}
+			}
+			if(event.which == 13 || event.which == 27){
+				$(this).blur();
+			}
+			var rows_prev = parseInt($(this).attr('rows'), 10);
+			$(this).textareaRows(3);
+			if(rows_prev != parseInt($(this).attr('rows'), 10)){
+				wrapper_IScroll();
+			}
+		});
+
 		Elem.appendTo(position_wrapper);
 		app_application_lincko.add('models_question_top_'+question['id'], "question_"+question['id'], function(){
 			var item = Lincko.storage.get('question', this.action_param);
 			if(item){
-				$("#"+this.id).find("[find=title]").html( wrapper_to_html(item['title']) );
+				$("#"+this.id).find("[find=title]").val( item['title'] );
 			}
 		}, question['id']);
 	} else {
@@ -218,7 +313,7 @@ var app_layers_answer_feedPage = function(param){
 				}
 			}
 			clearTimeout(answer_timer[answer_id]);
-			answer_timer[answer_id] = setTimeout(function(answer_id, title){
+			answer_timer[answer_id] = setTimeout(function(answer_id, data){
 				if(storage_offline(data)){
 					wrapper_sendAction(data, 'post', 'api/data/set', storage_cb_success, storage_cb_error, storage_cb_begin, storage_cb_complete);
 				}
@@ -323,9 +418,18 @@ var app_layers_answer_feedPage = function(param){
 		event.clearSelection();
 	});
 
+	Elem.find("[find=ppt]").on('click', question['id'], function(event){
+		event.stopPropagation();
+		var ppt_url = top.location.protocol+'//'+document.domain+"/app/sample/"+wrapper_integer_map(event.data);
+		console.log(ppt_url);
+		device_download(ppt_url, "_blank", "SamplePPT.pptx");
+	});
+
 	Elem.appendTo(position_wrapper);
 
 	//Draw to DOM
+
+	position_wrapper.find("[find=input_textarea]").textareaRows();
 
 	for(var i in items){
 		var item = items[i];
@@ -474,9 +578,9 @@ var app_layers_answer_grumble_1 = function(){
 
 var app_layers_answer_grumble_2 = function(){
 	var grumble_2_distance = 2 + $('#app_layers_answer_url').find("[find=question]").outerHeight();
-	$('#app_layers_answer_url').find("[find=question_wrapper]").grumble(
+	$('#app_layers_answer_url').find("[find=ppt_wrapper]").grumble(
 		{
-			text: Lincko.Translation.get('app', 126, 'html'), //Paste the link to your PPT Web Viewer plugin
+			text: Lincko.Translation.get('app', 127, 'html'), //Download your PPT file sample here
 			size: 150,
 			sizeRange: [150],
 			angle: 340,

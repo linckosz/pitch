@@ -12,6 +12,7 @@ use \libs\Video;
 use \bundles\lincko\api\models\ModelLincko;
 use \bundles\lincko\api\models\data\User;
 use \bundles\lincko\api\models\data\File;
+use \bundles\lincko\api\models\data\Question;
 use WideImage\WideImage;
 use Endroid\QrCode\QrCode;
 

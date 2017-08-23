@@ -89,6 +89,7 @@
 	padding: 0 6px;
 	text-align: center;
 	cursor: text;
+	min-height: 16px;
 }
 
 .app_layers_answer_url_wrapper {
@@ -96,6 +97,7 @@
 	display: inline-block;
 	padding: 16px 30px 2px 30px;
 	text-align: center;
+	vertical-align: top;
 }
 
 .app_layers_answer_url_wrapper_answer.statistics {

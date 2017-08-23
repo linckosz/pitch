@@ -35,23 +35,76 @@ var app_layers_question_feedPage = function(param){
 	var position_wrapper = sub_layer.find("[find=wrapper]");
 
 	var pitch = Lincko.storage.get('pitch', param);
+	var pitch_timer = {};
 	if(pitch){
-		app_content_top_title._set('pitch', pitch['id']);
+		var item = pitch;
+		app_content_top_title._set('pitch', item['id']);
 		Elem = $('#-models_pitch_top').clone();
-		Elem.prop('id', 'models_pitch_top_'+pitch['id']).find("[find=title]").html( wrapper_to_html(pitch['title']) );
-		Elem.attr('padding_top', "1");
-		Elem.find("[find=edit]").click(
-			pitch['id'],
-			function(event){
-				event.stopPropagation();
-				submenu_Build("app_pitch_edit", 1, true, event.data);
+		Elem.prop('id', 'models_pitch_top_'+item['id']);
+		
+		Elem.find("[find=input_textarea]").val(item['title']);
+		//Create new item
+		pitch_timer[item['id']] = null;
+		Elem.find("[find=input_textarea]").on('blur keyup input', item['id'], function(event){
+			var str = $(this).val();
+			var pitch_id = event.data;
+			var pitch = Lincko.storage.get('pitch', pitch_id);
+			if(pitch){
+				title = str.replace(/(\r\n|\n|\r)/gm, " ");
+				var data = {};
+				data.set = {};
+				data.set.pitch = {};
+				data.set.pitch[pitch['id']] = {
+					id: pitch['id'],
+					md5: pitch['md5'],
+					title: title,
+				};
 			}
-		);
+			clearTimeout(pitch_timer[pitch_id]);
+			pitch_timer[pitch_id] = setTimeout(function(pitch_id, data){
+				if(storage_offline(data)){
+					wrapper_sendAction(data, 'post', 'api/data/set', storage_cb_success, storage_cb_error, storage_cb_begin, storage_cb_complete);
+				}
+			}, 2000, pitch_id, data);
+		});
+		//Disable New Line
+		Elem.find("[find=input_textarea]").on('keydown keypress change copy paste cut input', function(event){
+			if(event.type=="copy" || event.type=="paste" || event.type=="cut"){
+				setTimeout(function(that){
+					var str = that.val();
+					if(str.match(/(\r\n|\n|\r)/gm)){
+						str = str.replace(/(\r\n|\n|\r)/gm, " ");
+						that.val(str);
+					}
+					var rows_prev = parseInt(that.attr('rows'), 10);
+					that.textareaRows(3);
+					if(rows_prev != parseInt(that.attr('rows'), 10)){
+						wrapper_IScroll();
+					}
+				}, 0, $(this));
+			} else {
+				var str = $(this).val();
+				if(str.match(/(\r\n|\n|\r)/gm)){
+					str = str.replace(/(\r\n|\n|\r)/gm, " ");
+					$(this).val(str);
+				}
+			}
+			if(event.which == 13 || event.which == 27){
+				$(this).blur();
+			}
+			var rows_prev = parseInt($(this).attr('rows'), 10);
+			$(this).textareaRows(3);
+			if(rows_prev != parseInt($(this).attr('rows'), 10)){
+				wrapper_IScroll();
+			}
+		});
+
+
 		Elem.appendTo(position_wrapper);
 		app_application_lincko.add('models_pitch_top_'+pitch['id'], "pitch_"+pitch['id'], function(){
 			var item = Lincko.storage.get('pitch', this.action_param);
 			if(item){
-				$("#"+this.id).find("[find=title]").html( wrapper_to_html(item['title']) );
+				$("#"+this.id).find("[find=title]").val( item['title'] );
 			}
 		}, pitch['id']);
 	} else {
@@ -132,6 +185,8 @@ var app_layers_question_feedPage = function(param){
 		return false;
 	});
 	Elem.appendTo(position_wrapper);
+
+	position_wrapper.find("[find=input_textarea]").textareaRows();
 
 	var layer = $('#app_layers_content');
 	Elem = $('#-app_layers_question_add_corner').clone();

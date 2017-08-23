@@ -96,7 +96,7 @@ $.fn.textareaRows = function(limit){
 			scrollbar = this.get(0).scrollHeight - this.outerHeight();
 		}
 	} else {
-		while(scrollbar < 0 && rows>1){
+		while(scrollbar <= 0 && rows>1){
 			rows--;
 			this.attr('rows', rows);
 			scrollbar = this.get(0).scrollHeight - this.outerHeight();

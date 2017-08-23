@@ -58,7 +58,7 @@ class Folders {
 		return true;
 	}
 
-	public function loopFolder(){
+	public function loopFolder($fullpath=false){
 		$list = array();
 		if($this->folder !== false){
 			if($this->checkPath($this->folder)){
@@ -66,7 +66,11 @@ class Folders {
 				if (is_array($files) && count($files) > 0) {
 					foreach($files as $file) {
 						if(!is_dir($file)){
-							$list[] = basename($file);
+							if($fullpath){
+								$list[] = $file;
+							} else {
+								$list[] = basename($file);
+							}
 						}
 					}
 				}
@@ -101,6 +105,28 @@ class Folders {
 					}
 				}
 			}
+		}
+		return false;
+	}
+
+	public function createZip($pathzip){
+		$zip = new \ZipArchive();
+		if($this->folder && is_dir($this->folder) && $zip->open($pathzip, \ZipArchive::CREATE) === TRUE) {
+			if(is_file($pathzip)){
+				@unlink($pathzip);
+			}
+			$filelist = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->folder), \RecursiveIteratorIterator::SELF_FIRST);
+			foreach ($filelist as $key => $file) {
+				if(!in_array($file->getFilename(), array('.', '..'))){
+					$basename = str_replace($this->folder, '', $key);
+					if(is_dir($key)){
+						$zip->addEmptyDir($basename);
+					} else if(is_file($key)){
+						$zip->addFile($key, $basename);
+					}
+				}
+			}
+			return $zip->close();
 		}
 		return false;
 	}
