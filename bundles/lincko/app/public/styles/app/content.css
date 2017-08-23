@@ -152,6 +152,16 @@
 	left: 4px;
 }
 
+#app_content_pc {
+	position: fixed;
+	z-index: 2;
+	font-size: 11px;
+	font-weight: 100;
+	bottom: 4px;
+	left: 4px;
+}
+
+
 #app_content_expiration {
 	position: fixed;
 	z-index: 2;
@@ -173,10 +183,7 @@
 	.app_content_top_title_next {
 		padding: 0 2px;
 	}
-	#app_content_powered {
-		font-size: 10px;
-	}
-	#app_content_expiration {
+	#app_content_powered, #app_content_pc, #app_content_expiration {
 		font-size: 10px;
 	}
 }

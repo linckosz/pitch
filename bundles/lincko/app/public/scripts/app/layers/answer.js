@@ -515,6 +515,7 @@ var app_layers_answer_feedPage = function(param){
 					//app_layers_answer_grumble_mask(); //Note: Can be annoying for UX because of the double click
 					app_layers_answer_grumble_1();
 					app_layers_answer_grumble_2();
+					app_layers_answer_grumble_3();
 				}, 400);
 			}
 		}
@@ -556,6 +557,26 @@ var app_layers_answer_grumble_action = function(){
 
 var app_layers_answer_grumble_1 = function(){
 	//http://jamescryer.github.io/grumble.js/
+	$('#app_content_top_home').grumble(
+		{
+			text: Lincko.Translation.get('app', 129, 'html'), //Main Menu
+			size: 100,
+			sizeRange: [100],
+			angle: 140,
+			distance: 8,
+			showAfter: 200,
+			hideOnClick: true,
+			type: 'alt-',
+			useRelativePositioning: false,
+			onBeginHide: function(){
+				app_layers_answer_grumble_action();
+			},
+		}
+	);
+};
+
+var app_layers_answer_grumble_2 = function(){
+	//http://jamescryer.github.io/grumble.js/
 	$('#app_layers_answer_preview').find("[find=eye]").grumble(
 		{
 			text: Lincko.Translation.get('app', 125, 'html'), //See how cool it will be!
@@ -563,7 +584,7 @@ var app_layers_answer_grumble_1 = function(){
 			sizeRange: [150],
 			angle: 200,
 			distance: 8,
-			showAfter: 200,
+			showAfter: 400,
 			hideOnClick: true,
 			type: 'alt-',
 			useRelativePositioning: true,
@@ -575,16 +596,16 @@ var app_layers_answer_grumble_1 = function(){
 	);
 };
 
-var app_layers_answer_grumble_2 = function(){
-	var grumble_2_distance = 2 + $('#app_layers_answer_url').find("[find=question]").outerHeight();
+var app_layers_answer_grumble_3 = function(){
+	var grumble_3_distance = 2 + $('#app_layers_answer_url').find("[find=question]").outerHeight();
 	$('#app_layers_answer_url').find("[find=ppt_wrapper]").grumble(
 		{
 			text: Lincko.Translation.get('app', 127, 'html'), //Download your PPT file sample here
 			size: 150,
 			sizeRange: [150],
 			angle: 340,
-			distance: grumble_2_distance,
-			showAfter: 200,
+			distance: grumble_3_distance,
+			showAfter: 600,
 			hideOnClick: true,
 			type: 'alt-',
 			useRelativePositioning: true,

@@ -113,5 +113,12 @@ $("#app_content_top_title_select_answers").on('click', function(){
 
 JSfiles.finish(function(){
 	app_content_menu.selection("pitch");
+	if(device_type()!='computer'){
+		$('#app_content_pc').removeClass('display_none');
+		$('#app_content_powered').addClass('display_none');
+	} else {
+		$('#app_content_pc').addClass('display_none');
+		$('#app_content_powered').removeClass('display_none');
+	}
 });
 

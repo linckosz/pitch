@@ -48,8 +48,10 @@
 	</div>
 </div>
 
-<div id="app_content_powered">Powered by <br class="maxMobileL" />Lincko</div>
+<span id="app_content_powered">Powered by <br class="maxMobileL" />Lincko</span>
 
-<div id="app_content_expiration">{{ _trans('app', 4, 21, 'brut', {'br': '<br class="maxMobileL" />'}) }}{# Free during the Beta phase #}</div>
+<span id="app_content_pc" class="display_none">{{ _trans('app', 4, 23, 'html') }}{# PC version: #}<br />https://{{ domain }}</span>
+
+<span id="app_content_expiration">{{ _trans('app', 4, 21, 'brut', {'br': '<br class="maxMobileL" />'}) }}{# Free during the Beta phase #}</span>
 
 <div id="end_app_content" class="visibility_hidden"></div>
