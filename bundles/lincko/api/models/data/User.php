@@ -175,7 +175,7 @@ class User extends ModelLincko {
 		$language = $app->trans->getClientLanguage();
 		if(!empty($language) && $language!=$this->language){
 			$this->language = strtolower($language);
-			$this->brutSave(); //Because the language settings doesn't need to be shown on front
+			$this->save();
 		}
 	}
 
@@ -200,6 +200,8 @@ class User extends ModelLincko {
 		$db->beginTransaction();
 		$committed = false;
 		try {
+			$language = $app->trans->getClientLanguage();
+
 			$pitch = new Pitch;
 			$pitch->title = $app->trans->getBRUT('data', 4, 0); //My Pitch
 			$pivot = new \stdClass;
@@ -269,21 +271,21 @@ class User extends ModelLincko {
 			foreach ($answers as $answer) {
 				if($answer->number==1){
 					$file_id = 10001;
-					if($this->language=='en'){ $file_id = 10005; }
+					if($language=='en'){ $file_id = 10005; }
 					$answer->title = '';
 				} else if($answer->number==2){ //correct
 					$file_id = 10002;
-					if($this->language=='en'){ $file_id = 10006; }
+					if($language=='en'){ $file_id = 10006; }
 					$answer->title = '';
 					$question->answer_id = $answer->id;
 					$question->save();
 				} else if($answer->number==3){
 					$file_id = 10003;
-					if($this->language=='en'){ $file_id = 10007; }
+					if($language=='en'){ $file_id = 10007; }
 					$answer->title = '';
 				} else if($answer->number==4){
 					$file_id = 10004;
-					if($this->language=='en'){ $file_id = 10008; }
+					if($language=='en'){ $file_id = 10008; }
 					$answer->title = '';
 				}
 				$file = File::find($file_id)->replicate();
@@ -305,19 +307,19 @@ class User extends ModelLincko {
 			foreach ($answers as $answer) {
 				if($answer->number==1){
 					$file_id = 10009;
-					if($this->language=='en'){ $file_id = 10013; }
+					if($language=='en'){ $file_id = 10013; }
 					$answer->title = $app->trans->getBRUT('data', 4, 12); //Cakes
 				} else if($answer->number==2){
 					$file_id = 10010;
-					if($this->language=='en'){ $file_id = 10014; }
+					if($language=='en'){ $file_id = 10014; }
 					$answer->title = $app->trans->getBRUT('data', 4, 13); //Ice Cream
 				} else if($answer->number==3){ //correct
 					$file_id = 10011;
-					if($this->language=='en'){ $file_id = 10015; }
+					if($language=='en'){ $file_id = 10015; }
 					$answer->title = $app->trans->getBRUT('data', 4, 14); //Cheese
 				} else if($answer->number==4){
 					$file_id = 10012;
-					if($this->language=='en'){ $file_id = 10016; }
+					if($language=='en'){ $file_id = 10016; }
 					$answer->title = $app->trans->getBRUT('data', 4, 15); //Fruits
 				}
 				$file = File::find($file_id)->replicate();

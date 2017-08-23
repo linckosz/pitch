@@ -4,6 +4,7 @@ namespace bundles\lincko\wrapper\controllers;
 
 use \bundles\lincko\wrapper\models\TranslationListJS;
 use \bundles\lincko\api\models\ModelLincko;
+use \bundles\lincko\api\models\data\User;
 use \libs\Vanquish;
 use \libs\Controller;
 use \libs\Json;
@@ -24,6 +25,7 @@ class ControllerTranslation extends Controller {
 		if(isset($data->translation_language) && is_string($data->translation_language)){
 			$data = strtolower($data->translation_language);
 			if(preg_match("/[\w-]{2,}/ui", $data)){
+				User::getUser()->setLanguage();
 				Vanquish::set(array('user_language' => $data));
 			}
 		}

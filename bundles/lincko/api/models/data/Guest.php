@@ -80,7 +80,7 @@ class Guest extends ModelLincko {
 		$language = $app->trans->getClientLanguage();
 		if(!empty($language) && $language!=$this->language){
 			$this->language = strtolower($language);
-			$this->brutSave(); //Because the language settings doesn't need to be shown on front
+			$this->save();
 		}
 	}
 
