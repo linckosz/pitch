@@ -25,6 +25,7 @@
 	color: rgba(255, 255, 255, 0.65);
 	display: table-cell;
 	width: 1px; /*Help to keep it small */
+	white-space: nowrap;
 }
 
 .models_question_top_title_textarea {
