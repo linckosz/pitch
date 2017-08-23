@@ -123,7 +123,7 @@ class ControllerPPT extends Controller {
 				//Do not refresh for answer
 				$app->lincko->data['data_stats_iframe'] .= '/static';
 				$app->lincko->data['data_pitch_url_hide'] = true;
-				$app->lincko->data['data_pitch_url_raw'] = $base_url.'/lincko/wrapper/images/generic/neutral.png?time=0';
+				$app->lincko->data['data_pitch_url_raw'] = $base_url.'/lincko/wrapper/images/generic/neutral.png';
 				$app->lincko->data['data_pitch_url'] = $app->lincko->data['data_pitch_url_raw'].'?time=0';
 			} else {
 				$app->lincko->data['data_pitch_url_raw'] = $base_url.'/ppt/qrcode/'.$questionid_enc.'.jpg';

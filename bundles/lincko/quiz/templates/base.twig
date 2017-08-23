@@ -86,7 +86,42 @@ var account_integration = {
 
 integration_wechat();
 
+var base_scanner = function(){};
 </script>
+{% if wechat_package_appId %}
+	<script src="{{ _filelatest('/scripts/libs/integration/jweixin-1.2.0.js') }}" type="text/javascript"></script>
+	<script>
+		$(function() {
+			//injection authentication
+			wx.config({
+				debug: false,
+				appId: "{{ wechat_package_appId }}",
+				timestamp: "{{ wechat_package_timestamp }}",
+				nonceStr: "{{ wechat_package_nonceStr }}",
+				signature: "{{ wechat_package_signature }}",
+				// list all APIs you are going to call in jsApiList
+				jsApiList: [
+					'scanQRCode',
+				],
+			});
+
+			wx.ready(function(){
+				//setup scanner to use wechat QR code scanner
+				base_scanner = function(){
+					wx.scanQRCode({
+						needResult: true,
+						desc: 'Lincko scanner',
+						success: function (res) {
+							if(res.resultStr){
+								window.location.href = res.resultStr;
+							}
+						},
+					});
+				};
+			});
+		});
+	</script>
+{% endif %}
 
 </head>
 <body id="body_lincko" class="base_color_text_white unselectable base_tapHighlight_off base_color_bg_main_gradient">

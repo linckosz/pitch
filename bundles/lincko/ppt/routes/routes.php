@@ -55,11 +55,11 @@ $app->group('/ppt', function () use ($app) {
 	->name('ppt_statsjs_get');
 
 	$app->get(
-		'/qrcode/:statisticsid.jpg',
+		'/qrcode/:questionid.jpg',
 		'\bundles\lincko\ppt\controllers\ControllerPPT:qrcode_get'
 	)
 	->conditions(array(
-		'statisticsid' => '[a-z0-9]+',
+		'questionid' => '[a-z0-9]+',
 	))
 	->name('ppt_qrcode_get');
 

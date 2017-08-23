@@ -11,16 +11,21 @@
 		</div>
 		<div id="quiz_result_answer_count">3</div>
 		{% if data_correct %}
-			<div id="quiz_result_answer_answer" class="display_none">
+			<div id="quiz_result_answer_answer">
 				{{ _trans('quiz', 0, 6, 'html') }}{# correct! #}
 			</div>
-			<img id="quiz_result_answer_gif" class="display_none" src="{{ _filelatest('/lincko/quiz/images/gif/correct01.gif') }}" />
+			<img id="quiz_result_answer_gif" src="{{ _filelatest('/lincko/quiz/images/gif/correct01.gif') }}" />
 		{% else %}
-			<div id="quiz_result_answer_answer" class="display_none">
+			<div id="quiz_result_answer_answer">
 				{{ _trans('quiz', 0, 10, 'html') }}{# not the one that I think is correct 😉 #}
 			</div>
-			<img id="quiz_result_answer_gif" class="display_none" src="{{ _filelatest('/lincko/quiz/images/gif/wrong04.gif') }}" />
+			<img id="quiz_result_answer_gif" src="{{ _filelatest('/lincko/quiz/images/gif/wrong04.gif') }}" />
 		{% endif %}
+	</div>
+
+	<div id="quiz_result_answer_scan">
+		<span id="quiz_result_answer_scan_sentence" >{{ _trans('quiz', 0, 15, 'html') }}{# Scan next quiz #}</span>
+		<img id="quiz_result_answer_scan_picture" src="{{ _filelatest('/lincko/quiz/images/phone.png') }}" />
 	</div>
 
 	<div class="quiz_result_answer_followus">
@@ -37,8 +42,8 @@
 					quiz_result_answer_count--;
 					if(quiz_result_answer_count==0){
 						clearInterval(quiz_result_answer_count_timer);
-						$("#quiz_result_answer_count").addClass("display_none");
-						$("#quiz_result_answer_answer, #quiz_result_answer_gif").removeClass("display_none");
+						$("#quiz_result_answer_count").css("visibility", "hidden");
+						$("#quiz_result_answer_answer, #quiz_result_answer_gif, #quiz_result_answer_scan").css("visibility", "visible");
 					} else {
 						$("#quiz_result_answer_count").html(quiz_result_answer_count);
 					}

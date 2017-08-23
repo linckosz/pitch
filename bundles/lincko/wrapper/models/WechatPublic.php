@@ -4,6 +4,7 @@
 namespace bundles\lincko\wrapper\models;
 
 use \bundles\lincko\api\models\base\Token;
+use \bundles\lincko\api\models\base\Action;
 use \libs\Wechat;
 use \libs\STR;
 
@@ -65,7 +66,7 @@ class WechatPublic {
 
 		self::$access_token = $access_token;
 		self::$expire_access_token = $expire_access_token;
-		self::$jsapi_ticket = $jsapi_tickett;
+		self::$jsapi_ticket = $jsapi_ticket;
 		self::$expire_jsapi_ticket = $expire_jsapi_ticket;
 
 	}
@@ -115,12 +116,7 @@ class WechatPublic {
 	public static function getPackage(){
 		$app = \Slim\Slim::getInstance();
 		$ticket = self::jsapi_ticket();
-		$url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'];
-		if($app->lincko->data['user_info_0'] == 'Macintosh'){
-			$url .= $_SERVER['REQUEST_URI'];
-		} else {
-			$url .= '/';
-		}
+		$url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 		$nonceStr = STR::random(16);
 		$timestamp = time();
 		$signature = sha1("jsapi_ticket=$ticket&noncestr=$nonceStr&timestamp=$timestamp&url=$url");

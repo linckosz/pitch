@@ -201,6 +201,9 @@ class ControllerWechat extends Controller {
 
 				$user->username = $result->nickname;
 				$user->gender = intval($result->sex);
+				if($user->gender!=1 && $user->gender!=2){
+					$user->gender == 1;
+				}
 				if(isset($result->headimgurl)){
 					$user->headimgurl = $result->headimgurl;
 				}

@@ -11,7 +11,7 @@
 		</noscript>
 		<script type="text/javascript">
 			var ppt_frame_right_top_src = function(){
-				return "{{ data_pitch_url_raw|raw }}?time"+(new Date()).getTime();
+				return "{{ data_pitch_url_raw|raw }}?time="+(new Date()).getTime(){% if body_preview %}+"&preview=1"{% endif %};
 			}
 		</script>
 		<script src="{{ _filelatest('/lincko/ppt/scripts/ppt/frame.js') }}" type="text/javascript"></script>

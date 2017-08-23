@@ -8,11 +8,13 @@ use \bundles\lincko\api\models\ModelLincko;
 use \bundles\lincko\api\models\Session;
 use \bundles\lincko\api\models\Statistics;
 use \bundles\lincko\api\models\Answered;
+use \bundles\lincko\api\models\base\Action;
 use \bundles\lincko\api\models\data\Answer;
 use \bundles\lincko\api\models\data\File;
 use \bundles\lincko\api\models\data\Question;
 use \bundles\lincko\api\models\data\Pitch;
 use \bundles\lincko\api\models\data\Guest;
+use \bundles\lincko\wrapper\models\WechatPublic;
 
 
 class ControllerQuiz extends Controller {
@@ -124,6 +126,15 @@ class ControllerQuiz extends Controller {
 
 	public function answer_get($statisticsid_enc, $answerid_enc){
 		$app = ModelLincko::getApp();
+		$user_info = Action::getUserInfo();
+		if($user_info[2] == 'Wechat'){
+			if($wechat_package = WechatPublic::getPackage()){
+				foreach ($wechat_package as $key => $value) {
+					$app->lincko->data['wechat_package_'.$key] = $value;
+					\libs\Watch::php($value, $key, __FILE__, __LINE__, false, false, true);
+				}
+			}
+		}
 		$app->lincko->data['data_answered'] = false;
 		$app->lincko->data['data_correct'] = false;
 		$answer_id = STR::integer_map($answerid_enc, true);
@@ -169,6 +180,10 @@ class ControllerQuiz extends Controller {
 							$answered->statistics_id = $statistics->id;
 							$answered->question_id = $question->id;
 							$answered->correct = $app->lincko->data['data_correct'];
+							$answered->info_0 = $user_info[0];
+							$answered->info_1 = $user_info[1];
+							$answered->info_2 = $user_info[2];
+							$answered->info_3 = $user_info[3];
 							try { //In case there is a doublon
 								$answered->save();
 							} catch (\Exception $e){
