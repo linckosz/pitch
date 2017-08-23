@@ -154,6 +154,7 @@ $app->lincko->data = array(
 	'uid' => false,
 	'guest_id' => false,
 	'domain' => $app->lincko->domain,
+	'http_host' => $app->lincko->http_host,
 	'title' => $app->lincko->title,
 	'lincko_dev' => $_SERVER['LINCKO_DEV'],
 	'lincko_wechat' => $_SERVER['LINCKO_WECHAT'],
