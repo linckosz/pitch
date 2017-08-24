@@ -42,6 +42,11 @@ class Pitch extends ModelLincko {
 		return $this->hasOne('\\bundles\\lincko\\api\\models\\data\\File', 'id', 'file_id');
 	}
 
+	//One(Pitch) to Many(Question)
+	public function question(){
+		return $this->hasMany('\\bundles\\lincko\\api\\models\\data\\Question', 'parent_id'); //parent_id => pitch_id
+	}
+
 ////////////////////////////////////////////
 
 	public static function setItem($form){

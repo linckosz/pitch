@@ -30,14 +30,20 @@ $app->post('/signout', function () use($app) {
 })
 ->name('_signout_post');
 
-$app->get(
-	'/app/sample/:questionid',
-	'\bundles\lincko\app\controllers\ControllerApp:sample_get'
-)
-->conditions(array(
-	'questionid' => '[a-z0-9]+',
-))
-->name('app_sample_get');
+	
+
+$app->group('/app/sample', function () use ($app) {
+
+	$app->get(
+		'/pitch/:pitchid',
+		'\bundles\lincko\app\controllers\ControllerApp:sample_pitch_get'
+	)
+	->conditions(array(
+		'pitchid' => '[a-z0-9]+',
+	))
+	->name('app_sample_pitch_get');
+
+});
 
 /*
 $app->get('/app/login', function () use($app) {

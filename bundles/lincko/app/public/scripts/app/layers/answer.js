@@ -418,10 +418,10 @@ var app_layers_answer_feedPage = function(param){
 		event.clearSelection();
 	});
 
-	Elem.find("[find=ppt]").on('click', question['id'], function(event){
+	Elem.find("[find=ppt]").on('click', pitch['id'], function(event){
 		event.stopPropagation();
-		var ppt_url = top.location.protocol+'//'+document.domain+"/app/sample/"+wrapper_integer_map(event.data);
-		device_download(ppt_url, "_blank", "sample.pptx");
+		var ppt_url = top.location.protocol+'//'+document.domain+"/app/sample/pitch/"+wrapper_integer_map(event.data);
+		device_download(ppt_url, "_blank", "pitch.pptx");
 	});
 
 	Elem.appendTo(position_wrapper);
@@ -600,7 +600,7 @@ var app_layers_answer_grumble_3 = function(){
 	var grumble_3_distance = 2 + $('#app_layers_answer_url').find("[find=question]").outerHeight();
 	$('#app_layers_answer_url').find("[find=ppt_wrapper]").grumble(
 		{
-			text: Lincko.Translation.get('app', 127, 'html'), //Download your PPT file sample here
+			text: Lincko.Translation.get('app', 127, 'html'), //Download your PPT file here
 			size: 150,
 			sizeRange: [150],
 			angle: 340,

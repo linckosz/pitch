@@ -34,6 +34,7 @@ class Question extends ModelLincko {
 		'parent_id',
 		'answer_id',
 		'file_id',
+		'sort',
 	);
 
 	public $parent_type = 'pitch';
@@ -42,6 +43,7 @@ class Question extends ModelLincko {
 		'parent_id',
 		'answer_id',
 		'style',
+		'sort',
 	);
 
 ////////////////////////////////////////////
