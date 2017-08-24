@@ -5,12 +5,25 @@ namespace bundles\lincko\app\controllers;
 use \libs\Controller;
 use \libs\STR;
 use \libs\Folders;
+use \libs\Json;
 use \bundles\lincko\api\models\ModelLincko;
 use \bundles\lincko\api\models\data\Pitch;
 use \bundles\lincko\api\models\data\Question;
 use \bundles\lincko\api\models\data\User;
 
 class ControllerApp extends Controller {
+
+	public function refresh_post(){
+		$msg = 'error';
+		if(User::isAdmin()){
+			if(User::refreshAll()){
+				$msg = 'OK';
+			}
+		}
+		$msg = array('msg' => $msg);
+		(new Json($msg))->render();
+		return exit(0);
+	}
 
 	public function sample_pitch_get($pitchid_enc){
 		$app = ModelLincko::getApp();

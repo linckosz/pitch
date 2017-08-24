@@ -23,6 +23,12 @@ $app->post('/app/signout', function () use($app) {
 })
 ->name('app_signout_post');
 
+$app->post(
+	'/app/refresh',
+	'\bundles\lincko\app\controllers\ControllerApp:refresh_post'
+)
+->name('app_refresh_get');
+
 $app->post('/signout', function () use($app) {
 	Vanquish::unsetAll(array('user_language'));
 	\bundles\lincko\wrapper\hooks\SetLogin();

@@ -29,7 +29,7 @@ class ControllerData extends Controller {
 		$lastvisit_ms = false;
 
 		//Note: There is a very low probability that one object has been created exactly at the same milliseconds, but should never happen with the same user.
-		if(isset($data->lastvisit_ms) && is_integer($data->lastvisit_ms)){
+		if(isset($data->lastvisit_ms) && is_integer($data->lastvisit_ms) && !User::needRefresh()){
 			$lastvisit_ms = (int) $data->lastvisit_ms;
 		}
 

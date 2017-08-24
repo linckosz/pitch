@@ -170,6 +170,30 @@ class User extends ModelLincko {
 		return static::$me;
 	}
 
+	public static function isAdmin(){
+		if(User::getUser()->admin){
+			return true;
+		}
+		return false;
+	}
+
+	public static function refreshAll(){
+		if(User::isAdmin()){
+			User::withTrashed()->where('refresh', false)->getQuery()->update(['refresh' => true]);
+			return true;
+		}
+		return false;
+	}
+
+	public static function needRefresh(){
+		$user = User::getUser();
+		if($user->refresh){
+			User::withTrashed()->where('id', $user->id)->getQuery()->update(['refresh' => false]);
+			return true;
+		}
+		return false;
+	}
+
 	public function setLanguage(){
 		$app = ModelLincko::getApp();
 		$language = $app->trans->getClientLanguage();
