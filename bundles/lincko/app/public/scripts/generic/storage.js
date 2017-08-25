@@ -100,11 +100,15 @@ var storage_offline = function(data){
 
 var storage_cb_success = function(msg, err, status, data){
 	var info = false;
+	var refresh = false;
 	if(typeof data.info == 'string'){
 		info = data.info;
 	}
+	if(typeof data.refresh == 'boolean'){
+		refresh = data.refresh;
+	}
 	if(typeof data == 'object' && typeof data.data == 'object' && data.data){
-		Lincko.storage.update(data.data, info);
+		Lincko.storage.update(data.data, info, refresh);
 	}
 };
 
@@ -269,8 +273,9 @@ setInterval(function(){
 }, 10000);
 
 //Function that update the localweb database
-Lincko.storage.update = function(data, info){
+Lincko.storage.update = function(data, info, refresh){
 	if(typeof info != 'string'){ info = false }
+	if(typeof refresh == 'undefined'){ refresh = false }
 	var partial;
 	var update_global = false;
 	var update_item = false;
@@ -288,7 +293,7 @@ Lincko.storage.update = function(data, info){
 					update_item = true;
 					synchro['new'] = 'new';
 					synchro[i+'_new'] = i+'_new';
-				} else if(partial[i][j]['updated_ms'] != Lincko.storage.data[i][j]['updated_ms']){
+				} else if(refresh || partial[i][j]['updated_ms'] != Lincko.storage.data[i][j]['updated_ms']){
 					
 					//Compare with offline data and update if necessary
 					offline_data = {};

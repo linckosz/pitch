@@ -86,7 +86,7 @@ var app_layers_answer_feedPage = function(param){
 						that.val(str);
 					}
 					var rows_prev = parseInt(that.attr('rows'), 10);
-					that.textareaRows(3);
+					that.textareaRows();
 					if(rows_prev != parseInt(that.attr('rows'), 10)){
 						wrapper_IScroll();
 					}
@@ -102,7 +102,7 @@ var app_layers_answer_feedPage = function(param){
 				$(this).blur();
 			}
 			var rows_prev = parseInt($(this).attr('rows'), 10);
-			$(this).textareaRows(3);
+			$(this).textareaRows();
 			if(rows_prev != parseInt($(this).attr('rows'), 10)){
 				wrapper_IScroll();
 			}
@@ -165,7 +165,7 @@ var app_layers_answer_feedPage = function(param){
 						that.val(str);
 					}
 					var rows_prev = parseInt(that.attr('rows'), 10);
-					that.textareaRows(3);
+					that.textareaRows();
 					if(rows_prev != parseInt(that.attr('rows'), 10)){
 						wrapper_IScroll();
 					}
@@ -181,7 +181,7 @@ var app_layers_answer_feedPage = function(param){
 				$(this).blur();
 			}
 			var rows_prev = parseInt($(this).attr('rows'), 10);
-			$(this).textareaRows(3);
+			$(this).textareaRows();
 			if(rows_prev != parseInt($(this).attr('rows'), 10)){
 				wrapper_IScroll();
 			}
@@ -421,7 +421,7 @@ var app_layers_answer_feedPage = function(param){
 	Elem.find("[find=ppt]").on('click', pitch['id'], function(event){
 		event.stopPropagation();
 		var ppt_url = top.location.protocol+'//'+document.domain+"/app/sample/pitch/"+wrapper_integer_map(event.data);
-		device_download(ppt_url, "_blank", "pitch.pptx");
+		device_download(ppt_url, "_blank", "error.txt");
 	});
 
 	Elem.appendTo(position_wrapper);
@@ -597,7 +597,7 @@ var app_layers_answer_grumble_2 = function(){
 };
 
 var app_layers_answer_grumble_3 = function(){
-	var grumble_3_distance = 2 + $('#app_layers_answer_url').find("[find=question]").outerHeight();
+	var grumble_3_distance = 2 + $('#app_layers_answer_url').find("[find=ppt]").outerHeight();
 	$('#app_layers_answer_url').find("[find=ppt_wrapper]").grumble(
 		{
 			text: Lincko.Translation.get('app', 127, 'html'), //Download your PPT file here

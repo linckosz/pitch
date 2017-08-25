@@ -15,7 +15,7 @@
 }
 
 .models_pitch_top_title {
-	font-size: 12px;
+	font-size: 14px;
 	color: rgba(255, 255, 255, 0.9);
 	display: table;
 	width: 100%;
@@ -35,7 +35,7 @@
 	border: none;
 	background-color: transparent;
 	color: rgba(255, 255, 255, 0.9);
-	font-size: 12px;
+	font-size: 14px;
 	font-weight: 200;
 	resize: none;
 	overflow: hidden;
@@ -81,20 +81,11 @@
 	height: 100%;
 	font-size: 22px;
 	color: rgba(255, 255, 255, 0.9);
+	padding-right: 18px;
 }
 
 .models_pitch_standard:hover {
 	border-color: rgba(255, 255, 255, 0.5);
-}
-
-.models_pitch_standard_edit_top {
-	cursor: pointer;
-	position: absolute;
-	left: 0;
-	top: 0;
-	font-size: 18px;
-	color: rgba(255, 255, 255, 0.6);
-	padding: 6px;
 }
 
 .models_pitch_standard_edit {
@@ -105,10 +96,10 @@
 	font-size: 22px;
 	color: rgba(255, 255, 255, 0.6);
 }
-.models_pitch_standard_edit:hover, .models_pitch_standard_edit_top:hover {
+.models_pitch_standard_edit:hover {
 	color: rgba(255, 255, 255, 0.9);
 }
-.models_pitch_standard_edit:active, .models_pitch_standard_edit_top:active {
+.models_pitch_standard_edit:active {
 	color: #FFFFFF;
 }
 
@@ -169,21 +160,15 @@
 		margin: 10px;
 		width: 45%;
 	}
-	.models_pitch_standard_edit_top {
-		font-size: 20px;
-	}
 	.models_pitch_top_title, .models_pitch_top_title_textarea {
-		font-size: 14px;
+		font-size: 16px;
 	}
 }
 
 /* Tablet in Landscape and PC */
 @media only screen and (min-width: 901px){
-	.models_pitch_standard_edit_top {
-		font-size: 24px;
-	}
 	.models_pitch_top_title, .models_pitch_top_title_textarea {
-		font-size: 16px;
+		font-size: 20px;
 	}
 }
 

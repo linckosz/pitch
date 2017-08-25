@@ -321,13 +321,20 @@ var wrapper_IScroll_refresh = function(){
 		myIScrollList[i] = null;
 		delete myIScrollList[i];
 	}
-}
+};
+
+var wrapper_textarea = function(){
+	$('body').find("textarea").each(function(){ $(this).textareaRows(); });
+};
 
 var wrapper_timeout_timer = 200;
 var wrapper_IScroll_timer;
 $(window).resize(function(){
 	clearTimeout(wrapper_IScroll_timer);
-	wrapper_IScroll_timer = setTimeout(wrapper_IScroll, wrapper_timeout_timer);
+	wrapper_IScroll_timer = setTimeout(function(){
+		wrapper_textarea();
+		wrapper_IScroll();
+	}, wrapper_timeout_timer);
 });
 
 //http://stackoverflow.com/questions/23885255/how-to-remove-ignore-hover-css-style-on-touch-devices
@@ -355,7 +362,7 @@ function wrapper_mobile_hover(){
 			}
 		} catch (ex) {}
 	}
-}
+};
 
 //Set indice performance to run some javascript (mainly animation) on powerfull devices
 var wrapper_performance = {

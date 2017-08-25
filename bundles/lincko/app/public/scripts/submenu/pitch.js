@@ -2,7 +2,7 @@ submenu_list['app_pitch_new'] = {
 	//Set the title of the top
 	"_title": {
 		"style": "title",
-		"title": Lincko.Translation.get('app', 2101, 'html'), //New Pitch
+		"title": Lincko.Translation.get('app', 2111, 'html'), //Pitch
 	},
 	"pitch_title": {
 		"style": "input_text",
@@ -79,7 +79,7 @@ submenu_list['app_pitch_edit'] = {
 	//Set the title of the top
 	"_title": {
 		"style": "title",
-		"title": Lincko.Translation.get('app', 2102, 'html'), //Edit Pitch
+		"title": Lincko.Translation.get('app', 2111, 'html'), //Pitch
 	},
 	"pitch_title": {
 		"style": "input_text",

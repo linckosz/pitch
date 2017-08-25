@@ -2,7 +2,7 @@ submenu_list['app_question_new'] = {
 	//Set the title of the top
 	"_title": {
 		"style": "title",
-		"title": Lincko.Translation.get('app', 2104, 'html'), //New Question
+		"title": Lincko.Translation.get('app', 2112, 'html'), //Question
 	},
 	"question_title": {
 		"style": "input_text",
@@ -82,7 +82,7 @@ submenu_list['app_question_edit'] = {
 	//Set the title of the top
 	"_title": {
 		"style": "title",
-		"title": Lincko.Translation.get('app', 2105, 'html'), //Edit Question
+		"title": Lincko.Translation.get('app', 2112, 'html'), //Question
 	},
 	"question_title": {
 		"style": "input_text",

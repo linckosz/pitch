@@ -89,15 +89,9 @@ class ControllerQuiz extends Controller {
 				$i++;
 			}
 
-			if($question->style==3){
-				$app->lincko->data['title'] = $app->trans->getBRUT('quiz', 0, 13).' - '.$app->trans->getBRUT('quiz', 0, 14); //Statistics - Single choice
-				$app->render('/bundles/lincko/quiz/templates/quiz/qanda/questions.twig');
-				return true;
-			} else {
-				$app->lincko->data['title'] = $app->trans->getBRUT('quiz', 0, 12).' - '.$app->trans->getBRUT('quiz', 0, 14); //Question - Single choice
-				$app->render('/bundles/lincko/quiz/templates/quiz/qanda/questions.twig');
-				return true;
-			}
+			$app->lincko->data['title'] = $app->trans->getBRUT('quiz', 0, 14); //Single choice
+			$app->render('/bundles/lincko/quiz/templates/quiz/qanda/questions.twig');
+			return true;
 		}
 		$app->render('/bundles/lincko/quiz/templates/generic/sorry.twig');
 		return true;
@@ -145,11 +139,10 @@ class ControllerQuiz extends Controller {
 					if($answer->id == $question->answer_id){
 						$app->lincko->data['data_correct'] = true;
 					}
+					$app->lincko->data['title'] = $app->trans->getBRUT('quiz', 0, 16); //Result
 					if($question->style==3){
-						$app->lincko->data['title'] = $app->trans->getBRUT('quiz', 0, 13); //Statistics
 						$app->render('/bundles/lincko/quiz/templates/quiz/result/statistics.twig');
 					} else {
-						$app->lincko->data['title'] = $app->trans->getBRUT('quiz', 0, 12); //Question
 						$app->render('/bundles/lincko/quiz/templates/quiz/result/answer.twig');
 					}
 					return true;
@@ -188,11 +181,10 @@ class ControllerQuiz extends Controller {
 							} catch (\Exception $e){
 								//Do nothing
 							}
+							$app->lincko->data['title'] = $app->trans->getBRUT('quiz', 0, 16); //Result
 							if($question->style==3){
-								$app->lincko->data['title'] = $app->trans->getBRUT('quiz', 0, 13); //Statistics
 								$app->render('/bundles/lincko/quiz/templates/quiz/result/statistics.twig');
 							} else {
-								$app->lincko->data['title'] = $app->trans->getBRUT('quiz', 0, 12); //Question
 								$app->render('/bundles/lincko/quiz/templates/quiz/result/answer.twig');
 							}
 							return true;

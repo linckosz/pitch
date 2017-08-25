@@ -42,8 +42,9 @@ class Question extends ModelLincko {
 	protected $model_integer = array(
 		'parent_id',
 		'answer_id',
-		'style',
+		'file_id',
 		'sort',
+		'style',
 	);
 
 ////////////////////////////////////////////

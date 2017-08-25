@@ -47,8 +47,11 @@ var app_layers_pitch_feedPage = function(param){
 			var param = {
 				number: items.length+1,
 			};
-			$(this).find("[find=input_textarea]").val(Lincko.Translation.get('app', 2103, 'html', param)); //Pitch #[{number]}
-			$(this).find("[find=input_textarea]").focus();
+			$(this).find("[find=input_textarea]")
+				.val(Lincko.Translation.get('app', 2103, 'html', param)) //Pitch #[{number]}
+				.focus()
+				.select()
+				.textareaRows();
 			wrapper_IScroll();
 		}
 	});
@@ -110,7 +113,7 @@ var app_layers_pitch_feedPage = function(param){
 	Elem.prop('id', '');
 	Elem.click(param, function(event){
 		event.stopPropagation();
-		submenu_Build("app_pitch_new", 1, true, event.data);
+		$('#app_layers_pitch_add_icon').click();
 	});
 	Elem.appendTo(layer);
 
@@ -148,6 +151,7 @@ var app_layers_pitch_feedPage = function(param){
 	app_layers_pitch_new_animation = false;
 	app_application_lincko.add("app_layers_pitch", "pitch", function(){
 		var items = Lincko.storage.list('pitch');
+		items = Lincko.storage.sort_items(items, 'sort', 0, -1, false);
 		var item;
 		var Elem;
 		var position;
@@ -164,7 +168,27 @@ var app_layers_pitch_feedPage = function(param){
 					item['id'],
 					function(event){
 						event.stopPropagation();
-						submenu_Build("app_pitch_edit", 1, true, event.data);
+						if(confirm(Lincko.Translation.get('app', 26, 'js'))){ //Are you sure you want to delete this item?
+							var data = {};
+							data.delete = {};
+							data.delete.pitch = {};
+							var item = Lincko.storage.get('pitch', event.data);
+							data.delete.pitch[item['id']] = {
+								id: item['id'],
+								md5: item['md5'],
+							};
+							var action_cb_success = function(msg, error, status, extra){
+								storage_cb_success(msg, error, status, extra);
+								app_content_menu.selection("pitch");
+							}
+							var action_cb_complete = function(){
+								storage_cb_complete();
+								app_application_lincko.prepare("pitch", true);
+							};
+							if(storage_offline(data)){
+								wrapper_sendAction(data, 'post', 'api/data/set', action_cb_success, storage_cb_error, storage_cb_begin, action_cb_complete);
+							}
+						}
 					}
 				);
 				Elem.click(

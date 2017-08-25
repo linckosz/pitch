@@ -85,12 +85,20 @@ var wrapper_time_checkpoint = function(msg, reset, show){
 
 //Adjust the high of a textarea according to the line
 //Limit to 5 by default
-$.fn.textareaRows = function(limit){
-	if(typeof limit == 'undefined'){ limit = 5; }
+$.fn.textareaRows = function(){
+	var maxrows = parseInt(this.attr('maxrows'), 10);
+	if(typeof maxrows == 'undefined' || !maxrows || maxrows<=0){
+		maxrows = 5;
+	}
 	var scrollbar = this.get(0).scrollHeight - this.outerHeight(); //Negative means no scrollbar
 	var rows = parseInt(this.attr('rows'), 10);
+	while(rows>maxrows && rows>1){
+		rows--;
+		this.attr('rows', rows);
+		scrollbar = this.get(0).scrollHeight - this.outerHeight();
+	}
 	if(scrollbar > 0){
-		while(scrollbar > 0 && rows<=limit){
+		while(scrollbar > 0 && rows<maxrows){
 			rows++;
 			this.attr('rows', rows);
 			scrollbar = this.get(0).scrollHeight - this.outerHeight();

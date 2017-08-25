@@ -28,6 +28,12 @@ class Pitch extends ModelLincko {
 		'updated_json',
 		'title',
 		'file_id',
+		'sort',
+	);
+
+	protected $model_integer = array(
+		'file_id',
+		'sort',
 	);
 
 ////////////////////////////////////////////

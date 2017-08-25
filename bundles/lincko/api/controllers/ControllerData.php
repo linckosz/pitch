@@ -28,8 +28,10 @@ class ControllerData extends Controller {
 		$result->read = new \stdClass;
 		$lastvisit_ms = false;
 
+		$refresh = User::needRefresh();
+
 		//Note: There is a very low probability that one object has been created exactly at the same milliseconds, but should never happen with the same user.
-		if(isset($data->lastvisit_ms) && is_integer($data->lastvisit_ms) && !User::needRefresh()){
+		if(isset($data->lastvisit_ms) && is_integer($data->lastvisit_ms) && !$refresh){
 			$lastvisit_ms = (int) $data->lastvisit_ms;
 		}
 
@@ -60,10 +62,13 @@ class ControllerData extends Controller {
 
 		self::additional_data($result);
 
-		if($lastvisit_ms){
-			$msg = array('data' => $result);
-		} else {
-			$msg = array('data' => $result, 'info' => 'all');
+		$msg = array();
+		$msg['data'] = $result;
+		if(!$lastvisit_ms){
+			$msg['info'] = 'all';
+		}
+		if($refresh){
+			$msg['refresh'] = true;
 		}
 		(new Json($msg))->render();
 		return exit(0);

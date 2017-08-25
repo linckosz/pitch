@@ -25,8 +25,10 @@ class ControllerTranslation extends Controller {
 		if(isset($data->translation_language) && is_string($data->translation_language)){
 			$data = strtolower($data->translation_language);
 			if(preg_match("/[\w-]{2,}/ui", $data)){
-				User::getUser()->setLanguage();
 				Vanquish::set(array('user_language' => $data));
+				if($user = User::getUser()){
+					$user->setLanguage();
+				}
 			}
 		}
 		(new Json())->render();

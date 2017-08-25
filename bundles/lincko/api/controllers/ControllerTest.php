@@ -44,7 +44,7 @@ class ControllerTest extends Controller {
 		$app->lincko->time_record = true; //Display timing
 		$tp = null;
 
-		$tp = str_replace('a', 'b', 'blah blah blater!');
+		
 
 		//wrapper_sendAction('', 'post', 'api/test');
 		//\libs\Watch::php( $db->getQueryLog() , 'QueryLog', __FILE__, __LINE__, false, false, true);

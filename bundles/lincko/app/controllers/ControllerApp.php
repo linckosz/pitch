@@ -34,7 +34,7 @@ class ControllerApp extends Controller {
 		
 		if($pitch = Pitch::find($pitch_id)){
 
-			$lincko_info = $app->trans->getBRUT('app', 6, 1); //Please use PowerPoint 2013 or later, with its Add-in Web Viewer installed. And click on "Enable Editing" if you see the notification. Or simply use any browser.
+			$lincko_info = $app->trans->getBRUT('app', 6, 1); //1) Please use PowerPoint 2013 or later, with its Add-in Web Viewer installed. And click on "Enable Editing" if you see the notification. 2) Or simply use any browser.
 
 			$folder = new Folders;
 			$folder->createPath($app->lincko->filePath.'/sample/');
@@ -46,7 +46,7 @@ class ControllerApp extends Controller {
 			}
 			$files = $folder->loopFolder(true);
 
-			$ppt = $app->lincko->path.'/bundles/lincko/app/models/sample/pitch30.pptx';
+			$ppt = $app->lincko->path.'/bundles/lincko/app/models/sample/pitch.pptx';
 			$ppt_temp = $app->lincko->filePath.'/sample/pitch_'.$pitchid_enc.'_'.time().'.pptx';
 
 			copy($ppt, $ppt_temp);
@@ -62,28 +62,47 @@ class ControllerApp extends Controller {
 				$i++;
 			}
 
-			$lincko_pitch = $pitch->title; //title
-			$lincko_by = User::getUser()->username; //By Bruno Martin mad1ssw
+			$questions = $pitch->question()->orderBy('sort', 'DESC')->orderBy('id', 'ASC')->get(array('id', 'style', 'title'));
+
+			$lincko_pitch_title = $pitch->title; //title
+			$lincko_by = $app->trans->getBRUT('app', 6, 7).User::getUser()->username; //By Bruno Martin 马丁
 			$content = 'ppt/slides/slide1.xml';
 			$xml = $zip->getFromName($content);
 			if(!empty($xml)){
-				$xml = preg_replace("/lincko_pitch/i", $lincko_pitch, $xml);
+				$xml = preg_replace("/lincko_pitch_title/i", $lincko_pitch_title, $xml);
 				$xml = preg_replace("/lincko_by/i", $lincko_by, $xml);
 				$zip->addFromString($content, $xml);
 			}
 
-			$lincko_pitch = $app->trans->getBRUT('app', 6, 2).$pitch->title; //Pitch: title
+			$lincko_url = false;
+			foreach ($questions as $question) {
+				$questionid_enc = STR::integer_map($question->id);
+				$lincko_url = $app->lincko->http_host.'/ppt/question/'.$questionid_enc;
+				break;
+			}
+
+			$lincko_pitch = $app->trans->getBRUT('app', 6, 2).$pitch->title; //Title: title
 			$content = 'ppt/notesSlides/notesSlide1.xml';
 			$xml = $zip->getFromName($content);
 			if(!empty($xml)){
+				if($lincko_url){
+					$xml = preg_replace("/lincko_url/i", $lincko_url, $xml);
+				} else {
+					$xml = preg_replace("/https://lincko_url/i", '', $xml);
+				}
 				$xml = preg_replace("/lincko_pitch/i", $lincko_pitch, $xml);
 				$xml = preg_replace("/lincko_info/i", $lincko_info, $xml);
 				$zip->addFromString($content, $xml);
 			}
 
-			$questions = $pitch->question()->orderBy('sort', 'ASC')->orderBy('id', 'ASC')->get(array('id', 'style', 'title'));
+			$tbs = new \clsTinyButStrong;
+			$tbs->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
+			$tbs->LoadTemplate($ppt);
+			$page_max = $tbs->Plugin(OPENTBS_COUNT_SLIDES)-1;
+			$tbs->LoadTemplate(false);
+
 			$page = 2;
-			$page_max = 61;
+			
 			$nbr = 1;
 			foreach ($questions as $question) {
 				$questionid_enc = STR::integer_map($question->id);
