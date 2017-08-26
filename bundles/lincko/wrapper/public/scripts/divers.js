@@ -90,6 +90,7 @@ $.fn.textareaRows = function(){
 	if(typeof maxrows == 'undefined' || !maxrows || maxrows<=0){
 		maxrows = 5;
 	}
+	var tolerance = 2; //Give 2px tolerance for chinese character display issue (android as a small offset)
 	var scrollbar = this.get(0).scrollHeight - this.outerHeight(); //Negative means no scrollbar
 	var rows = parseInt(this.attr('rows'), 10);
 	while(rows>maxrows && rows>1){
@@ -97,19 +98,19 @@ $.fn.textareaRows = function(){
 		this.attr('rows', rows);
 		scrollbar = this.get(0).scrollHeight - this.outerHeight();
 	}
-	if(scrollbar > 0){
-		while(scrollbar > 0 && rows<maxrows){
+	if(scrollbar > tolerance){
+		while(scrollbar > tolerance && rows<maxrows){
 			rows++;
 			this.attr('rows', rows);
 			scrollbar = this.get(0).scrollHeight - this.outerHeight();
 		}
 	} else {
-		while(scrollbar <= 0 && rows>1){
+		while(scrollbar <= tolerance && rows>1){
 			rows--;
 			this.attr('rows', rows);
 			scrollbar = this.get(0).scrollHeight - this.outerHeight();
 		}
-		if(scrollbar > 0){
+		if(scrollbar > tolerance){
 			rows++;
 			this.attr('rows', rows);
 		}

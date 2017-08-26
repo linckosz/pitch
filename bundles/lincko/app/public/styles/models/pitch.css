@@ -82,9 +82,9 @@
 	color: #FFFFFF;
 	background-color: #7BB1A9;
 	border-radius: 2px;
-	padding: 6px;
+	padding: 28px 10px;
 	margin: 20px;
-	display: inline-table;
+	display: inline-block;
 	border: 2px solid transparent;
 	cursor: pointer;
 	width: 25%;

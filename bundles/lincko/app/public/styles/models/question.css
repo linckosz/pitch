@@ -60,7 +60,7 @@
 	border-radius: 2px;
 	padding: 6px;
 	margin: 6px;
-	display: inline-table;
+	display: inline-block;
 	border: 2px solid transparent;
 	cursor: pointer;
 	width: 80%;
@@ -78,7 +78,7 @@
 	display: block;
 	text-align: left;
 	vertical-align: middle;
-	width: 100%;
+	width: 96%;
 	height: 100%;
 	font-size: 22px;
 	color: rgba(255, 255, 255, 0.9);
