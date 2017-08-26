@@ -70,10 +70,12 @@
 	text-align: left;
 	box-sizing: border-box;
 	min-height: 30px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .models_question_standard_title {
-	display: table-cell;
+	display: block;
 	text-align: left;
 	vertical-align: middle;
 	width: 100%;
@@ -81,6 +83,8 @@
 	font-size: 22px;
 	color: rgba(255, 255, 255, 0.9);
 	padding-right: 16px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .models_question_standard:hover {
@@ -129,6 +133,7 @@
 /* Mobile phone in Portrait */
 @media only screen and (max-width: 900px){
 	.models_question_standard {
+		display: block;
 		border-radius: 0;
 		border-width: 0;
 		border-color: transparent;
