@@ -63,6 +63,10 @@ var app_layers_answer_feedPage = function(param){
 		//Create new item
 		pitch_timer[item['id']] = null;
 		Elem.find("[find=input_textarea]").on('blur keyup input', item['id'], function(event){
+			var timer = 2000;
+			if(event.type=="blur"){
+				timer = 0;
+			}
 			var str = $(this).val();
 			var pitch_id = event.data;
 			var pitch = Lincko.storage.get('pitch', pitch_id);
@@ -82,7 +86,7 @@ var app_layers_answer_feedPage = function(param){
 				if(storage_offline(data)){
 					wrapper_sendAction(data, 'post', 'api/data/set', storage_cb_success, storage_cb_error, storage_cb_begin, storage_cb_complete);
 				}
-			}, 2000, pitch_id, data);
+			}, timer, pitch_id, data);
 		});
 		//Disable New Line
 		Elem.find("[find=input_textarea]").on('keydown keypress change copy paste cut input', function(event){
@@ -142,6 +146,10 @@ var app_layers_answer_feedPage = function(param){
 		//Create new item
 		question_timer[item['id']] = null;
 		Elem.find("[find=input_textarea]").on('blur keyup input', item['id'], function(event){
+			var timer = 2000;
+			if(event.type=="blur"){
+				timer = 0;
+			}
 			var str = $(this).val();
 			var question_id = event.data;
 			var question = Lincko.storage.get('question', question_id);
@@ -161,7 +169,7 @@ var app_layers_answer_feedPage = function(param){
 				if(storage_offline(data)){
 					wrapper_sendAction(data, 'post', 'api/data/set', storage_cb_success, storage_cb_error, storage_cb_begin, storage_cb_complete);
 				}
-			}, 2000, question_id, data);
+			}, timer, question_id, data);
 		});
 		//Disable New Line
 		Elem.find("[find=input_textarea]").on('keydown keypress change copy paste cut input', function(event){
@@ -301,6 +309,10 @@ var app_layers_answer_feedPage = function(param){
 		//Create new item
 		answer_timer[item['id']] = null;
 		Elem.find("[find=input_textarea]").on('blur keyup input', item['id'], function(event){
+			var timer = 2000;
+			if(event.type=="blur"){
+				timer = 0;
+			}
 			var str = $(this).val();
 			var answer_id = event.data;
 			var answer = Lincko.storage.get('answer', answer_id);
@@ -326,7 +338,7 @@ var app_layers_answer_feedPage = function(param){
 				if(storage_offline(data)){
 					wrapper_sendAction(data, 'post', 'api/data/set', storage_cb_success, storage_cb_error, storage_cb_begin, storage_cb_complete);
 				}
-			}, 2000, answer_id, data);
+			}, timer, answer_id, data);
 		});
 		//Disable New Line
 		Elem.find("[find=input_textarea]").on('keydown keypress change copy paste cut input', function(event){

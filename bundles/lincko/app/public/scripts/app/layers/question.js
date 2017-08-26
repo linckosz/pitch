@@ -54,6 +54,10 @@ var app_layers_question_feedPage = function(param){
 		//Create new item
 		pitch_timer[item['id']] = null;
 		Elem.find("[find=input_textarea]").on('blur keyup input', item['id'], function(event){
+			var timer = 2000;
+			if(event.type=="blur"){
+				timer = 0;
+			}
 			var str = $(this).val();
 			var pitch_id = event.data;
 			var pitch = Lincko.storage.get('pitch', pitch_id);
@@ -73,7 +77,7 @@ var app_layers_question_feedPage = function(param){
 				if(storage_offline(data)){
 					wrapper_sendAction(data, 'post', 'api/data/set', storage_cb_success, storage_cb_error, storage_cb_begin, storage_cb_complete);
 				}
-			}, 2000, pitch_id, data);
+			}, timer, pitch_id, data);
 		});
 		//Disable New Line
 		Elem.find("[find=input_textarea]").on('keydown keypress change copy paste cut input', function(event){
