@@ -27,12 +27,17 @@ class ControllerData extends Controller {
 		$result = new \stdClass;
 		$result->read = new \stdClass;
 		$lastvisit_ms = false;
-
-		$refresh = User::needRefresh();
-
+		
 		//Note: There is a very low probability that one object has been created exactly at the same milliseconds, but should never happen with the same user.
-		if(isset($data->lastvisit_ms) && is_integer($data->lastvisit_ms) && !$refresh){
+		if(isset($data->lastvisit_ms) && is_integer($data->lastvisit_ms)){
 			$lastvisit_ms = (int) $data->lastvisit_ms;
+		}
+
+		$refresh = User::getUser()->refresh;
+		if($refresh>$lastvisit_ms){
+			$lastvisit_ms = false;
+		} else {
+			$refresh = false;
 		}
 
 		$list = array();

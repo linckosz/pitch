@@ -179,16 +179,7 @@ class User extends ModelLincko {
 
 	public static function refreshAll(){
 		if(User::isAdmin()){
-			User::withTrashed()->where('refresh', false)->getQuery()->update(['refresh' => true]);
-			return true;
-		}
-		return false;
-	}
-
-	public static function needRefresh(){
-		$user = User::getUser();
-		if($user->refresh){
-			User::withTrashed()->where('id', $user->id)->getQuery()->update(['refresh' => false]);
+			User::withTrashed()->getQuery()->update(['refresh' => \micro_seconds()]);
 			return true;
 		}
 		return false;
