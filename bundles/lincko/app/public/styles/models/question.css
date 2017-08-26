@@ -80,24 +80,24 @@
 	height: 100%;
 	font-size: 22px;
 	color: rgba(255, 255, 255, 0.9);
-	padding-right: 18px;
+	padding-right: 16px;
 }
 
 .models_question_standard:hover {
 	border-color: rgba(255, 255, 255, 0.5);
 }
 
-.models_question_standard_edit {
+.models_question_standard_delete {
 	position: absolute;
 	right: 6px;
 	top: 6px;
 	font-size: 22px;
-	color: rgba(255, 255, 255, 0.6);
+	color: rgba(255, 255, 255, 0.4);
 }
-.models_question_standard_edit:hover {
-	color: rgba(255, 255, 255, 0.9);
+.models_question_standard_delete:hover {
+	color: rgba(255, 255, 255, 0.85);
 }
-.models_question_standard_edit:active {
+.models_question_standard_delete:active {
 	color: #FFFFFF;
 }
 

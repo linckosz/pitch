@@ -91,6 +91,7 @@ if(!window.console){
 
 var wrapper_link = [];
 wrapper_link['root'] = top.location.protocol+'//'+document.domain;
+wrapper_link['support'] = "{{ support }}";
 
 //Do not use "success", it can bug for some files, use "complete" as callback
 $.cachedScript = function( url ) {

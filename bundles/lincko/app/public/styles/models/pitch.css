@@ -28,6 +28,30 @@
 	white-space: nowrap;
 }
 
+.models_pitch_top_title_ppt {
+	display: table-cell;
+	width: 36px; /*Help to keep it small */
+	white-space: nowrap;
+	cursor: pointer;
+	text-align: center;
+}
+.models_pitch_top_title_ppt_icon {
+	position: absolute;
+	font-size: 20px;
+	color: rgba(255, 255, 255, 0.65);
+	transform: translateX(-50%);
+	-webkit-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
+	-ms-transform: translateX(-50%);
+	-o-transform: translateX(-50%);
+}
+.models_pitch_top_title_ppt_icon:hover {
+	color: rgba(255, 255, 255, 0.80);
+}
+.models_pitch_top_title_ppt_icon:active {
+	color: #FFFFFF;
+}
+
 .models_pitch_top_title_textarea {
 	display: table-cell;
 	padding: 0 3px;
@@ -81,25 +105,28 @@
 	height: 100%;
 	font-size: 22px;
 	color: rgba(255, 255, 255, 0.9);
-	padding-right: 18px;
 }
 
 .models_pitch_standard:hover {
 	border-color: rgba(255, 255, 255, 0.5);
 }
 
-.models_pitch_standard_edit {
+.models_pitch_standard_delete, .models_pitch_standard_ppt {
 	cursor: pointer;
 	position: absolute;
 	right: 6px;
 	top: 6px;
 	font-size: 22px;
-	color: rgba(255, 255, 255, 0.6);
+	color: rgba(255, 255, 255, 0.4);
 }
-.models_pitch_standard_edit:hover {
-	color: rgba(255, 255, 255, 0.9);
+.models_pitch_standard_ppt {
+	right: 36px;
+	top: 7px;
 }
-.models_pitch_standard_edit:active {
+.models_pitch_standard_delete:hover, .models_pitch_standard_ppt:hover {
+	color: rgba(255, 255, 255, 0.85);
+}
+.models_pitch_standard_delete:active, .models_pitch_standard_ppt:active {
 	color: #FFFFFF;
 }
 
@@ -140,7 +167,7 @@
 		max-width: none;
 		min-width: none;
 		margin: 0px;
-		padding: 10px;
+		padding: 28px 10px;
 	}
 	.models_pitch_standard_last{
 		border-bottom-color: transparent !important;
@@ -163,12 +190,18 @@
 	.models_pitch_top_title, .models_pitch_top_title_textarea {
 		font-size: 16px;
 	}
+	.models_pitch_top_title_ppt_icon {
+		font-size: 22px;
+	}
 }
 
 /* Tablet in Landscape and PC */
 @media only screen and (min-width: 901px){
 	.models_pitch_top_title, .models_pitch_top_title_textarea {
 		font-size: 20px;
+	}
+	.models_pitch_top_title_ppt_icon {
+		font-size: 26px;
 	}
 }
 

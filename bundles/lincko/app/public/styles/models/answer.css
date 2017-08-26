@@ -35,17 +35,17 @@
 	border-color: rgba(255, 255, 255, 0.5);
 }
 
-.models_answer_standard_edit {
+.models_answer_standard_delete {
 	position: absolute;
 	right: 6px;
 	top: 6px;
 	font-size: 22px;
-	color: rgba(255, 255, 255, 0.6);
+	color: rgba(255, 255, 255, 0.4);
 }
-.models_answer_standard_edit:hover {
-	color: rgba(255, 255, 255, 0.9);
+.models_answer_standard_delete:hover {
+	color: rgba(255, 255, 255, 0.85);
 }
-.models_answer_standard_edit:active {
+.models_answer_standard_delete:active {
 	color: #FFFFFF;
 }
 

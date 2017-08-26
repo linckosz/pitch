@@ -19,6 +19,21 @@ submenu_list['settings'] = {
 		"value": submenu_language_full,
 		"class": "",
 	},
+	"support": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 89, 'html'), //Contact Us
+		"value": function(){
+			return wrapper_link['support'];
+		},
+		"action": function(Elem,subm){
+			var link = "mailto:"
+				+ wrapper_link['support']
+				+ "?subject=" + escape("[ID:"+wrapper_localstorage.user_id+"] Pitch Enhancer")
+			;
+			window.location.href = link;
+		},
+		"class": "",
+	},
 	"signout": {
 		"style": "button",
 		"title": Lincko.Translation.get('app', 38, 'html'), //Sign out

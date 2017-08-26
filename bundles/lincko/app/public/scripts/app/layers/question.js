@@ -41,6 +41,14 @@ var app_layers_question_feedPage = function(param){
 		app_content_top_title._set('pitch', item['id']);
 		Elem = $('#-models_pitch_top').clone();
 		Elem.prop('id', 'models_pitch_top_'+item['id']);
+
+		Elem.find("[find=ppt]").click(
+			item['id'],
+			function(event){
+				event.stopPropagation();
+				Lincko.storage.downloadPPT(event.data);
+			}
+		);
 		
 		Elem.find("[find=input_textarea]").val(item['title']);
 		//Create new item
@@ -208,7 +216,7 @@ var app_layers_question_feedPage = function(param){
 			var item = Lincko.storage.get('question', id);
 			if(!item){
 				$(this)
-					.find("[find=edit]")
+					.find("[find=delete]")
 					.recursiveOff()
 					.css("cursor", "default")
 				$(this)
@@ -247,7 +255,7 @@ var app_layers_question_feedPage = function(param){
 				Elem.attr('created_at', item['created_at']);
 				Elem.attr('question_id', item['id']);
 				Elem.find("[find=title]").html( wrapper_to_html(item['title']) );
-				Elem.find("[find=edit]").click(
+				Elem.find("[find=delete]").click(
 					item['id'],
 					function(event){
 						event.stopPropagation();

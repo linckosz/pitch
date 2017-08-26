@@ -125,7 +125,7 @@ var app_layers_pitch_feedPage = function(param){
 			var item = Lincko.storage.get('pitch', id);
 			if(!item){
 				$(this)
-					.find("[find=edit]")
+					.find("[find=delete]")
 					.recursiveOff()
 					.css("cursor", "default")
 				$(this)
@@ -164,7 +164,7 @@ var app_layers_pitch_feedPage = function(param){
 				Elem.attr('created_at', item['created_at']);
 				Elem.attr('pitch_id', item['id']);
 				Elem.find("[find=title]").html( wrapper_to_html(item['title']) );
-				Elem.find("[find=edit]").click(
+				Elem.find("[find=delete]").click(
 					item['id'],
 					function(event){
 						event.stopPropagation();
@@ -189,6 +189,13 @@ var app_layers_pitch_feedPage = function(param){
 								wrapper_sendAction(data, 'post', 'api/data/set', action_cb_success, storage_cb_error, storage_cb_begin, action_cb_complete);
 							}
 						}
+					}
+				);
+				Elem.find("[find=ppt]").click(
+					item['id'],
+					function(event){
+						event.stopPropagation();
+						Lincko.storage.downloadPPT(event.data);
 					}
 				);
 				Elem.click(

@@ -1073,6 +1073,11 @@ Lincko.storage.getFile = function(id, type){
 	return false;
 }
 
+Lincko.storage.downloadPPT = function(id){
+	var ppt_url = top.location.protocol+'//'+document.domain+"/app/sample/pitch/"+wrapper_integer_map(id);
+	device_download(ppt_url, "_blank", "error.txt");
+};
+
 Lincko.storage.getURLShorcut = function(type, id){
 	if(Lincko.storage.get(type, id)){
 		return top.location.protocol+'//'+document.domain+'/app#'+type+'-'+id;

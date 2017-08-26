@@ -119,10 +119,15 @@
 .app_layers_answer_question_image {
 	cursor: pointer;
 	width: auto;
+	min-width: 64px;
 	max-width: 200px;
 	height: auto;
+	min-height: 64px;
 	max-height: 160px;
 	border: 1px solid rgba(255, 255, 255, 0.40);
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
 }
 
 .app_layers_answer_question_image:hover {
@@ -135,12 +140,28 @@
 	cursor: pointer;
 	font-size: 64px;
 	color: rgba(255, 255, 255, 0.2);
+	position: relative;
 }
 .app_layers_answer_question_icon:hover {
 	color: rgba(255, 255, 255, 0.4);
 }
 .app_layers_answer_question_icon:active {
 	color: rgba(255, 255, 255, 0.5);
+}
+
+.app_layers_answer_question_progress, .app_layers_answer_answers_progress {
+	font-size: 12px;
+	color: rgba(255, 255, 255, 0.70);
+	position: absolute;
+	text-align: center;
+	vertical-align: middle;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
 }
 
 .app_layers_answer_answers_wrapper {
@@ -415,9 +436,14 @@
 	cursor: pointer;
 	width: auto;
 	height: auto;
+	min-width: 32px;
 	max-width: 80px;
+	min-height: 32px;
 	max-height: 80px;
 	border: 1px solid rgba(255, 255, 255, 0.40);
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
 }
 
 .app_layers_answer_answers_picture_image.pictures {
@@ -435,6 +461,7 @@
 	margin: 0 1px;
 	font-size: 32px;
 	color: rgba(255, 255, 255, 0.2);
+	position: relative;
 }
 .app_layers_answer_answers_picture_icon:hover {
 	color: rgba(255, 255, 255, 0.4);
@@ -485,14 +512,24 @@
 }
 
 .app_layers_answer_mask {
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: 3;
-    background-color: transparent;
-    z-index: 100000;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	z-index: 3;
+	background-color: transparent;
+	z-index: 100000;
+}
+
+.app_layers_answer_upload_error {
+	color: rgba(185, 124, 103, 0.8) !important;
+}
+
+.app_layers_answer_webkit_progress {
+	background: rgba(255, 255, 255, 0.2);
+	-webkit-background-clip: text !important;
+	-webkit-text-fill-color: transparent !important;
 }
 
 /* Mobile phone in Portrait */

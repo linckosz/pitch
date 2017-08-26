@@ -4,6 +4,11 @@
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/layers/answer.js') }}");
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/layers/answer.css') }}" type="text/css" />
+	<style type="text/css">
+		.app_layers_answer_question_image, .app_layers_answer_answers_picture_image {
+			background-image: url("{{ _filelatest('/lincko/app/images/generic/loadingpacman10.png') }}");
+		}
+	</style>
 </div>
 <div id="end_app_layers_answer" class="visibility_hidden"></div>
 
@@ -22,7 +27,9 @@
 
 	<div id="-app_layers_answer_question" class="app_layers_answer_question">
 		<img find="image" class="app_layers_answer_question_image display_none" />
-		<span find="add" class="app_layers_answer_question_icon fa fa-picture-o" title="{{ _trans('app', 4, 16, 'html') }}{# Add image #}"></span>
+		<span find="add" class="app_layers_answer_question_icon fa fa-picture-o" title="{{ _trans('app', 4, 16, 'html') }}{# Add image #}">
+			<div find="progress" class="app_layers_answer_question_progress display_none"></div>
+		</span>
 	</div>
 
 	<div id="-app_layers_answer_answers" find="answer" class="app_layers_answer_answers app_layers_answer_answers_table questions">
@@ -42,7 +49,9 @@
 			</div>
 			<div find="preview" class="app_layers_answer_answers_picture app_layers_answer_answers_cell">
 				<img find="answer_image" class="app_layers_answer_answers_picture_image display_none" />
-				<span find="answer_add" class="app_layers_answer_answers_picture_icon fa fa-picture-o" title="{{ _trans('app', 4, 16, 'html') }}{# Add image #}"></span>
+				<span find="answer_add" class="app_layers_answer_answers_picture_icon fa fa-picture-o" title="{{ _trans('app', 4, 16, 'html') }}{# Add image #}">
+					<div find="progress" class="app_layers_answer_answers_progress display_none"></div>
+				</span>
 			</div>
 		</div>
 	</div>

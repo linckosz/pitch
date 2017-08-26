@@ -156,6 +156,7 @@ $app->lincko->data = array(
 	'domain' => $app->lincko->domain,
 	'http_host' => $app->lincko->http_host,
 	'title' => $app->lincko->title,
+	'support' => 'pitch@lincko.com',
 	'lincko_dev' => $_SERVER['LINCKO_DEV'],
 	'lincko_wechat' => $_SERVER['LINCKO_WECHAT'],
 	'lincko_show_dev' => 'false', //Display some error for developpers on JS (NOTE: it has to be a string because of Twig conversion to JS)

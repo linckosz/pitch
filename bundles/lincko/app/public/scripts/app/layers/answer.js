@@ -50,6 +50,14 @@ var app_layers_answer_feedPage = function(param){
 		app_content_top_title._set('pitch', item['id']);
 		Elem = $('#-models_pitch_top').clone();
 		Elem.prop('id', 'models_pitch_top_'+item['id']);
+
+		Elem.find("[find=ppt]").click(
+			item['id'],
+			function(event){
+				event.stopPropagation();
+				Lincko.storage.downloadPPT(event.data);
+			}
+		);
 		
 		Elem.find("[find=input_textarea]").val(item['title']);
 		//Create new item
@@ -253,7 +261,8 @@ var app_layers_answer_feedPage = function(param){
 	Elem.prop('id', 'app_layers_answer_question');
 	Elem.find("[find=add]").on('click', question['id'], function(event){
 		var item = Lincko.storage.get('question', event.data);
-		app_upload_open_photo_single('question', item['id'], item['md5'], false, true, item['md5']);
+		var temp_id = app_upload_open_photo_single('question', item['id'], item['md5'], false, true);	
+		app_layers_answer_upload_status($(this), temp_id, true);
 	});
 	Elem.find("[find=image]").on('click', question['id'], function(event){
 		var item = Lincko.storage.get('question', event.data);
@@ -354,7 +363,8 @@ var app_layers_answer_feedPage = function(param){
 		Elem.find("[find=answer_add]").on('click', item['id'], function(event){
 			event.stopPropagation();
 			var answer = Lincko.storage.get('answer', event.data);
-			app_upload_open_photo_single('answer', answer['id'], answer['md5'], false, true, answer['md5']);
+			var temp_id = app_upload_open_photo_single('answer', answer['id'], answer['md5'], false, true);
+			app_layers_answer_upload_status($(this), temp_id, true);
 		});
 		Elem.find("[find=answer_image]").on('click', item['id'], function(event){
 			event.stopPropagation();
@@ -369,7 +379,8 @@ var app_layers_answer_feedPage = function(param){
 				if(answer['file_id'] && Lincko.storage.get('file', answer['file_id'])){
 					previewer(answer['file_id']);
 				} else {
-					app_upload_open_photo_single('answer', answer['id'], answer['md5'], false, true, answer['md5']);
+					var temp_id = app_upload_open_photo_single('answer', answer['id'], answer['md5'], false, true);
+					app_layers_answer_upload_status($(this), temp_id, true);
 				}
 			}
 		});
@@ -420,8 +431,7 @@ var app_layers_answer_feedPage = function(param){
 
 	Elem.find("[find=ppt]").on('click', pitch['id'], function(event){
 		event.stopPropagation();
-		var ppt_url = top.location.protocol+'//'+document.domain+"/app/sample/pitch/"+wrapper_integer_map(event.data);
-		device_download(ppt_url, "_blank", "error.txt");
+		Lincko.storage.downloadPPT(event.data);
 	});
 
 	Elem.appendTo(position_wrapper);
@@ -461,7 +471,7 @@ var app_layers_answer_feedPage = function(param){
 			var item = Lincko.storage.get('answer', id);
 			if(!item){
 				$(this)
-					.find("[find=edit]")
+					.find("[find=delete]")
 					.recursiveOff()
 					.css("cursor", "default")
 				$(this)
@@ -765,4 +775,66 @@ var app_layers_answer_answers_picture_image = function(answer_id){
 		.attr('src', wrapper_neutral.src);
 	$('#app_layers_answer_answers_'+answer_id).find("[find=row]")
 			.css("background-image", "url('"+wrapper_neutral.src+"')");
+};
+
+var app_layers_answer_upload_status_list = {};
+var app_layers_answer_upload_status_progress = {};
+var app_layers_answer_upload_status = function(Elem, temp_id, fill){
+	if(typeof fill != 'boolean'){ fill = false; }
+	Elem.find("[find=progress]").addClass('display_none');
+	Elem.find("[find=progress]").html('');
+	if(!navigator.userAgent.match(/webkit/i)){
+		fill = false;
+	}
+	Elem.find("[find=progress]").html('0%');
+	app_layers_answer_upload_status_list[temp_id] = app_application_garbage.add(temp_id);
+	app_application_lincko.add(app_layers_answer_upload_status_list[temp_id], 'upload', function() {
+		var Elem = this.action_param[0];
+		var temp_id = this.action_param[1];
+		var data = app_upload_files.getData(temp_id);
+		var fill = this.action_param[2];
+		if(typeof app_layers_answer_upload_status_progress[temp_id] != 'undefined' && (!data || Elem.length<=0)){
+			delete app_layers_answer_upload_status_list[temp_id];
+			delete app_layers_answer_upload_status_progress[temp_id];
+			Elem
+				.css('background', '')
+				.removeClass('app_layers_answer_webkit_progress')
+				.removeClass('app_layers_answer_upload_error');
+			Elem.find("[find=progress]")
+				.addClass('display_none')
+				.html('');
+			app_application_garbage.remove(this.id);
+		} else if(data){
+			var progress = Math.floor(data.lincko_progress);
+			var error = false;
+			if($.inArray(data.lincko_status, ['abort', 'failed', 'error', 'deleted']) >= 0){
+				error = true;
+				Elem.addClass('app_layers_answer_upload_error');
+			} else {
+				if(progress<100 && data.lincko_status!='done'){
+					app_layers_answer_upload_status_progress[temp_id] = Math.floor(data.lincko_progress);
+				}
+				if(data.lincko_status=='done'){
+					app_layers_answer_upload_status_progress[temp_id] = 100;
+				}
+				Elem.removeClass('app_layers_answer_upload_error');
+			}
+			progress = app_layers_answer_upload_status_progress[temp_id];
+			if(fill){
+				Elem.addClass('app_layers_answer_webkit_progress');
+				if(error){
+					Elem.css('background', '-webkit-linear-gradient(bottom, rgba(185, 124, 103, 0.8) '+(progress-5)+'%, rgba(255, 255, 255, 0.2) '+(progress+5)+'%');
+				} else {
+					Elem.css('background', '-webkit-linear-gradient(bottom, rgba(255, 255, 255, 0.8) '+(progress-5)+'%, rgba(255, 255, 255, 0.2) '+(progress+5)+'%');
+				}
+			} else {
+				Elem.find("[find=progress]").removeClass('display_none');
+			}
+			if(error){
+				Elem.find("[find=progress]").html('');
+			} else {
+				Elem.find("[find=progress]").html(progress+'%');
+			}
+		}
+	}, [Elem, temp_id, fill]);
 };

@@ -23,14 +23,17 @@ var previewer = function(file_id){
 					}
 
 					$("#previewer_update").on('click', [parent['_type'], parent['id']], function(event){
+						event.stopPropagation();
 						var type = event.data[0];
 						var id = event.data[1];
 						var item = Lincko.storage.getClone(type, id);
-						app_upload_open_photo_single(item['_type'], item['id'], item['md5'], false, true, item['md5']);
-						event.stopPropagation();
+						var temp_id = app_upload_open_photo_single(item['_type'], item['id'], item['md5'], false, true);
+						previewer_upload_status(temp_id);
 					});
 					
 					$("#previewer_delete").on('click', file_id, function(event){
+						previewer_upload_abort(event);
+						event.stopPropagation();
 						if(confirm(Lincko.Translation.get('app', 26, 'js'))){ //Are you sure you want to delete this item?
 							var data = {};
 							//Delete the file
@@ -63,10 +66,10 @@ var previewer = function(file_id){
 							if(storage_offline(data)){
 								base_showProgress(Elem);
 								wrapper_sendAction(data, 'post', 'api/data/set', action_cb_success, storage_cb_error, storage_cb_begin, action_cb_complete);
+								app_application_lincko.prepare("file_"+file_id, true);
 							}
 							previewer(false);
 						}
-						event.stopPropagation();
 					});
 					
 					app_generic_state.change({
@@ -87,6 +90,54 @@ var previewer = function(file_id){
 	}, null, -1);
 
 	return false;
+};
+
+var previewer_upload_garbage = {};
+var previewer_upload_progress = false;
+var previewer_upload_temp_id = false;
+var previewer_upload_status = function(temp_id){
+	previewer_upload_temp_id = temp_id;
+	previewer_upload_progress = false;
+	previewer_upload_garbage[temp_id] = app_application_garbage.add(temp_id);
+	app_application_lincko.add(previewer_upload_garbage[temp_id], 'upload', function() {
+		var Elem = $('#previewer_update');
+		var data = app_upload_files.getData(this.action_param);
+		if(previewer_upload_progress && (!data || Elem.length<=0)){
+			Elem.css('background', '');
+			previewer_upload_progress = false;
+			previewer_upload_temp_id = false;
+			delete previewer_upload_garbage[this.action_param];
+			app_application_garbage.remove(this.id);
+		} else if(data){
+			var progress = Math.floor(data.lincko_progress);
+			var color_start = 'rgba(143, 143, 143, 0.6)';
+			var color_end = 'rgba(143, 143, 143, 0.2)';
+			if($.inArray(data.lincko_status, ['abort', 'failed', 'error', 'deleted']) >= 0){
+				color_start = 'rgba(185, 124, 103, 0.6)';
+			} else {
+				if(progress<100 && data.lincko_status!='done'){
+					previewer_upload_progress = Math.floor(data.lincko_progress);
+				}
+				if(data.lincko_status=='done'){
+					previewer_upload_progress = 100;
+				}
+			}
+			progress = previewer_upload_progress;
+			Elem
+				.css('background', '-moz-linear-gradient(left, '+color_start+' '+(progress-2)+'%, '+color_end+' '+(progress+2)+'%)')
+				.css('background', '-webkit-linear-gradient(left, '+color_start+' '+(progress-2)+'%, '+color_end+' '+(progress+2)+'%)')
+				.css('background', 'linear-gradient(to right, '+color_start+' '+(progress-2)+'%, '+color_end+' '+(progress+2)+'%)');
+		}
+	}, temp_id);
+};
+
+var previewer_upload_abort = function(event){
+	if(previewer_upload_temp_id){
+		var data = app_upload_files.getData(previewer_upload_temp_id);
+		if(data){
+			data.abort();
+		}
+	}
 }
 
 JSfiles.finish(function(){

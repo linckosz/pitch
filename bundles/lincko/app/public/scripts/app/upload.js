@@ -146,7 +146,7 @@ $(function () {
 
 		//data => File object
 		add: function (event, data) {
-			if (typeof event !== 'undefined' && event.isDefaultPrevented()) { return false; }
+			if (typeof event != 'undefined' && event && event.isDefaultPrevented()) { return false; }
 			var that = $('#app_upload_fileupload').fileupload('option');
 
 			that.reindex(event, this);
@@ -271,9 +271,9 @@ $(function () {
 		//It will decrement the file index to rewrite over previously allocated memory space.
 		//data => File object
 		reindex: function (event, data) {
-			if (typeof event !== 'undefined' && event.isDefaultPrevented()) { return false; }
+			if (typeof event != 'undefined' && event && event.isDefaultPrevented()) { return false; }
 			var that = $('#app_upload_fileupload').fileupload('option');
-			while(app_upload_files.lincko_files_index > 0 && typeof app_upload_files.lincko_files[app_upload_files.lincko_files_index-1] === 'undefined'){
+			while(app_upload_files.lincko_files_index > 0 && typeof app_upload_files.lincko_files[app_upload_files.lincko_files_index-1] == 'undefined'){
 				app_upload_files.lincko_files_index--;
 			}
 		},
@@ -294,7 +294,7 @@ $(function () {
 		
 		//data => File object
 		done: function (event, data) {
-			if (typeof event !== 'undefined' && event.isDefaultPrevented()) { return false; }
+			if (typeof event != 'undefined' && event && event.isDefaultPrevented()) { return false; }
 			var that = $('#app_upload_fileupload').fileupload('option');
 			if(data.result && data.result.error){
 				app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'error';
@@ -322,7 +322,7 @@ $(function () {
 				that.reindex(event, this);
 				app_application_lincko.prepare('file');
 				//Force to update elements if the function is available
-				if(data.result && data.result.extra && typeof storage_cb_success === 'function'){
+				if(data.result && data.result.extra && typeof storage_cb_success == 'function'){
 					var msg = '';
 					var show = false;
 					var status = 200;
@@ -340,7 +340,7 @@ $(function () {
 
 		//data => File object
 		progress: function (event, data) {
-			if (typeof event !== 'undefined' && event.isDefaultPrevented()) { return false; }
+			if (typeof event != 'undefined' && event && event.isDefaultPrevented()) { return false; }
 			var that = $('#app_upload_fileupload').fileupload('option');
 			var progress = Math.floor( 100 * data.loaded/data.total );
 			if(progress<0){
@@ -353,10 +353,10 @@ $(function () {
 
 		//data => Main object
 		progressall: function (event, data) {
-			if (typeof event !== 'undefined' && event.isDefaultPrevented()) { return false; }
+			if (typeof event != 'undefined' && event && event.isDefaultPrevented()) { return false; }
 			var that = $('#app_upload_fileupload').fileupload('option');
 			app_upload_files.lincko_numberOfFiles = that._numberOfFiles();
-			if($.type(data) === 'object' && data.loaded && data.total && data.bitrate){
+			if($.type(data) == 'object' && data.loaded && data.total && data.bitrate){
 				var progress = Math.floor( 100 * data.loaded/data.total );
 				if(app_upload_files.lincko_numberOfFiles<=0){
 					progress = 100;
@@ -385,7 +385,7 @@ $(function () {
 				} else {
 					var lincko_progress = false;
 					$.each(app_upload_files.lincko_files, function(index, data){
-						if($.type(data) === 'object'){
+						if($.type(data) == 'object'){
 							if(data.lincko_progress > 0){
 								return lincko_progress = true;
 							}
@@ -406,7 +406,7 @@ $(function () {
 
 		//data => File object
 		fail: function (event, data) {
-			if (typeof event != 'undefined' && event.isDefaultPrevented()) { return false; }
+			if (typeof event != 'undefined' && event && event.isDefaultPrevented()) { return false; }
 			if (data.lincko_status == 'failed') {
 				data.lincko_error = data.files[0].error || data.errorThrown || Lincko.Translation.get('app', 9, 'html'); //Unknown error
 			} else if (data.lincko_status != 'error') {
@@ -419,7 +419,7 @@ $(function () {
 
 		//data => File object
 		destroy: function (event, data) {
-			if (typeof event != 'undefined' && event.isDefaultPrevented()) { return false; }
+			if (typeof event != 'undefined' && event && event.isDefaultPrevented()) { return false; }
 			var that = $('#app_upload_fileupload').fileupload('option');
 			app_upload_files.lincko_files[data.lincko_files_index].abort();
 			app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'deleted';
@@ -434,14 +434,14 @@ $(function () {
 
 
 		_startHandler: function (event) {
-			if(typeof event !== 'undefined'){ event.preventDefault(); }
+			if(typeof event != 'undefined' && event){ event.preventDefault(); }
 			var that = this;
 			$.each(app_upload_files.lincko_files, function(index, data){
-				if($.type(data) === 'object'){
-					if(data.lincko_status === 'failed'){
+				if($.type(data) == 'object'){
+					if(data.lincko_status == 'failed'){
 						data.lincko_status = 'deleted';
 						that.destroy(event, data);
-					} else if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file'){
+					} else if(typeof data.lincko_type != 'undefined' && data.lincko_type == 'file'){
 						data.lincko_status = 'pause';
 						data.lincko_submit();
 					}
@@ -451,11 +451,11 @@ $(function () {
 		},
 
 		_cancelHandler: function (event) {
-			if(typeof event !== 'undefined'){ event.preventDefault(); }
+			if(typeof event != 'undefined'){ event.preventDefault(); }
 			var that = this;
 			$.each(app_upload_files.lincko_files, function(index, data){
-				if($.type(data) === 'object'){
-					if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file' && data.lincko_status !== 'abort'){
+				if($.type(data) == 'object'){
+					if(typeof data.lincko_type != 'undefined' && data.lincko_type == 'file' && data.lincko_status != 'abort'){
 						data.lincko_status = 'abort';
 						data.abort();
 					}
@@ -465,11 +465,11 @@ $(function () {
 		},
 
 		_deleteHandler: function (event) {
-			if(typeof event !== 'undefined'){ event.preventDefault(); }
+			if(typeof event != 'undefined'){ event.preventDefault(); }
 			var that = this;
 			$.each(app_upload_files.lincko_files, function(index, data){
-				if($.type(data) === 'object'){
-					if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file' && data.lincko_status !== 'deleted'){
+				if($.type(data) == 'object'){
+					if(typeof data.lincko_type != 'undefined' && data.lincko_type == 'file' && data.lincko_status != 'deleted'){
 						data.lincko_status = 'deleted';
 						that.destroy(event, data);
 					}
@@ -481,8 +481,8 @@ $(function () {
 		_numberOfFiles: function(){
 			var num = 0;
 			$.each(app_upload_files.lincko_files, function(index, data){
-				if($.type(data) === 'object'){
-					if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file'){
+				if($.type(data) == 'object'){
+					if(typeof data.lincko_type != 'undefined' && data.lincko_type == 'file'){
 						num++;
 					}
 				}
@@ -491,7 +491,7 @@ $(function () {
 		},
 
 		_formatFileSize: function (bytes) {
-			if (typeof bytes !== 'number') {
+			if (typeof bytes != 'number') {
 				return '?';
 			} else if (bytes >= 1073741824) {
 				return (bytes / 1073741824).toFixed(2) + ' GB';
@@ -503,7 +503,7 @@ $(function () {
 		},
 
 		_formatBitrate: function (bits) {
-			if (typeof bits !== 'number') {
+			if (typeof bits != 'number') {
 				return '?';
 			}
 
@@ -539,7 +539,7 @@ $(function () {
 		},
 
 		_formatComplete: function (loaded, total) {
-			if (typeof loaded !== 'number' || typeof total !== 'number') {
+			if (typeof loaded != 'number' || typeof total != 'number') {
 				return '?';
 			} else if (total >= 1073741824) {
 				return (loaded / 1073741824).toFixed(2) + ' GB / ' + (total / 1073741824).toFixed(2) + ' GB';
@@ -555,7 +555,7 @@ $(function () {
 		},
 
 		_formatTime: function (seconds) {
-			if (typeof seconds !== 'number') {
+			if (typeof seconds != 'number') {
 				return '?';
 			}
 
@@ -590,7 +590,7 @@ $(function () {
 	});
 
 	$("#app_upload_fileupload").on('submit', function(event) {
-		 if(typeof event !== 'undefined'){ event.preventDefault(); } else { event = null; } //Disable submit action by click
+		 if(typeof event != 'undefined'){ event.preventDefault(); } else { event = null; } //Disable submit action by click
 		 return false; //Disable by JS action
 	});
 
