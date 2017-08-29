@@ -131,6 +131,18 @@ class Pitch extends ModelLincko {
 			}
 		}
 
+		if(isset($form->sort)){
+			$error = true;
+			if(is_numeric($form->sort)){
+				$error = false;
+				$model->sort = (int) $form->sort;
+			}
+			if($error){
+				$errfield = 'sort';
+				goto failed;
+			}
+		}
+
 		return $model;
 
 		failed:

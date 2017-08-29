@@ -132,6 +132,26 @@
 	color: #FFFFFF;
 }
 
+.models_pitch_standard.shadow {
+	visibility: hidden;
+	overflow: visible;
+}
+
+.models_pitch_standard.move {
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	border-color: transparent !important;
+	position: absolute !important;
+	z-index: 3 !important;
+	filter: alpha(opacity=100);
+	opacity: 1;
+	-moz-opacity: 1;
+	-khtml-opacity: 1;
+}
+
 .models_pitch_standard_details {
 	white-space: nowrap;
 	width: 100%;
@@ -205,6 +225,9 @@
 	}
 	.models_pitch_top_title_ppt_icon {
 		font-size: 26px;
+	}
+	.models_pitch_standard > .app_content_clone_frame_elem {
+		border-radius: 2px;
 	}
 }
 

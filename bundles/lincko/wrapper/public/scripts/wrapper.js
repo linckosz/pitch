@@ -219,6 +219,11 @@ var wrapper_IScroll_options = {
 	disableMouse: false, // false if you want the slider to be usable with a mouse (desktop)
 };
 
+var wrapper_IScroll_easing_linear = {
+    style: 'cubic-bezier(0,0,1,1)',
+    fn: function (k) { return k; }
+};
+
 //For Desktop support
 if(!supportsTouch){
 	wrapper_IScroll_options.fadeScrollbars = false;
@@ -231,7 +236,7 @@ var wrapper_IScroll_options_new = {};
 var wrapper_IScroll_cb_creation = {};
 
 var myIScrollList = {};
-
+var wrapper_IScroll_scrolling = false;
 function wrapper_IScroll(){
 	var overthrow = $('.overthrow');
 	overthrow.css('overflow', 'hidden').css('overflow-x', 'hidden').css('overflow-y', 'hidden');
@@ -280,6 +285,12 @@ function wrapper_IScroll(){
 				if(typeof wrapper_IScroll_cb_creation[this.id] == 'function'){
 					wrapper_IScroll_cb_creation[this.id]();
 				}
+				myIScrollList[this.id].on('scrollStart', function(){
+					wrapper_IScroll_scrolling = true;
+				});
+				myIScrollList[this.id].on('scrollEnd', function(){
+					wrapper_IScroll_scrolling = false;
+				});
 				Elem.on('scroll', function(){
 					$(this).scrollTop(0);
 				});
@@ -300,26 +311,56 @@ var wrapper_change_language = function(language){
 var wrapper_IScroll_refresh = function(){
 	var Elem = false;
 	var Child = null;
+	var destroy = false;
 	for(var i in myIScrollList){
 		Elem = $('#'+i);
-		Child = Elem.children().first();
+		destroy = true;
 		if(Elem.length>0){
 			if(Elem.hasClass('overthrow')){
 				if('refresh' in myIScrollList[i]){
 					myIScrollList[i].refresh();
+					destroy = false;
 					continue;
 				}
 			} else {
 				if('destroy' in myIScrollList[i]){
+					Child = Elem.children().first();
 					if(Child.length>0 && Child.hasClass('iscroll_sub_div')){
 						Child.addClass('iscroll_destroyed');
 					}
 				}
-				myIScrollList[i].destroy();
 			}
 		}
-		myIScrollList[i] = null;
-		delete myIScrollList[i];
+		if(destroy){
+			if('destroy' in myIScrollList[i]){
+				myIScrollList[i].destroy();
+			}
+			myIScrollList[i] = null;
+			delete myIScrollList[i];
+		}
+	}
+};
+
+var wrapper_IScroll_switch = function(roll, id){
+	if(typeof roll == 'undefined'){ roll = true; }
+	if(typeof id == 'undefined'){ id = false; }
+	for(var i in myIScrollList){
+		if(id && i!=id){
+			continue;
+		}
+		if(roll){
+			if('enable' in myIScrollList[i]){
+				myIScrollList[i].enable();
+			}
+		} else {
+			if('disable' in myIScrollList[i]){
+				myIScrollList[i].initiated = 0;
+				myIScrollList[i].disable();
+			}
+		}
+		if('resetPosition' in myIScrollList[i]){
+			myIScrollList[i].resetPosition(600);
+		}
 	}
 };
 
@@ -340,7 +381,7 @@ $(window).resize(function(){
 //http://stackoverflow.com/questions/23885255/how-to-remove-ignore-hover-css-style-on-touch-devices
 //This disable some unwanted behavior the double tapping within the 300ms
 //This function is slow to run, so use it in another thread
-function wrapper_mobile_hover(){
+var wrapper_mobile_hover = function(){
 	if (supportsTouch && responsive.test("maxMobileL")) { // remove all :hover stylesheets
 		try { // prevent crash on browsers not supporting DOM styleSheets properly
 			//We first disbale Fastclick on some elements
@@ -384,6 +425,27 @@ var wrapper_performance = {
 //By default we consider as powerfull if the width screen is the one of a Tablet Landscape
 wrapper_performance.powerfull = true;
 wrapper_performance.delay = 50;
+
+//Keep a record of mouse position
+var wrapper_mouse = {
+	x: 0,
+	y: 0,
+}
+$(window).on('mousemove touchmove touchdown touchstart', function(event){
+	if(typeof event != 'object'){
+		return false;
+	}
+	if(typeof event.pageX == 'number' && typeof event.pageY == 'number'){
+		wrapper_mouse.x = event.pageX;
+		wrapper_mouse.y = event.pageY;
+	} else if(typeof event.originalEvent == 'object' && typeof event.originalEvent.touches == 'object' && typeof event.originalEvent.touches[0] == 'object' && typeof event.originalEvent.touches[0].pageX == 'number' && typeof event.originalEvent.touches[0].pageY == 'number'){
+		wrapper_mouse.x = event.originalEvent.touches[0].pageX;
+		wrapper_mouse.y = event.originalEvent.touches[0].pageY;
+	} else if(typeof event.originalEvent.touches == 'object' && typeof event.touches[0] == 'object' && typeof event.touches[0].pageX == 'number' && typeof event.touches[0].pageY == 'number'){
+		wrapper_mouse.x = event.touches[0].pageX;
+		wrapper_mouse.y = event.touches[0].pageY;
+	}
+});
 
 JSfiles.finish(function(){
 	wrapper_time_server();

@@ -91,6 +91,26 @@
 	border-color: rgba(255, 255, 255, 0.5);
 }
 
+.models_question_standard.shadow {
+	visibility: hidden;
+	overflow: visible;
+}
+
+.models_question_standard.move {
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	border-color: transparent !important;
+	position: absolute !important;
+	z-index: 3 !important;
+	filter: alpha(opacity=100);
+	opacity: 1;
+	-moz-opacity: 1;
+	-khtml-opacity: 1;
+}
+
 .models_question_standard_delete {
 	position: absolute;
 	right: 6px;
@@ -175,5 +195,8 @@
 @media only screen and (min-width: 901px){
 	.models_question_top_title, .models_question_top_title_textarea {
 		font-size: 20px;
+	}
+	.models_question_standard > .app_content_clone_frame_elem {
+		border-radius: 2px;
 	}
 }

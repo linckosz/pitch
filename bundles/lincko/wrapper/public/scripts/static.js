@@ -35,13 +35,13 @@ var wrapper_flat_text = function(text){
 	}
 	text = text.replace(/\r\n|\n\r|\r|\n/g, '&nbsp;');
 	return text;
-}
+};
 
 var wrapper_to_url = function(text){
 	// based on the rules here: http://www.mtu.edu/umc/services/web/cms/characters-avoid/
 	text = text.replace(/[#%&{}\/\\<>*? $!'":@+`|=_]/g,'-');
 	return text;
-}
+};
 
 var wrapper_timeoffset = function(){
 	//Important: Note that getTimezoneOffset() is return posit value number (-8H for China instead of 8H)
@@ -55,7 +55,7 @@ var wrapper_timeoffset = function(){
 		timeoffset = 0;
 	}
 	return timeoffset;
-}
+};
 
 //Help to detach all Nodes
 jQuery.prototype.recursiveEmpty = function(delay){
@@ -89,7 +89,7 @@ jQuery.prototype.recursiveEmpty = function(delay){
 		.empty();
 
 	return this;
-}
+};
 
 //Help to detach all Nodes
 jQuery.prototype.recursiveRemove = function(delay){
@@ -99,7 +99,7 @@ jQuery.prototype.recursiveRemove = function(delay){
 		.removeData()
 		.remove();
 	return this;
-}
+};
 
 //Help to bloc all Nodes event
 jQuery.prototype.recursiveOff = function(delay){
@@ -127,15 +127,15 @@ jQuery.prototype.recursiveOff = function(delay){
 		.off();
 
 	return this;
-}
+};
 
-function encode_utf8(s) {
+var encode_utf8 = function(s) {
 	return unescape(encodeURIComponent(s));
-}
+};
 
-function decode_utf8(s) {
+var decode_utf8 = function(s) {
 	return decodeURIComponent(escape(s));
-}
+};
 
 var parseHTML = function(text) {
 	text = ''+text;
@@ -232,7 +232,7 @@ var getCookie = function(cname) {
 		}
 	}
 	return "";
-}
+};
 
 var setCookie = function(cname, cvalue, exdays) {
 	if(typeof exdays == 'undefined'){ exdays = 30; } //1 month by default
@@ -240,7 +240,7 @@ var setCookie = function(cname, cvalue, exdays) {
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var expires = "expires="+ d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
+};
 
 var ArrayToObject = function(arr){
 	var result = false;
@@ -253,7 +253,7 @@ var ArrayToObject = function(arr){
 		result = arr;
 	}
 	return result;
-}
+};
 
 var wrapper_integer_map = function(text, decode){
 	if(typeof decode == 'undefined'){ decode = false; }
@@ -294,4 +294,4 @@ var wrapper_integer_map = function(text, decode){
 	}
 
 	return result;
-}
+};

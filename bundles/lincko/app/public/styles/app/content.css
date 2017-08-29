@@ -172,6 +172,22 @@
 	text-align: left;
 }
 
+.app_content_clone_frame_clone {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.05);
+}
+
+.app_content_clone_frame_elem {
+	visibility: visible !important;
+	position: absolute;
+	top: 0;
+	left: 0;
+	border: solid 4px rgba(77, 255, 176, 0.80);
+	box-sizing: border-box;
+}
+
 /* Mobile phone in Portrait maximum */
 @media only screen and (max-width: 479px){
 	#app_content_top {

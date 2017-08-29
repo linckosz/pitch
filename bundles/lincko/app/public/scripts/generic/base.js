@@ -118,5 +118,11 @@ var base_toggle_myQRcode = function(display){
 }
 
 JSfiles.finish(function(){
-	$('body').addClass('base_tapHighlight_off');
+	$('body')
+		//Avoid seeing highlited element on mobile
+		.addClass('base_tapHighlight_off')
+		//Avoid having scroll top/bottom browser (especially on wechat)
+		.on('touchmove pointermove MSPointerMove mousemove', function(event){
+			event.preventDefault();
+		});
 });

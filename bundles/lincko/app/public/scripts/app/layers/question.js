@@ -21,6 +21,11 @@ var app_layers_question_refresh = function(timer){
 		layer.find('.models_question_standard_last').removeClass('models_question_standard_last');
 		layer.find('.models_question_standard').last().addClass('models_question_standard_last');
 		wrapper_IScroll();
+		if(typeof myIScrollList['app_layers_question'] == 'object' && (myIScrollList['app_layers_question'].hasHorizontalScroll || myIScrollList['app_layers_question'].hasVerticalScroll)){
+			$('#app_layers_question_add_corner').removeClass('display_none');
+		} else {
+			$('#app_layers_question_add_corner').addClass('display_none');
+		}
 	}, timer);
 }
 $(window).resize(app_layers_question_refresh);
@@ -205,7 +210,7 @@ var app_layers_question_feedPage = function(param){
 
 	var layer = $('#app_layers_content');
 	Elem = $('#-app_layers_question_add_corner').clone();
-	Elem.prop('id', '');
+	Elem.prop('id', 'app_layers_question_add_corner');
 	Elem.click(param, function(event){
 		event.stopPropagation();
 		$('#app_layers_question_add_icon').click();
@@ -263,6 +268,7 @@ var app_layers_question_feedPage = function(param){
 					item['id'],
 					function(event){
 						event.stopPropagation();
+						app_layers_content_move.reset();
 						if(confirm(Lincko.Translation.get('app', 26, 'js'))){ //Are you sure you want to delete this item?
 							var data = {};
 							data.delete = {};
@@ -290,13 +296,129 @@ var app_layers_question_feedPage = function(param){
 					item['id'],
 					function(event){
 						event.stopPropagation();
+						app_layers_content_move.reset();
 						app_content_menu.selection("answer", event.data);
 					}
 				);
+				Elem.on('mousedown touchdown touchstart', function(event){
+					app_layers_content_move.mousedown(
+						$(this),
+						function(){ //cb_begin
+							app_layers_question_list_position.build();
+						},
+						function(){ //cb_success
+							if(!app_layers_question_list_position.list){
+								return false;
+							}
+							//Order from big to small
+							var order_id = [];
+							var keysY = Object.keys(app_layers_question_list_position.list).sort(function(a, b) { return b - a; });
+							for(var y in keysY){
+								var keyY = keysY[y];
+								if(typeof app_layers_question_list_position.list[keyY] == 'undefined'){
+									continue;
+								}
+								var keysX = Object.keys(app_layers_question_list_position.list[keyY]).sort(function(a, b) { return b - a; });
+								for(var x in keysX){
+									var keyX = keysX[x];
+									if(typeof app_layers_question_list_position.list[keyY][keyX] == 'undefined'){
+										continue;
+									}
+									if($("#"+app_layers_question_list_position.list[keyY][keyX]).length>0){
+										order_id.push(parseInt($("#"+app_layers_question_list_position.list[keyY][keyX]).attr("question_id"), 10));
+									}
+								}
+							}
+							var data = {};
+							data.set = {};
+							data.set.question = {};
+							for(var i in order_id){
+								var order = parseInt(i, 10)+1;
+								var item = Lincko.storage.get("question", order_id[i]);
+								if(item){
+									data.set.question[item['id']] = {
+										id: item['id'],
+										md5: item['md5'],
+										sort: order,
+									};
+								}
+							}
+							app_layers_question_list_position.list = false;
+							app_layers_question_list_position.current.x = false;
+							app_layers_question_list_position.current.y = false;
+							var action_cb_complete = function(){
+								storage_cb_complete();
+								app_application_lincko.prepare("question", true);
+							};
+							if(storage_offline(data)){
+								app_application_lincko.prepare("question", true);
+								wrapper_sendAction(data, 'post', 'api/data/set', storage_cb_success, storage_cb_error, storage_cb_begin, action_cb_complete);
+							}
+						},
+						function(){ //cb_progress
+							if(app_layers_question_list_position.list && app_layers_content_move.clone && app_layers_content_move.clone.length>0){
+								var posY = false;
+								var keysY = Object.keys(app_layers_question_list_position.list).sort(function(a, b) { return a - b; });
+								for(var i in keysY){
+									var y = keysY[i];
+									if(!posY){
+										posY = y;
+									}
+									if(wrapper_mouse.y > y){
+										posY = y;
+									}
+								}
+								if(posY){
+									if(typeof app_layers_question_list_position.list[posY] == 'undefined'){
+										return false;
+									}
+									var posX = false;
+									var keysX = Object.keys(app_layers_question_list_position.list[posY]).sort(function(a, b) { return a - b; });
+									for(var i in keysX){
+										var x = keysX[i];
+										if(!posX){
+											posX = x;
+										}
+										if(wrapper_mouse.x > x){
+											posX = x;
+										}
+									}
+								}
+								if(posY && posX){
+									if(
+										   (posY != app_layers_question_list_position.current.y
+										|| posX != app_layers_question_list_position.current.x)
+										&& app_layers_content_move.elem
+										&& app_layers_content_move.elem.length>0
+										&& typeof app_layers_question_list_position.list[posY] != 'undefined'
+										&& typeof app_layers_question_list_position.list[posY][posX] != 'undefined'
+										&& $('#'+app_layers_question_list_position.list[posY][posX]).length>0
+									){
+										var direction = 'before';
+										if(posY > app_layers_question_list_position.current.y){
+											direction = 'after';
+										} else if(posY == app_layers_question_list_position.current.y){
+											if(posX > app_layers_question_list_position.current.x){
+												direction = 'after';
+											}
+										}
+										if(direction=='before'){
+											app_layers_content_move.elem.insertBefore($('#'+app_layers_question_list_position.list[posY][posX]));
+										} else {
+											app_layers_content_move.elem.insertAfter($('#'+app_layers_question_list_position.list[posY][posX]));
+										}
+										app_layers_question_list_position.build();
+										app_layers_question_refresh();
+									}
+									
+								}
+							}
+						}
+					);
+				});
 
-				position = $('#app_layers_question').find("[created_at]").filter(function() { return parseInt($(this).attr("created_at"), 10) <= item['created_at']; }).first();
-				if(position.length==1){
-					position.before(Elem);
+				if($("#app_layers_question_add_icon").length>0){
+					Elem.insertBefore($("#app_layers_question_add_icon"));
 				} else {
 					position = $('#app_layers_question').find("[find=wrapper]");
 					Elem.appendTo(position);
@@ -327,6 +449,38 @@ var app_layers_question_feedPage = function(param){
 
 	app_application_lincko.prepare("question", true);
 
+};
+
+var app_layers_question_list_position = {
+
+	current: {
+		x: false,
+		y: false,
+	},
+
+	list: false,
+
+	build: function(){
+		if(app_layers_content_move.elem && app_layers_content_move.elem.length>0){
+			var elem_id = app_layers_content_move.elem.prop('id');
+			app_layers_question_list_position.list = {};
+			$('#app_layers_content').find("[question_id]").each(function(){
+				var that = $(this);
+				if(that.prop('id') == app_layers_content_move.clone.prop('id')){
+					return false;
+				}
+				var offset = that.offset();
+				if(typeof app_layers_question_list_position.list[offset.top] == 'undefined'){
+					app_layers_question_list_position.list[offset.top] = {};
+				}
+				app_layers_question_list_position.list[offset.top][offset.left] = that.prop('id');
+				if(app_layers_question_list_position.list[offset.top][offset.left] == elem_id){
+					app_layers_question_list_position.current.x = offset.left;
+					app_layers_question_list_position.current.y = offset.top;
+				}
+			});
+		}
+	},
 };
 
 var app_layers_question_icon_back = function(){

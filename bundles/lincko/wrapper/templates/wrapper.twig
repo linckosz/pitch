@@ -267,7 +267,7 @@ JSfiles.loadLibraries = function(){
 		return true;
 	}
 	//Once it reach a string, it means there is no more js files to load, so we can launch the ultimate functions
-	var asc_order = Object.keys(wrapper_after_dom).sort(function(a, b) { return a - b; }); //From smalll(high priority) to big(low priority)
+	var asc_order = Object.keys(wrapper_after_dom).sort(function(a, b) { return a - b; }); //From small(high priority) to big(low priority)
 	for(var i in asc_order){
 		pri_tp = asc_order[i];
 		for(var action in wrapper_after_dom[pri_tp]){
