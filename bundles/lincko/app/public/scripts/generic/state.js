@@ -128,7 +128,7 @@ var app_generic_state = {
 
 	action: {
 		showppt: function(data){
-			showppt(false);
+			showppt_close();
 		},
 		previewer: function(data){
 			previewer(false);

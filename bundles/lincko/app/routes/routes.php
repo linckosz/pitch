@@ -3,11 +3,16 @@
 namespace bundles\lincko\launch\routes;
 
 use \libs\Vanquish;
+use \bundles\lincko\api\models\base\Action;
 
 $app = \Slim\Slim::getInstance();
 
 $app->get('/', function () use($app) {
 	if($app->lincko->data['logged']){
+		$user_info = Action::getUserInfo();
+		foreach ($user_info as $key => $value) {
+			$app->lincko->data['user_info_'.$key] = $value;
+		}
 		$app->render('/bundles/lincko/app/templates/app/application.twig');
 	} else {
 		Vanquish::unsetAll(array('user_language'));

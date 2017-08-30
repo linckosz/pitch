@@ -157,6 +157,21 @@
 	padding-left: 1.6vmin;
 }
 
+#ppt_frame_style {
+	position: fixed;
+	bottom: 3vw;
+	bottom: 3vmin;
+	right: 5vw;
+	right: 5vmin;
+	font-size: 0;
+	height: 4.4vw;
+	height: 4.4vmin;
+	filter: alpha(opacity=30);
+	opacity: 0.30;
+	-moz-opacity: 0.30;
+	-khtml-opacity: 0.30;
+}
+
 #ppt_stats_qrcode {
 	width: 100%;
 	height: 100%;

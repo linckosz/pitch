@@ -15,6 +15,7 @@ use \bundles\lincko\api\models\data\File;
 use \bundles\lincko\api\models\data\Question;
 use \bundles\lincko\api\models\data\Pitch;
 use \bundles\lincko\api\models\data\Guest;
+use \bundles\lincko\api\models\data\User;
 use WideImage\WideImage;
 use Endroid\QrCode\QrCode;
 
@@ -114,6 +115,13 @@ class ControllerPPT extends Controller {
 			$app->lincko->data['data_question_style'] = $question->style;
 			if($question->file_id && $file = File::Where('id', $question->file_id)->first(array('id', 'uploaded_by', 'link', 'ori_ext', 'updated_ms'))){
 				$app->lincko->data['data_question_picture'] = $base_url.'/files/'.$file->uploaded_by.'/'.$file->link.'.'.$file->ori_ext.'?'.$file->updated_ms;
+			}
+
+			$app->lincko->data['data_question_style_picture'] = '/lincko/ppt/images/icons/answers.png';
+			if($question->style==2){
+				$app->lincko->data['data_question_style_picture'] = '/lincko/ppt/images/icons/pictures.png';
+			} else if($question->style==3){
+				$app->lincko->data['data_question_style_picture'] = '/lincko/ppt/images/icons/statistics.png';
 			}
 
 			
@@ -219,6 +227,31 @@ class ControllerPPT extends Controller {
 			}
 		}
 		$app->render('/bundles/lincko/ppt/templates/generic/sorry.twig');
+	}
+
+	public function pitch_start_get($pitchid_enc){
+		$this->pitch_info($pitchid_enc, true);
+	}
+
+	public function pitch_end_get($pitchid_enc){
+		$this->pitch_info($pitchid_enc, false);
+	}
+
+	public function pitch_info($pitchid_enc, $start=true){
+		$app = ModelLincko::getApp();
+		$app->lincko->data['data_pitch_title'] = strtoupper($app->trans->getBRUT('ppt', 0, 6)); //Thank you
+		$app->lincko->data['data_pitch_by'] = '';
+		$pitch_id = STR::integer_map($pitchid_enc, true);
+		if($pitch = Pitch::Where('id', $pitch_id)->first(array('id', 'title'))){
+			if($start){
+				$app->lincko->data['data_pitch_title'] = $pitch->title;
+				if($user = User::getUser()){
+					$app->lincko->data['data_pitch_by'] = $app->trans->getBRUT('ppt', 0, 7).$user->username; //By Bruno Martin
+				}
+			}
+		}
+		$app->render('/bundles/lincko/ppt/templates/ppt/info/pitch.twig');
+		return true;
 	}
 
 	public function stats_get($questionid_enc, $refresh='refresh'){

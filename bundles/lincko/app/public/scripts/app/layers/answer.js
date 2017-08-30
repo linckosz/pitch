@@ -262,7 +262,7 @@ var app_layers_answer_feedPage = function(param){
 	Elem = $('#-app_layers_answer_preview').clone();
 	Elem.prop('id', 'app_layers_answer_preview');
 	Elem.on('click', question['id'], function(event){
-		showppt(event.data);
+		showppt_launch(event.data);
 	});
 	Elem.appendTo(position_wrapper);
 

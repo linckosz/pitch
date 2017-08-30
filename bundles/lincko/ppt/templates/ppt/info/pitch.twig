@@ -1,0 +1,28 @@
+{% extends '/bundles/lincko/ppt/templates/base.twig' %}
+{% block frame %}
+	<div id="begin_ppt_info_pitch" class="visibility_hidden">
+		<link rel="stylesheet" href="{{ _filelatest('/lincko/ppt/styles/ppt/info/pitch.css') }}" type="text/css" />
+		<style type="text/css">
+			.base_color_bg_main_gradient {
+				background-image: url("{{ _filelatest('/lincko/ppt/images/bg01.jpg') }}") !important;
+				background-repeat: no-repeat !important;
+				background-position: center !important;
+				background-size: cover !important;
+			}
+		</style>
+		<script src="{{ _filelatest('/lincko/ppt/scripts/ppt/info/pitch.js') }}" type="text/javascript"></script>
+	</div>
+
+	<div id="ppt_info_pitch_title">
+		{{ data_pitch_title }}
+	</div>
+	<div id="ppt_info_pitch_by">
+		{{ data_pitch_by }}
+	</div>
+
+	<div id="ppt_info_pitch_website">
+		<span id="ppt_info_pitch_website_logo" class="icon-projectBlack"></span><span id="ppt_info_pitch_website_link">pitch.lincko.com</span>
+	</div>
+
+	<div id="end_ppt_info_pitch" class="visibility_hidden"></div>
+{% endblock %}

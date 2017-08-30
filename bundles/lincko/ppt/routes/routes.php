@@ -27,6 +27,24 @@ $app->group('/ppt', function () use ($app) {
 	->name('ppt_answer_get');
 
 	$app->get(
+		'/pitch/start/:pitchid',
+		'\bundles\lincko\ppt\controllers\ControllerPPT:pitch_start_get'
+	)
+	->conditions(array(
+		'pitchid' => '[a-z0-9]+',
+	))
+	->name('ppt_pitch_start_get');
+
+	$app->get(
+		'/pitch/end/:pitchid',
+		'\bundles\lincko\ppt\controllers\ControllerPPT:pitch_end_get'
+	)
+	->conditions(array(
+		'pitchid' => '[a-z0-9]+',
+	))
+	->name('ppt_pitch_end_get');
+
+	$app->get(
 		'/stats/:statisticsid(/:refresh)',
 		'\bundles\lincko\ppt\controllers\ControllerPPT:stats_get'
 	)

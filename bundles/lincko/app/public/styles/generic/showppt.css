@@ -14,6 +14,14 @@
 	right: 0;
 }
 
+#showppt_width_wrapper {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+}
+
 .showppt_top {
 	z-index: 3;
 	position: absolute;
@@ -63,7 +71,18 @@
 	background-color: rgba(143, 143, 143, 0.6);
 	text-align: center;
 	padding: 4px 20px;
-	margin: 2px 4px;
+	margin: 4px;
+}
+
+.showppt_button.disabled {
+	color: rgba(255, 255, 255, 0.65) !important;
+	border: 1px solid rgba(255, 255, 255, 0.65) !important;
+	background-color: rgba(143, 143, 143, 0.6) !important;
+	cursor: default;
+	filter: alpha(opacity=30);
+	opacity: 0.30;
+	-moz-opacity: 0.30;
+	-khtml-opacity: 0.30;
 }
 
 .showppt_button:hover {
@@ -82,21 +101,26 @@
 	padding: 4px 60px;
 }
 
-#showppt_next {
-	padding: 6px 32px;
-	font-size: 18px;
+#showppt_slide {
 	position: absolute;
 	right: 5%;
 	bottom: 5%;
+	white-space: nowrap;
 }
 
-#showppt_webviewer {
-	padding: 6px;
-	font-size: 14px;
+#showppt_prev, #showppt_next {
+	padding: 6px 32px;
+	font-size: 18px;
+	white-space: nowrap;
+}
+
+#showppt_close {
+	font-size: 18px;
 	position: absolute;
 	left: 5%;
 	bottom: 5%;
 	cursor: pointer;
+	white-space: nowrap;
 }
 
 .showppt_link {
@@ -118,21 +142,111 @@
 	left: 0;
 }
 
+#showppt_scrollbar {
+	position: absolute;
+	z-index: 3;
+	top: 25%;
+	height: 40%;
+	right: 1%;
+	width: 3%;
+	border: 1px solid rgba(187, 186, 187, 0.30);
+}
+
+#showppt_scrollbar_indicator {
+	border: 4px solid #00719C;
+	width: 100%;
+	height: 1px;
+	margin-top: -2px;
+	margin-left: -2px;
+	box-sizing: border-box;
+	background: transparent;
+	position: absolute;
+	top: 0;
+}
+
+#showppt_scrollbar_list {
+	display: table;
+	width: 100%;
+	height: 100%;
+}
+
+.showppt_scrollbar_list_slide {
+	/*background-color: #D1D1D1;*/
+	width: 100%;
+	display: table-row;
+	height: auto;
+}
+
+.showppt_scrollbar_list_slide_info {
+	display: table-cell;
+	cursor: pointer;
+	height: auto;
+	width: 100%;
+	background-color: #D1D1D1;
+}
+.showppt_scrollbar_list_slide_info.odd {
+	background-color: #C7C7C7;
+}
+.showppt_scrollbar_list_slide_info:hover {
+	background-color: #8DB2D5;
+}
+.showppt_scrollbar_list_slide_info:active {
+	background-color: #548DC0;
+}
+
+#showppt_scrollbar_ppt {
+	cursor: pointer;
+	position: absolute;
+	left: 2px;
+	top: 25%;
+	font-size: 22px;
+	color: rgba(127, 127, 127, 0.4);
+	z-index: 3;
+}
+#showppt_scrollbar_ppt:hover {
+	color: rgba(127, 127, 127, 0.85);
+}
+#showppt_scrollbar_ppt:active {
+	color: rgba(127, 127, 127, 1.00);
+}
 
 /* Mobile phone in Portrait */
 @media only screen and (max-width: 479px){
-	#showppt_next {
-		padding: 6px 26px;
-		font-size: 16px;
-	}
 	.showppt_button.showppt_button_url {
-		padding: 4px 20px;
+		margin: auto;
+		padding: 4px 0;
+		overflow: visible;
+		white-space: nowrap;
+		width: 96%;
+		width: 96vw;
+	}
+	.showppt_top_wrapper {
+		display: block;
 	}
 	.showppt_top {
-		top: 1%;
+		top: 2%;
+		top: 2vw;
 	}
 	.showppt_link {
 		font-size: 12px;
+	}
+	#showppt_slide {
+		right: 2%;
+		right: 2vw;
+		bottom: 2%;
+		bottom: 2vw;
+	}
+	#showppt_prev, #showppt_next {
+		padding: 10px 26px;
+		font-size: 16px;
+	}
+	#showppt_close {
+		padding: 6px 20px;
+		font-size: 14px;
+		left: 2%;
+		left: 2vw;
+		bottom: 2%;
+		bottom: 2vw;
 	}
 }
 
