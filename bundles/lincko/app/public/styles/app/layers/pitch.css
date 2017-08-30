@@ -8,7 +8,8 @@
 }
 
 .app_layers_pitch_add_corner {
-	background-color: #7BB1A9;
+	/*background-color: #7BB1A9;*/
+	background-color: #4B8179;
 	position: fixed;
 	z-index: 100;
 	right: 0;
@@ -38,6 +39,10 @@
 	opacity: 0.80;
 	-moz-opacity: 0.80;
 	-khtml-opacity: 0.80;
+}
+
+.app_layers_pitch_add_corner_display_none {
+	display: none;
 }
 
 .app_layers_pitch_add_icon {

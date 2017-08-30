@@ -141,6 +141,7 @@ var app_layers_question_feedPage = function(param){
 			$(this).find("[find=add]").addClass("display_none");
 			$(this).find("[find=input]").removeClass("display_none");
 			$(this).css('cursor', 'default');
+			$('#app_layers_question_add_corner').addClass('app_layers_question_add_corner_display_none');
 			var items = Lincko.storage.list('question', -1, null, 'pitch', event.data);
 			var param = {
 				number: items.length+1,
@@ -251,6 +252,7 @@ var app_layers_question_feedPage = function(param){
 	app_layers_question_new_animation = false;
 	app_application_lincko.add("app_layers_question", "question", function(){
 		var items = Lincko.storage.list('question', -1, null, 'pitch', this.action_param);
+		items = Lincko.storage.sort_items(items, 'id', 0, -1, true);
 		items = Lincko.storage.sort_items(items, 'sort', 0, -1, false);
 		var item;
 		var Elem;
@@ -264,6 +266,7 @@ var app_layers_question_feedPage = function(param){
 				Elem.attr('created_at', item['created_at']);
 				Elem.attr('question_id', item['id']);
 				Elem.find("[find=title]").html( wrapper_to_html(item['title']) );
+				Elem.find("[find=style]").prop('src', app_layers_icon_source(item['style']));
 				Elem.find("[find=delete]").click(
 					item['id'],
 					function(event){
@@ -302,6 +305,7 @@ var app_layers_question_feedPage = function(param){
 				);
 				Elem.on('mousedown touchdown touchstart', function(event){
 					app_layers_content_move.mousedown(
+						event,
 						$(this),
 						function(){ //cb_begin
 							app_layers_question_list_position.build();
@@ -402,6 +406,20 @@ var app_layers_question_feedPage = function(param){
 												direction = 'after';
 											}
 										}
+										//Check with mouse direction
+										if(posY != app_layers_question_list_position.current.y){
+											if(direction=='before' && wrapper_mouse.dirY==1){
+												return false;
+											} else if(direction=='after' && wrapper_mouse.dirY==-1){
+												return false;
+											}
+										} else if(posX != app_layers_question_list_position.current.x){
+											if(direction=='before' && wrapper_mouse.dirX==1){
+												return false;
+											} else if(direction=='after' && wrapper_mouse.dirX==-1){
+												return false;
+											}
+										}
 										if(direction=='before'){
 											app_layers_content_move.elem.insertBefore($('#'+app_layers_question_list_position.list[posY][posX]));
 										} else {
@@ -441,6 +459,7 @@ var app_layers_question_feedPage = function(param){
 			} else {
 				Elem = $('#models_question_'+item['id']);
 				Elem.find("[find=title]").html( wrapper_to_html(item['title']) );
+				Elem.find("[find=style]").prop('src', app_layers_icon_source(item['style']));
 			}
 		}
 		app_layers_question_new_animation = true;
@@ -491,7 +510,9 @@ var app_layers_question_icon_back = function(){
 		$("#app_layers_question_add_icon").css('cursor', '');
 		$("#app_layers_question_add_icon").find("[find=input_textarea]").val("");
 		$("#app_layers_question_add_icon").blur();
+		$('#app_layers_question_add_corner').removeClass('app_layers_question_add_corner_display_none');
 		wrapper_IScroll();
+		app_layers_question_refresh();
 	}
 };
 

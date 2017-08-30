@@ -57,3 +57,21 @@ var app_layers_launchMenu = function(menu, param){
 	delete layer;
 
 };
+
+var app_layers_icon_source = function(style){
+	if(style==2){
+		return app_layers_img_pictures.src;
+	} else if(style==3){
+		return app_layers_img_statistics.src;
+	}
+	return app_layers_img_answers.src;
+};
+
+var app_layers_icon_source30 = function(style){
+	if(style==2){
+		return app_layers_img_pictures30.src;
+	} else if(style==3){
+		return app_layers_img_statistics30.src;
+	}
+	return app_layers_img_answers30.src;
+};

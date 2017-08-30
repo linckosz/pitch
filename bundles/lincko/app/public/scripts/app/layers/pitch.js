@@ -48,6 +48,7 @@ var app_layers_pitch_feedPage = function(param){
 			$(this).find("[find=add]").addClass("display_none");
 			$(this).find("[find=input]").removeClass("display_none");
 			$(this).css('cursor', 'default');
+			$('#app_layers_pitch_add_corner').addClass('app_layers_pitch_add_corner_display_none');
 			var items = Lincko.storage.list('pitch');
 			var param = {
 				number: items.length+1,
@@ -156,6 +157,7 @@ var app_layers_pitch_feedPage = function(param){
 	app_layers_pitch_new_animation = false;
 	app_application_lincko.add("app_layers_pitch", "pitch", function(){
 		var items = Lincko.storage.list('pitch');
+		items = Lincko.storage.sort_items(items, 'id', 0, -1, true);
 		items = Lincko.storage.sort_items(items, 'sort', 0, -1, false);
 		var item;
 		var Elem;
@@ -215,6 +217,7 @@ var app_layers_pitch_feedPage = function(param){
 				);
 				Elem.on('mousedown touchdown touchstart', function(event){
 					app_layers_content_move.mousedown(
+						event,
 						$(this),
 						function(){ //cb_begin
 							app_layers_pitch_list_position.build();
@@ -404,7 +407,9 @@ var app_layers_pitch_icon_back = function(){
 		$("#app_layers_pitch_add_icon").css('cursor', '');
 		$("#app_layers_pitch_add_icon").find("[find=input_textarea]").val("");
 		$("#app_layers_pitch_add_icon").blur();
+		$('#app_layers_pitch_add_corner').removeClass('app_layers_pitch_add_corner_display_none');
 		wrapper_IScroll();
+		app_layers_pitch_refresh();
 	}
 };
 

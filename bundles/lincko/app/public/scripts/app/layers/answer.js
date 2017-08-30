@@ -221,23 +221,25 @@ var app_layers_answer_feedPage = function(param){
 	Elem = $('#-app_layers_answer_style').clone();
 	Elem.prop('id', '');
 	Elem.find("[find=select_style]").on('change', question['id'], function(event){
-			var data = {};
-			data.set = {};
-			data.set.question = {};
-			var item = Lincko.storage.get('question', event.data);
-			if(item){
-				data.set.question[item['id']] = {
-					id: item['id'],
-					md5: item['md5'],
-					style: this.value,
-				};
-				if(storage_offline(data)){
-					app_layers_answer_answers_style(this.value);
-					app_layers_answer_answers_correct(item, false, true);
-					wrapper_sendAction(data, 'post', 'api/data/set', storage_cb_success, storage_cb_error, storage_cb_begin, storage_cb_complete);
-				}
+		var data = {};
+		data.set = {};
+		data.set.question = {};
+		var item = Lincko.storage.get('question', event.data);
+		if(item){
+			data.set.question[item['id']] = {
+				id: item['id'],
+				md5: item['md5'],
+				style: this.value,
+			};
+			if(storage_offline(data)){
+				app_layers_answer_answers_style(this.value);
+				app_layers_answer_answers_correct(item, false, true);
+				wrapper_sendAction(data, 'post', 'api/data/set', storage_cb_success, storage_cb_error, storage_cb_begin, storage_cb_complete);
 			}
+		}
+		$(this).css("background-image", "url('"+app_layers_icon_source30(this.value)+"')");
 	});
+	Elem.find("[find=select_style]").css("background-image", "url('"+app_layers_icon_source30(question['style'])+"')");
 	//Preselect
 	Elem.find("option").each(function(){
 		if($(this).val() == question['style']){

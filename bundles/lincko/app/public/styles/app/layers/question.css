@@ -8,7 +8,8 @@
 }
 
 .app_layers_question_add_corner {
-	background-color: #8DB1BF;
+	/*background-color: #8DB1BF;*/
+	background-color: #4D7888;
 	position: fixed;
 	z-index: 100;
 	right: 0;
@@ -38,6 +39,10 @@
 	opacity: 0.80;
 	-moz-opacity: 0.80;
 	-khtml-opacity: 0.80;
+}
+
+.app_layers_question_add_corner_display_none {
+	display: none;
 }
 
 .app_layers_question_add_icon {

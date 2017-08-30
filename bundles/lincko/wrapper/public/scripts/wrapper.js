@@ -430,21 +430,42 @@ wrapper_performance.delay = 50;
 var wrapper_mouse = {
 	x: 0,
 	y: 0,
+	dirX: 1, //-1:up 1:down
+	dirY: 1, //-1:left 1:right
+	set: function(event){
+		if(typeof event != 'object'){
+			return false;
+		}
+		var oldX = wrapper_mouse.x;
+		var oldY = wrapper_mouse.y;
+		if(typeof event.pageX == 'number' && typeof event.pageY == 'number'){
+			wrapper_mouse.x = event.pageX;
+			wrapper_mouse.y = event.pageY;
+		} else if(typeof event.originalEvent == 'object' && typeof event.originalEvent.touches == 'object' && typeof event.originalEvent.touches[0] == 'object' && typeof event.originalEvent.touches[0].pageX == 'number' && typeof event.originalEvent.touches[0].pageY == 'number'){
+			wrapper_mouse.x = event.originalEvent.touches[0].pageX;
+			wrapper_mouse.y = event.originalEvent.touches[0].pageY;
+		} else if(typeof event.originalEvent.touches == 'object' && typeof event.touches[0] == 'object' && typeof event.touches[0].pageX == 'number' && typeof event.touches[0].pageY == 'number'){
+			wrapper_mouse.x = event.touches[0].pageX;
+			wrapper_mouse.y = event.touches[0].pageY;
+		}
+		if(wrapper_mouse.x < oldX){
+			wrapper_mouse.dirX = -1;
+		} else if(wrapper_mouse.x > oldX){
+			wrapper_mouse.dirX = 1;
+		} else {
+			//Do not record 0 because of crenelage effect
+		}
+		if(wrapper_mouse.y < oldY){
+			wrapper_mouse.dirY = -1;
+		} else if(wrapper_mouse.y > oldY){
+			wrapper_mouse.dirY = 1;
+		} else {
+			//Do not record 0 because of crenelage effect
+		}
+	},
 }
 $(window).on('mousemove touchmove touchdown touchstart', function(event){
-	if(typeof event != 'object'){
-		return false;
-	}
-	if(typeof event.pageX == 'number' && typeof event.pageY == 'number'){
-		wrapper_mouse.x = event.pageX;
-		wrapper_mouse.y = event.pageY;
-	} else if(typeof event.originalEvent == 'object' && typeof event.originalEvent.touches == 'object' && typeof event.originalEvent.touches[0] == 'object' && typeof event.originalEvent.touches[0].pageX == 'number' && typeof event.originalEvent.touches[0].pageY == 'number'){
-		wrapper_mouse.x = event.originalEvent.touches[0].pageX;
-		wrapper_mouse.y = event.originalEvent.touches[0].pageY;
-	} else if(typeof event.originalEvent.touches == 'object' && typeof event.touches[0] == 'object' && typeof event.touches[0].pageX == 'number' && typeof event.touches[0].pageY == 'number'){
-		wrapper_mouse.x = event.touches[0].pageX;
-		wrapper_mouse.y = event.touches[0].pageY;
-	}
+	wrapper_mouse.set(event);
 });
 
 JSfiles.finish(function(){

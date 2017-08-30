@@ -124,6 +124,8 @@ var app_layers_content_move = {
 
 	timer: false,
 
+	touchcancel_timer: false,
+
 	cb_begin: false,
 
 	cb_success: false,
@@ -136,8 +138,13 @@ var app_layers_content_move = {
 	offsetTop: false,
 	offsetLeft: false,
 
+	//Check the mouse offset after timeout
+	currentTop: 0,
+	currentLeft: 0,
+
 	init: function(){
 		clearTimeout(app_layers_content_move.timer);
+		clearTimeout(app_layers_content_move.touchcancel_timer);
 		wrapper_IScroll_switch();
 		app_layers_content_move.moving = false;
 		app_layers_content_move.wrapper = false;
@@ -158,13 +165,21 @@ var app_layers_content_move = {
 		app_layers_content_move.offsetLeft = false;
 	},
 
-	mousedown: function(Elem, cb_begin, cb_success, cb_progress){
+	mousedown: function(event, Elem, cb_begin, cb_success, cb_progress){
 		if(!wrapper_IScroll_scrolling && !app_layers_content_move.moving && Elem.length>0){
 			app_layers_content_move.init();
 			app_layers_content_move.elem = Elem;
+			wrapper_mouse.set(event);
+			app_layers_content_move.currentTop = wrapper_mouse.y;
+			app_layers_content_move.currentLeft = wrapper_mouse.x;
 			clearTimeout(app_layers_content_move.timer);
+			clearTimeout(app_layers_content_move.touchcancel_timer);
 			app_layers_content_move.timer = setTimeout(function(){
-				if(wrapper_IScroll_scrolling){
+				if(
+					   wrapper_IScroll_scrolling
+					|| Math.abs(app_layers_content_move.currentTop - wrapper_mouse.y) > 5
+					|| Math.abs(app_layers_content_move.currentLeft - wrapper_mouse.x) > 5
+				){
 					app_layers_content_move.init();
 					return false;
 				}
@@ -234,6 +249,7 @@ var app_layers_content_move = {
 						scale = 1.02;
 					}
 					clone
+					.css('visibility', 'hidden')
 					.addClass('move')
 					.recursiveOff()
 					.velocity(
@@ -256,6 +272,9 @@ var app_layers_content_move = {
 								if(typeof app_layers_content_move.cb_begin == 'function'){
 									app_layers_content_move.cb_begin();
 								}
+								if(app_layers_content_move.clone && app_layers_content_move.clone.length>0){
+									app_layers_content_move.clone.css('visibility', '');
+								}
 							},
 							complete: function(){
 								app_layers_content_move.move();
@@ -270,6 +289,7 @@ var app_layers_content_move = {
 	reset: function(animation){
 		if(typeof animation == 'undefined'){ animation = true; }
 		clearTimeout(app_layers_content_move.timer);
+		clearTimeout(app_layers_content_move.touchcancel_timer);
 		if(app_layers_content_move.moving){
 			if(typeof app_layers_content_move.cb_progress == 'function'){
 				app_layers_content_move.cb_progress();
@@ -419,6 +439,17 @@ JSfiles.finish(function(){
 	$(window).on('mouseup touchup touchend', function(event){
 		if(app_layers_content_move.moving){
 			app_layers_content_move.reset();
+		}
+	});
+	$(window).on('touchcancel', function(event){
+		if(app_layers_content_move.moving){
+			clearTimeout(app_layers_content_move.touchcancel_timer);
+			//Cancel move after 4s
+			app_layers_content_move.touchcancel_timer = setTimeout(function(){
+				if(app_layers_content_move.moving){
+					app_layers_content_move.reset();
+				}
+			}, 4000);
 		}
 	});
 	$('body').on('mouseleave', function(event){

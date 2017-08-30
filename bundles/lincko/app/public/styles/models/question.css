@@ -118,11 +118,23 @@
 	font-size: 22px;
 	color: rgba(255, 255, 255, 0.4);
 }
-.models_question_standard_delete:hover {
+.models_question_standard_delete:hover, .models_question_standard:hover .models_question_standard_delete:hover {
 	color: rgba(255, 255, 255, 0.85);
 }
-.models_question_standard_delete:active {
+.models_question_standard_delete:active, .models_question_standard:active .models_question_standard_delete:active {
 	color: #FFFFFF;
+}
+
+.models_question_standard_style {
+	display: inline-block;
+	height: 16px;
+	margin-left: 2px;
+	margin-right: 8px;
+	vertical-align: baseline;
+	filter: alpha(opacity=30);
+	opacity: 0.30;
+	-moz-opacity: 0.30;
+	-khtml-opacity: 0.30;
 }
 
 .models_question_standard_details {
@@ -174,6 +186,9 @@
 		opacity: 0.90;
 		-moz-opacity: 0.90;
 		-khtml-opacity: 0.90;
+	}
+	.models_question_standard_style {
+		margin-left: 0;
 	}
 }
 

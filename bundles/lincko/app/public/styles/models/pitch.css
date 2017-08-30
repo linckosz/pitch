@@ -125,10 +125,18 @@
 	right: 36px;
 	top: 7px;
 }
-.models_pitch_standard_delete:hover, .models_pitch_standard_ppt:hover {
+.models_pitch_standard_delete:hover,
+.models_pitch_standard:hover .models_pitch_standard_delete:hover,
+.models_pitch_standard_ppt:hover,
+.models_pitch_standard:hover .models_pitch_standard_ppt:hover
+{
 	color: rgba(255, 255, 255, 0.85);
 }
-.models_pitch_standard_delete:active, .models_pitch_standard_ppt:active {
+.models_pitch_standard_delete:active,
+.models_pitch_standard:active .models_pitch_standard_delete:active,
+.models_pitch_standard_ppt:active,
+.models_pitch_standard:active .models_pitch_standard_ppt:active
+{
 	color: #FFFFFF;
 }
 
