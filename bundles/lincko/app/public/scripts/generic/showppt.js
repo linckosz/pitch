@@ -1,4 +1,5 @@
 var showppt_list_url = [];
+var showppt_list_scan = [];
 var showppt_list_index = 0;
 var showppt_pitch_id = false;
 
@@ -53,10 +54,10 @@ var showppt_iframe_css = {
 	},
 
 	init: function(body_width){
-		showppt_iframe_css.bg_width = 0;
-		showppt_iframe_css.bg_height = 0;
-		showppt_iframe_css.bg_left = 0;
-		showppt_iframe_css.bg_top = 0;
+		showppt_iframe_css.wrapper_width = 0;
+		showppt_iframe_css.wrapper_height = 0;
+		showppt_iframe_css.wrapper_left = 0;
+		showppt_iframe_css.wrapper_top = 0;
 
 		var orientation = ($(window).width() / $(window).height() ) <  ( showppt_iframe_css.frame_width / showppt_iframe_css.frame_height );
 		if(orientation){
@@ -112,6 +113,20 @@ var showppt_iframe_css = {
 			'left': Math.round( iframe_border * ((1-ratio)/2) ),
 			'top': Math.round( showppt_iframe_css.iframe_top + 8),
 		});
+
+		var ratio = 0.15;
+		$("#showppt_scanner").css({
+			'right': Math.round( iframe_border + (((0.30-ratio)/2) * showppt_iframe_css.iframe_width) ),
+			'bottom': Math.round( $(window).height() - (showppt_iframe_css.iframe_top + showppt_iframe_css.iframe_height + 16) - (ratio * showppt_iframe_css.iframe_width) ),
+			'width': Math.round( ratio * showppt_iframe_css.iframe_width ),
+			'height': Math.round( ratio * showppt_iframe_css.iframe_width ),
+		});
+		$("#showppt_lazer").css({
+			'right': Math.round( iframe_border ),
+			'bottom': Math.round( $(window).height() - (showppt_iframe_css.iframe_top + showppt_iframe_css.iframe_height + 16) ),
+			'width': Math.round( 0.30 * showppt_iframe_css.iframe_width ),
+			'height': Math.round( showppt_iframe_css.iframe_height),
+		});
 	},
 
 };
@@ -124,12 +139,14 @@ var showppt_launch = function(question_id){
 	var index = 0;
 	var result = false;
 	showppt_list_url = [];
+	showppt_list_scan = [];
 	showppt_list_index = 0;
 	showppt_pitch_id = false;
 	var pitch = Lincko.storage.getParent("question", question_id);	
 	if(pitch){
 		showppt_pitch_id = pitch['id'];
 		showppt_list_url.push(top.location.protocol+'//'+document.domain+'/ppt/pitch/start/'+wrapper_integer_map(pitch["id"]));
+		showppt_list_scan.push(false);
 		index++;
 		var items = Lincko.storage.list('question', -1, null, 'pitch', pitch["id"]);
 		items = Lincko.storage.sort_items(items, 'id', 0, -1, true);
@@ -139,13 +156,16 @@ var showppt_launch = function(question_id){
 				showppt_list_index = index;
 			}
 			showppt_list_url.push(top.location.protocol+'//'+document.domain+'/ppt/question/'+wrapper_integer_map(items[i]["id"]));
+			showppt_list_scan.push(top.location.protocol+'//'+document.domain+'/quiz/question/0/'+wrapper_integer_map(items[i]["id"]));
 			index++;
 			if(items[i]["style"]!=3){
 				showppt_list_url.push(top.location.protocol+'//'+document.domain+'/ppt/answer/'+wrapper_integer_map(items[i]["id"]));
+				showppt_list_scan.push(false);
 				index++;
 			}
 		}
 		showppt_list_url.push(top.location.protocol+'//'+document.domain+'/ppt/pitch/end/'+wrapper_integer_map(pitch["id"]));
+		showppt_list_scan.push(false);
 		index++;
 		if(typeof showppt_list_url[showppt_list_index] != 'string'){
 			showppt_list_index = 0;
@@ -180,12 +200,20 @@ var showppt_insert_slide = function(slides){
 	}
 };
 
+var showppt_quiz_close = function(){
+	$('#showppt_iframe_quiz').prop('src', '');
+	$('#showppt_iframe_quiz, #showppt_iframe_quiz_close').addClass('display_none');
+};
+
 var showppt_close = function(){
 	$('#showppt_iframe').prop('src', '');
 	$("#showppt").addClass('display_none');
+	$("#showppt_lazer").velocity("stop");
 	showppt_list_url = [];
+	showppt_list_scan = [];
 	showppt_list_index = 0;
 	showppt_pitch_id = false;
+	showppt_quiz_close();
 	app_generic_state.change({
 		showppt: false,
 	}, null, -1);
@@ -230,6 +258,12 @@ var showppt = function(index, timer){
 					'top': slide.position().top,
 					'duration': timer,
 				});
+			}
+			//Scanner button
+			if(typeof showppt_list_scan[index] == 'string'){
+				$("#showppt_scanner").removeClass('display_none');
+			} else {
+				$("#showppt_scanner").addClass('display_none');
 			}
 			app_generic_state.change({
 				showppt: true,
@@ -276,9 +310,58 @@ $("#showppt_next").on('click', function(event){
 });
 
 //Close the preview
+$("#showppt_scanner").on('click', function(event){
+	if(typeof showppt_list_scan[showppt_list_index] == 'string' && showppt_list_scan[showppt_list_index]){
+		$("#showppt_lazer")
+			.css({
+				height: Math.round( showppt_iframe_css.iframe_height),
+			})
+			.velocity("stop")
+			.velocity(
+				{
+					height: Math.round( showppt_iframe_css.iframe_height - (0.50 * showppt_iframe_css.iframe_height)),
+				},
+				{
+					mobileHA: hasGood3Dsupport,
+					duration: 1500,
+					delay: 10,
+					begin: function(){
+						$("#showppt_lazer").removeClass('display_none');
+						if(showppt_pitch_id){
+							$('#showppt_iframe_quiz').prop('src', showppt_list_scan[showppt_list_index]);
+						}
+					},
+					progress: function(){
+						//blinking
+						var opacity = Math.round( 20 + (70 * Math.random()) );
+						$("#showppt_lazer")
+							.css({
+								'filter': 'alpha(opacity='+opacity+')',
+								'opacity': '0.'+opacity,
+								'-moz-opacity': '0.'+opacity,
+								'-khtml-opacity': '0.'+opacity,
+							});
+					},
+					complete: function(){
+						$("#showppt_lazer").addClass('display_none');
+						$('#showppt_iframe_quiz, #showppt_iframe_quiz_close').removeClass('display_none');
+					},
+				}
+			);
+	}
+	event.stopPropagation();
+});
+
+//Close the preview
 $("#showppt, #showppt_close").on('click', function(event){
 	event.stopPropagation();
 	showppt_close();
+});
+
+//Close the quiz preview
+$("#showppt_iframe_quiz_close").on('click', function(event){
+	event.stopPropagation();
+	showppt_quiz_close();
 });
 
 $("#showppt_scrollbar").on('click', function(event){
