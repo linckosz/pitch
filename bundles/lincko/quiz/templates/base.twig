@@ -33,6 +33,12 @@
 		background-image: url("{{ _filelatest('/lincko/quiz/images/bg02.png') }}"), linear-gradient(140deg, #023762, #00719C) !important;
 	}
 
+	{% if html_zoom %}
+		html {
+			zoom: {{ html_zoom }};
+		}
+	{% endif %}
+
 </style>
 
 <script src="{{ _filelatest('/scripts/libs/jquery-3.2.1.min.js') }}" type="text/javascript"></script>
@@ -62,6 +68,11 @@ window.name = 'pitchenhancerquiz';
 document.domainRoot = '{{ domain }}';
 document.linckoDev = '{{ lincko_dev }}';
 document.linckoWechat = '{{ lincko_wechat }}';
+
+var wrapper_html_zoom = false;
+{% if html_zoom %}
+	wrapper_html_zoom = {{ html_zoom }};
+{% endif %}
 
 //In IE console is undefined if the dev tool is closed
 if(!window.console){

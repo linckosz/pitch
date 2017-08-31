@@ -143,7 +143,7 @@
 	background-color: #000000;
 }
 
-#showppt_iframe_quiz {
+#showppt_quiz_wrapper {
 	z-index: 10;
 	width: 100%;
 	height: 100%;
@@ -153,7 +153,24 @@
 	position: absolute;
 	top: 0;
 	left: 0;
+	background-color: #FFFFFF;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+}
+
+#showppt_iframe_quiz {
+	z-index: 10;
+	width: 80%;
+	height: 80%;
+	border: none;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 10%;
+	left: 10%;
 	background-color: #000000;
+	bottom: 6%;
 }
 
 #showppt_iframe_quiz_close {
@@ -308,6 +325,9 @@
 		left: 2vw;
 		bottom: 2%;
 		bottom: 2vw;
+	}
+	#showppt_iframe_quiz_close {
+		bottom: 3%;
 	}
 }
 

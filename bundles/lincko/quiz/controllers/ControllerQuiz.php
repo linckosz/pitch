@@ -19,6 +19,16 @@ use \bundles\lincko\wrapper\models\WechatPublic;
 
 class ControllerQuiz extends Controller {
 
+	protected function prepare(){
+		$data = ModelLincko::getData();
+		$app = ModelLincko::getApp();
+
+		$app->lincko->data['html_zoom'] = false;
+		if(isset($data->zoom)){
+			$app->lincko->data['html_zoom'] = (float) $data->zoom;
+		}
+	}
+
 	protected function question_display($question_id){
 		$app = ModelLincko::getApp();
 		if($question = Question::Where('id', $question_id)->first(array('id', 'updated_ms', 'parent_id', 'answer_id', 'file_id', 'title', 'style'))){
@@ -99,6 +109,7 @@ class ControllerQuiz extends Controller {
 
 	public function question_get($sessionid_enc, $questionid_enc){
 		$app = ModelLincko::getApp();
+		$this->prepare();
 		$app->lincko->data['data_statisticsid_enc'] = '0';
 		if("$sessionid_enc"=='0'){
 			$question_id = STR::integer_map($questionid_enc, true);
@@ -120,6 +131,7 @@ class ControllerQuiz extends Controller {
 
 	public function answer_get($statisticsid_enc, $answerid_enc){
 		$app = ModelLincko::getApp();
+		$this->prepare();
 		$user_info = Action::getUserInfo();
 		if($user_info[2] == 'Wechat'){
 			if($wechat_package = WechatPublic::getPackage()){

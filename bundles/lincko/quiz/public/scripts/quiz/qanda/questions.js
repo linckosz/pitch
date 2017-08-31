@@ -12,6 +12,11 @@ $("[find=quiz_answer]").on("click", function(){
 $("#quiz_confirm").on("click", function(event){
 	event.stopPropagation();
 	if(answerid){
-		window.location.href = base_answer_url+answerid;
+		var url = base_answer_url+answerid;
+		if(wrapper_html_zoom){
+			url = url+"?zoom="+wrapper_html_zoom;
+		}
+		window.location.href = url;
+
 	}
 });

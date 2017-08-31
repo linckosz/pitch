@@ -8,6 +8,11 @@
 		var video_webviewer = "{{ _filelatest('/lincko/app/images/generic/webviewer.mp4') }}";
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/showppt.css') }}" type="text/css" />
+	<style type="text/css">
+		#showppt_quiz_wrapper {
+			background-image: url("{{ _filelatest('/lincko/app/images/generic/showppt/huawei.png') }}");
+		}
+	</style>
 </div>
 
 <div id="showppt" class="display_none">
@@ -52,8 +57,10 @@
 
 	<iframe id="showppt_iframe" name="showppt_iframe" class="base_color_bg_main_gradient" frameborder="0" scrolling="no" src=""></iframe>
 
-	<iframe id="showppt_iframe_quiz" name="showppt_iframe_quiz" class="base_color_bg_main_gradient display_none" frameborder="0" scrolling="no" src=""></iframe>
-	<span id="showppt_iframe_quiz_close" class="showppt_button display_none">{{ _trans('app', 1, 3, 'html') }}{# Close #}</span>
+	<div id="showppt_quiz_wrapper" class="display_none">
+		<iframe id="showppt_iframe_quiz" name="showppt_iframe_quiz" class="base_color_bg_main_gradient" frameborder="0" scrolling="no" src=""></iframe>
+		<span id="showppt_iframe_quiz_close" class="showppt_button">{{ _trans('app', 1, 3, 'html') }}{# Close #}</span>
+	</div>
 
 </div>
 

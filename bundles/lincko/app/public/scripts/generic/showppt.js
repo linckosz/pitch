@@ -131,8 +131,56 @@ var showppt_iframe_css = {
 
 };
 
+var showppt_iframe_quiz_css = {
+
+	//These are actual value of overlay picture
+	frame_width: 450,
+	frame_height: 830,
+	screen_width: 360,//359
+	screen_height: 642,//640
+	screen_left: 45,//45
+	screen_top: 87,//89
+
+	iframe_height: 0,
+	iframe_width: 0,
+	iframe_left: 0,
+	iframe_top: 0,
+
+	html_zoom: 1,
+
+	init: function(){
+		var orientation = ($(window).width() / $(window).height() ) <  ( showppt_iframe_quiz_css.frame_width / showppt_iframe_quiz_css.frame_height );
+		if(orientation){
+			showppt_iframe_quiz_css.iframe_width = Math.round( $(window).width() * showppt_iframe_quiz_css.screen_width / showppt_iframe_quiz_css.frame_width );
+			showppt_iframe_quiz_css.iframe_height = Math.round( showppt_iframe_quiz_css.iframe_width * showppt_iframe_quiz_css.screen_height / showppt_iframe_quiz_css.screen_width );
+			showppt_iframe_quiz_css.iframe_left = Math.round( showppt_iframe_quiz_css.screen_left * $(window).width() / showppt_iframe_quiz_css.frame_width );
+			var extra = Math.round( ( $(window).height() - ( showppt_iframe_quiz_css.frame_height * $(window).width() / showppt_iframe_quiz_css.frame_width ) ) /2);
+			showppt_iframe_quiz_css.iframe_top = extra + Math.round( showppt_iframe_quiz_css.screen_top * $(window).width() / showppt_iframe_quiz_css.frame_width );
+			showppt_iframe_quiz_css.html_zoom = Math.round( 1000 * showppt_iframe_quiz_css.iframe_width / $(window).width()) / 1000;
+		} else {
+			showppt_iframe_quiz_css.iframe_height = Math.round( $(window).height() * showppt_iframe_quiz_css.screen_height / showppt_iframe_quiz_css.frame_height );
+			showppt_iframe_quiz_css.iframe_width = Math.round( showppt_iframe_quiz_css.iframe_height * showppt_iframe_quiz_css.screen_width / showppt_iframe_quiz_css.screen_height );
+			showppt_iframe_quiz_css.iframe_top = Math.round( showppt_iframe_quiz_css.screen_top * $(window).height() / showppt_iframe_quiz_css.frame_height );
+			var extra = Math.round( ( $(window).width() - ( showppt_iframe_quiz_css.frame_width * $(window).height() / showppt_iframe_quiz_css.frame_height ) ) /2);
+			showppt_iframe_quiz_css.iframe_left = extra + Math.round( showppt_iframe_quiz_css.screen_left * $(window).height() / showppt_iframe_quiz_css.frame_height );
+			showppt_iframe_quiz_css.html_zoom = Math.round( 1000 * showppt_iframe_quiz_css.iframe_height / $(window).height()) / 1000;
+		}
+
+		$('#showppt_iframe_quiz').css({
+			'width': showppt_iframe_quiz_css.iframe_width,
+			'height': showppt_iframe_quiz_css.iframe_height,
+			'left': showppt_iframe_quiz_css.iframe_left,
+			'top': showppt_iframe_quiz_css.iframe_top,
+		});
+		$('#showppt_iframe_quiz_close').css({
+			'left': showppt_iframe_quiz_css.iframe_left,
+		});
+	},
+};
+
 app_application_lincko.add(function(){
 	showppt();
+	showppt_iframe_quiz_css.init();
 }, "resize");
 
 var showppt_launch = function(question_id){
@@ -202,7 +250,7 @@ var showppt_insert_slide = function(slides){
 
 var showppt_quiz_close = function(){
 	$('#showppt_iframe_quiz').prop('src', '');
-	$('#showppt_iframe_quiz, #showppt_iframe_quiz_close').addClass('display_none');
+	$('#showppt_quiz_wrapper').addClass('display_none');
 };
 
 var showppt_close = function(){
@@ -323,12 +371,20 @@ $("#showppt_scanner").on('click', function(event){
 				},
 				{
 					mobileHA: hasGood3Dsupport,
-					duration: 1500,
+					duration: 1200,
 					delay: 10,
 					begin: function(){
 						$("#showppt_lazer").removeClass('display_none');
 						if(showppt_pitch_id){
-							$('#showppt_iframe_quiz').prop('src', showppt_list_scan[showppt_list_index]);
+							showppt_iframe_quiz_css.init();
+							var url = showppt_list_scan[showppt_list_index];
+							if(showppt_iframe_quiz_css.html_zoom < 0.94){
+								url = url+'?zoom=0.94';
+							} else if(showppt_iframe_quiz_css.html_zoom < 1){
+								//Note: We don't need zoom because it already include responsiveness design
+								url = url+'?zoom='+showppt_iframe_quiz_css.html_zoom;
+							}
+							$('#showppt_iframe_quiz').prop('src', url);
 						}
 					},
 					progress: function(){
@@ -344,7 +400,7 @@ $("#showppt_scanner").on('click', function(event){
 					},
 					complete: function(){
 						$("#showppt_lazer").addClass('display_none');
-						$('#showppt_iframe_quiz, #showppt_iframe_quiz_close').removeClass('display_none');
+						$('#showppt_quiz_wrapper').removeClass('display_none');
 					},
 				}
 			);
@@ -359,7 +415,7 @@ $("#showppt, #showppt_close").on('click', function(event){
 });
 
 //Close the quiz preview
-$("#showppt_iframe_quiz_close").on('click', function(event){
+$("#showppt_iframe_quiz_close, #showppt_quiz_wrapper").on('click', function(event){
 	event.stopPropagation();
 	showppt_quiz_close();
 });
