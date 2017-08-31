@@ -83,3 +83,64 @@ html, .font_sans_serif {
 	background: -moz-linear-gradient(140deg, #023762, #00719C) !important; /* For Firefox 3.6 to 15 */
 	background: linear-gradient(140deg, #023762, #00719C) !important; /* Standard syntax */
 }
+
+
+#ppt_event_slide {
+	position: absolute;
+	right: 12vw;
+	right: 12vmin;
+	bottom: 1%;
+	white-space: nowrap;
+	/*display: none;*/
+}
+body:hover > #ppt_event_slide {
+	/*display: block;*/
+}
+
+.ppt_event_slide_button {
+	z-index: 3;
+	position: relative;
+	display: inline-block;
+	color: rgba(255, 255, 255, 0.65);
+	border: 1px solid rgba(255, 255, 255, 0.65);
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 22px;
+	background-color: rgba(143, 143, 143, 0.6);
+	text-align: center;
+	padding: 8px 30px;
+	margin: 4px;
+	white-space: nowrap;
+}
+
+.ppt_event_slide_button:hover {
+	color: rgba(255, 255, 255, 0.80);
+	border: 1px solid rgba(255, 255, 255, 0.80);
+	background-color: rgba(143, 143, 143, 0.7);
+}
+
+.ppt_event_slide_button:active {
+	color: rgba(255, 255, 255, 1);
+	border: 1px solid rgba(255, 255, 255, 1);
+	background-color: rgba(143, 143, 143, 0.9);
+}
+
+.ppt_event_slide_button.disabled {
+	color: rgba(255, 255, 255, 0.65) !important;
+	border: 1px solid rgba(255, 255, 255, 0.65) !important;
+	background-color: rgba(143, 143, 143, 0.6) !important;
+	cursor: default;
+	filter: alpha(opacity=30);
+	opacity: 0.30;
+	-moz-opacity: 0.30;
+	-khtml-opacity: 0.30;
+}
+
+/* Mobile phone in Portrait */
+@media only screen and (max-width: 479px){
+	.ppt_event_slide_button {
+		padding: 8px 10px;
+		font-size: 12px;
+		bottom: 1%;
+	}
+}

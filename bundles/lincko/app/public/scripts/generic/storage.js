@@ -1075,7 +1075,7 @@ Lincko.storage.getFile = function(id, type){
 
 Lincko.storage.downloadPPT = function(id){
 	var ppt_url = top.location.protocol+'//'+document.domain+"/app/sample/pitch/"+wrapper_integer_map(id);
-	device_download(ppt_url, "_blank", "error.txt");
+	device_download(ppt_url, "_system", "error.txt");
 };
 
 Lincko.storage.getURLShorcut = function(type, id){

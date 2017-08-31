@@ -86,11 +86,35 @@ if(!window.console){
 	};
 }
 
+var ppt_event_slide = {
+	listenevent: false,
+	timer: false,
+	change: function(){},
+	direction: 'next',
+	prev: false,
+	next: false,
+};
+
+{% if listenevent %}
+	ppt_event_slide.listenevent = true;
+{% endif %}
+{% if slide_prev %}
+	ppt_event_slide.prev = "{{ slide_prev }}";
+{% endif %}
+{% if slide_next %}
+	ppt_event_slide.next = "{{ slide_next }}";
+{% endif %}
+
 </script>
 
 </head>
 <body id="body_lincko" class="base_color_text_white unselectable base_tapHighlight_off base_color_bg_main_gradient">
-	
+
+	<span id="ppt_event_slide" class="display_none">
+		<span id="ppt_event_slide_prev" class="ppt_event_slide_button">< {{ _trans('ppt', 0, 8, 'html') }}{# Previous slide #}</span>
+		<span id="ppt_event_slide_next" class="ppt_event_slide_button">{{ _trans('ppt', 0, 9, 'html') }}{# Next slide #} ></span></span>
+	</span>
+
 	{% block frame %}
 	{% endblock %}
 

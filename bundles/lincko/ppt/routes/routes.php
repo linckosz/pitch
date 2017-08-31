@@ -9,38 +9,42 @@ $app = \Slim\Slim::getInstance();
 $app->group('/ppt', function () use ($app) {
 
 	$app->get(
-		'/question/:questionid',
+		'/question/:questionid(/:webviewer)',
 		'\bundles\lincko\ppt\controllers\ControllerPPT:question_get'
 	)
 	->conditions(array(
 		'questionid' => '[a-z0-9]+',
+		'webviewer' => '[a-z]+',
 	))
 	->name('ppt_question_get');
 
 	$app->get(
-		'/answer/:questionid',
+		'/answer/:questionid(/:webviewer)',
 		'\bundles\lincko\ppt\controllers\ControllerPPT:answer_get'
 	)
 	->conditions(array(
 		'questionid' => '[a-z0-9]+',
+		'webviewer' => '[a-z]+',
 	))
 	->name('ppt_answer_get');
 
 	$app->get(
-		'/pitch/start/:pitchid',
+		'/pitch/start/:pitchid(/:webviewer)',
 		'\bundles\lincko\ppt\controllers\ControllerPPT:pitch_start_get'
 	)
 	->conditions(array(
 		'pitchid' => '[a-z0-9]+',
+		'webviewer' => '[a-z]+',
 	))
 	->name('ppt_pitch_start_get');
 
 	$app->get(
-		'/pitch/end/:pitchid',
+		'/pitch/end/:pitchid(/:webviewer)',
 		'\bundles\lincko\ppt\controllers\ControllerPPT:pitch_end_get'
 	)
 	->conditions(array(
 		'pitchid' => '[a-z0-9]+',
+		'webviewer' => '[a-z]+',
 	))
 	->name('ppt_pitch_end_get');
 

@@ -62,10 +62,15 @@ class ControllerApp extends Controller {
 				$i++;
 			}
 
-			$questions = $pitch->question()->orderBy('sort', 'DESC')->orderBy('id', 'ASC')->get(array('id', 'style', 'title'));
+			$questions = $pitch->questions(array('id', 'style', 'title'));
 
 			$lincko_pitch_title = $pitch->title; //title
-			$lincko_by = $app->trans->getBRUT('app', 6, 7).User::getUser()->username; //By Bruno Martin 马丁
+
+			$lincko_by = '';
+			if($user = User::Where('id', $pitch->created_by)->first(array('id', 'username'))){
+				$lincko_by = $app->trans->getBRUT('app', 6, 7).$user->username; //By Bruno Martin 马丁
+			}
+
 			$content = 'ppt/slides/slide1.xml';
 			$xml = $zip->getFromName($content);
 			if(!empty($xml)){
@@ -77,7 +82,7 @@ class ControllerApp extends Controller {
 			$lincko_url = false;
 			foreach ($questions as $question) {
 				$questionid_enc = STR::integer_map($question->id);
-				$lincko_url = $app->lincko->http_host.'/ppt/question/'.$questionid_enc;
+				$lincko_url = $app->lincko->http_host.'/ppt/question/'.$questionid_enc.'/webviewer';
 				break;
 			}
 
@@ -124,7 +129,7 @@ class ControllerApp extends Controller {
 				$limit = $page_max - $slides;
 				$type = 'question';
 				while ($slides>0 && $page<=$limit) {
-					$lincko_url = $app->lincko->http_host.'/ppt/'.$type.'/'.$questionid_enc;
+					$lincko_url = $app->lincko->http_host.'/ppt/'.$type.'/'.$questionid_enc.'/webviewer';
 					$slide = 'ppt/slides/slide'.$page.'.xml';
 					$rels = 'ppt/slides/_rels/slide'.$page.'.xml.rels';
 					$slide_xml = $zip->getFromName($slide);

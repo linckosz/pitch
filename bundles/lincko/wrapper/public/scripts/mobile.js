@@ -40,8 +40,7 @@ function useMobileNotification(){
 }
 
 function device_download(url, target, name){
-	//set target and name to false if you don't want default '_blank' and 'file' values
-	if(typeof target == 'undefined'){ target = '_blank'; }
+	if(typeof target == 'undefined'){ target = '_system'; }
 	if(typeof name == 'undefined'){ name = 'file'; }
 	var device = device_type();
 

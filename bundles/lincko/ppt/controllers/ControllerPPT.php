@@ -21,7 +21,9 @@ use Endroid\QrCode\QrCode;
 
 class ControllerPPT extends Controller {
 
-	protected function prepare(array $attributes = array()){
+	protected static $webviewer = '';
+
+	protected function prepare($webviewer=false){
 		$data = ModelLincko::getData();
 		$app = ModelLincko::getApp();
 
@@ -37,11 +39,85 @@ class ControllerPPT extends Controller {
 				unset($check[$key]);
 			}
 		}
+
+		$app->lincko->data['listenevent'] = true;
+		if($webviewer=='webviewer'){
+			$app->lincko->data['listenevent'] = false;
+			self::$webviewer = '/webviewer';
+		}
 		$app->lincko->data['body_preview'] = false;
 		if(count($check)==0){
 			$app->lincko->data['body_preview'] = true;
+			$app->lincko->data['listenevent'] = false; //Disable events for preview mode
 		}
 		$app->lincko->data['get_style'] = false;
+
+		$app->lincko->data['slide_prev'] = false;
+		$app->lincko->data['slide_next'] = false;
+	}
+
+	protected function slides($pitch_id, $question_id, $answer=false){
+		$app = ModelLincko::getApp();
+		if(isset($app->lincko->data['listenevent']) && $app->lincko->data['listenevent']){
+			if($pitch = Pitch::find($pitch_id)){
+				$questions = $pitch->questions(array('id', 'style'));
+				$app->lincko->data['slide_prev'] = 'https://'.$app->lincko->http_host.'/ppt/pitch/start/'.STR::integer_map($pitch->id).self::$webviewer;
+				$app->lincko->data['slide_next'] = 'https://'.$app->lincko->http_host.'/ppt/pitch/end/'.STR::integer_map($pitch->id).self::$webviewer;
+				//Previous
+				foreach ($questions as $question) {
+					if($question->id == $question_id){
+						if($answer && $question->style!=3){
+							$app->lincko->data['slide_prev'] = 'https://'.$app->lincko->http_host.'/ppt/question/'.STR::integer_map($question->id).self::$webviewer;
+						}
+						break;
+					}
+					if($question->style!=3){
+						$app->lincko->data['slide_prev'] = 'https://'.$app->lincko->http_host.'/ppt/answer/'.STR::integer_map($question->id).self::$webviewer;
+					} else {
+						$app->lincko->data['slide_prev'] = 'https://'.$app->lincko->http_host.'/ppt/question/'.STR::integer_map($question->id).self::$webviewer;
+					}
+				}
+				//Next
+				$next = false;
+				foreach ($questions as $question) {
+					if($question->id == $question_id){
+						$next = true;
+						if(!$answer && $question->style!=3){
+							$app->lincko->data['slide_next'] = 'https://'.$app->lincko->http_host.'/ppt/answer/'.STR::integer_map($question->id).self::$webviewer;
+							break;
+						}
+						continue;
+					}
+					if($next){
+						$app->lincko->data['slide_next'] = 'https://'.$app->lincko->http_host.'/ppt/question/'.STR::integer_map($question->id).self::$webviewer;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	protected function slide_edge($pitch, $start=true){
+		$app = ModelLincko::getApp();
+		if(isset($app->lincko->data['listenevent']) && $app->lincko->data['listenevent']){
+			if($pitch){
+				if($start){
+					$app->lincko->data['slide_next'] = 'https://'.$app->lincko->http_host.'/ppt/pitch/end/'.STR::integer_map($pitch->id).self::$webviewer;
+					if($question = $pitch->question_first(array('id'))){
+						$app->lincko->data['slide_next'] = 'https://'.$app->lincko->http_host.'/ppt/question/'.STR::integer_map($question->id).self::$webviewer;
+					}
+				} else {
+					$app->lincko->data['slide_prev'] = 'https://'.$app->lincko->http_host.'/ppt/pitch/start/'.STR::integer_map($pitch->id).self::$webviewer;
+					if($question = $pitch->question_last(array('id', 'style'))){
+						if($question->style!=3){
+							$app->lincko->data['slide_prev'] = 'https://'.$app->lincko->http_host.'/ppt/answer/'.STR::integer_map($question->id).self::$webviewer;
+						} else {
+							$app->lincko->data['slide_prev'] = 'https://'.$app->lincko->http_host.'/ppt/question/'.STR::integer_map($question->id).self::$webviewer;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	public function get_session_md5(){
@@ -82,15 +158,13 @@ class ControllerPPT extends Controller {
 		return $session;
 	}
 
-	public function question_get($questionid_enc){
-		$app = ModelLincko::getApp();
-		$this->prepare();
+	public function question_get($questionid_enc, $webviewer=false){
+		$this->prepare($webviewer);
 		$this->qanda($questionid_enc, 'question');
 	}
 
-	public function answer_get($questionid_enc){
-		$app = ModelLincko::getApp();
-		$this->prepare();
+	public function answer_get($questionid_enc, $webviewer=false){
+		$this->prepare($webviewer);
 		$this->qanda($questionid_enc, 'answer', true);
 	}
 
@@ -105,6 +179,12 @@ class ControllerPPT extends Controller {
 			if($question->style==3){ //For Statistics we only display Questions
 				$style = 'question';
 				$app->lincko->data['get_style'] = $style;
+			}
+
+			if($style == 'answer'){
+				$this->slides($question->parent_id, $question->id, true);
+			} else {
+				$this->slides($question->parent_id, $question->id);
 			}
 
 			$base_url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'];
@@ -229,11 +309,13 @@ class ControllerPPT extends Controller {
 		$app->render('/bundles/lincko/ppt/templates/generic/sorry.twig');
 	}
 
-	public function pitch_start_get($pitchid_enc){
+	public function pitch_start_get($pitchid_enc, $webviewer=false){
+		$this->prepare($webviewer);
 		$this->pitch_info($pitchid_enc, true);
 	}
 
-	public function pitch_end_get($pitchid_enc){
+	public function pitch_end_get($pitchid_enc, $webviewer=false){
+		$this->prepare($webviewer);
 		$this->pitch_info($pitchid_enc, false);
 	}
 
@@ -243,6 +325,7 @@ class ControllerPPT extends Controller {
 		$app->lincko->data['data_pitch_by'] = '';
 		$pitch_id = STR::integer_map($pitchid_enc, true);
 		if($pitch = Pitch::Where('id', $pitch_id)->first(array('id', 'title'))){
+			$this->slide_edge($pitch, $start);
 			if($start){
 				$app->lincko->data['data_pitch_title'] = $pitch->title;
 				if($user = User::getUser()){

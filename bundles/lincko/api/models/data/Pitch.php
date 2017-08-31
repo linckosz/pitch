@@ -191,4 +191,19 @@ class Pitch extends ModelLincko {
 
 ////////////////////////////////////////////
 
+	//Get all question in correct order
+	public function questions($arr=array('*')){
+		return $this->question()->orderBy('sort', 'DESC')->orderBy('id', 'ASC')->get($arr);
+	}
+
+	//Get all question in correct order
+	public function question_first($arr=array('*')){
+		return $this->question()->orderBy('sort', 'DESC')->orderBy('id', 'ASC')->first($arr);
+	}
+
+	//Get all question in correct order
+	public function question_last($arr=array('*')){
+		return $this->question()->orderBy('sort', 'ASC')->orderBy('id', 'DESC')->first($arr);
+	}
+
 }
