@@ -53,6 +53,19 @@ if(isset($_SERVER['SERVER_HOST'])){
 	$app->lincko->domain = $_SERVER['HTTP_HOST'];
 }
 
+if(!isset($_SERVER['SERVER_ADMIN'])){
+	$_SERVER['SERVER_ADMIN'] = 'webmaster@lincko.com';
+}
+if(!isset($_SERVER['SERVER_HOST'])){
+	$_SERVER['SERVER_HOST'] = 'lincko.com';
+}
+if(!isset($_SERVER['LINCKO_DEV'])){
+	$_SERVER['LINCKO_DEV'] = '';
+}
+if(!isset($_SERVER['LINCKO_WECHAT'])){
+	$_SERVER['LINCKO_WECHAT'] = 'lincko.com';
+}
+
 $app->lincko->http_host = $_SERVER['HTTP_HOST'];
 
 //$app->lincko->cookies_lifetime = time()+1200; //Valid 20 minutes
