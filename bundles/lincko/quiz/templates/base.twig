@@ -50,6 +50,7 @@
 	'/scripts/libs/js.cookie.js',
 	'/scripts/libs/json3.min.js',
 	'/scripts/libs/fastclick.min.js',
+	'/scripts/libs/integration/jweixin-1.2.0.js',
 	'/lincko/wrapper/scripts/php.js',
 	'/lincko/wrapper/scripts/error.js',
 	'/lincko/wrapper/scripts/static.js',
@@ -100,7 +101,6 @@ integration_wechat();
 var base_scanner = function(){};
 </script>
 {% if wechat_package_appId %}
-	<script src="{{ _filelatest('/scripts/libs/integration/jweixin-1.2.0.js') }}" type="text/javascript"></script>
 	<script>
 		$(function() {
 			//injection authentication
