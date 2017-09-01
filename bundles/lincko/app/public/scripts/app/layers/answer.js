@@ -334,13 +334,11 @@ var app_layers_answer_feedPage = function(param){
 						app_layers_answer_answers_correct(question, false, true);
 					}
 				}
-			}
-			clearTimeout(answer_timer[answer_id]);
-			answer_timer[answer_id] = setTimeout(function(answer_id, data){
-				if(storage_offline(data)){
+				clearTimeout(answer_timer[answer_id]);
+				answer_timer[answer_id] = setTimeout(function(answer_id, data){
 					wrapper_sendAction(data, 'post', 'api/data/set', storage_cb_success, storage_cb_error, storage_cb_begin, storage_cb_complete);
-				}
-			}, timer, answer_id, data);
+				}, timer, answer_id, data);
+			}
 		});
 		//Disable New Line
 		Elem.find("[find=input_textarea]").on('keydown keypress change copy paste cut input', function(event){
