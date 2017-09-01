@@ -136,6 +136,7 @@
 #ppt_frame_website_logo {
 	height: 4.4vw;
 	height: 4.4vmin;
+	line-height: 4.4vw;
 	line-height: 4.4vmin;
 	width: 4.4vw;
 	width: 4.4vmin;

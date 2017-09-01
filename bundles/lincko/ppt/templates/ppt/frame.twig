@@ -9,6 +9,26 @@
 				}
 			</style>
 		</noscript>
+		{% if body_preview %}
+			<style type="text/css">
+				#ppt_frame_website {
+					left: 9vw;
+					left: 15vmin;
+					font-size: 3.2vw;
+					font-size: 5.2vmin;
+				}
+				#ppt_frame_website_logo {
+					height: 4.4vw;
+					height: 5.6vmin;
+					line-height: 4.4vw;
+					line-height: 5.6vmin;
+					width: 4.4vw;
+					width: 5.6vmin;
+					font-size: 4.2vw;
+					font-size: 5.4vmin;
+				}
+			</style>
+		{% endif %}
 		<script type="text/javascript">
 			var ppt_frame_right_top_src = function(){
 				return "{{ data_pitch_url_raw|raw }}?time="+(new Date()).getTime(){% if body_preview %}+"&preview=1"{% endif %};
