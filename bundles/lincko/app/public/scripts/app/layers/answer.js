@@ -530,16 +530,26 @@ var app_layers_answer_feedPage = function(param){
 	if(!Lincko.storage.onboarding_stop){
 		var tuto = Lincko.storage.get('user', wrapper_localstorage.user_id, 'tuto');
 		if(tuto){
+			Lincko.storage.onboarding_stop = true;
+			setTimeout(function(){
+				//app_layers_answer_grumble_mask(); //Note: Can be annoying for UX because of the double click
+				//app_layers_answer_grumble_1();
+				app_layers_answer_grumble_2();
+				app_layers_answer_grumble_3();
+			}, 10);
+			/*
+			//This method limit the onboarding on only one question
 			var item = app_generic_state.getItem(tuto);
 			if(typeof item.id != 'undefined' && item.id == param && item._type == 'question'){
 				Lincko.storage.onboarding_stop = true;
 				setTimeout(function(){
 					//app_layers_answer_grumble_mask(); //Note: Can be annoying for UX because of the double click
-					app_layers_answer_grumble_1();
+					//app_layers_answer_grumble_1();
 					app_layers_answer_grumble_2();
 					app_layers_answer_grumble_3();
 				}, 400);
 			}
+			*/
 		}
 	}
 };

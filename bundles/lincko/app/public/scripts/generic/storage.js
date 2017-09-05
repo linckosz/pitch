@@ -135,7 +135,7 @@ Lincko.storage.onboarding = function(){
 		if(tuto){
 			var item = app_generic_state.getItem(tuto);
 			if(typeof item.id != 'undefined' && item._type == 'question'){
-				app_generic_state.openItem(true);
+				//app_generic_state.openItem(true); //This line open automaticaly the question page (but may be too complex at first sight)
 			}
 		} else if(Lincko.storage.get('user', wrapper_localstorage.user_id)){
 			Lincko.storage.onboarding_stop = true;
