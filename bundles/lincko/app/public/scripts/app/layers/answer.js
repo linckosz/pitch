@@ -579,9 +579,9 @@ var app_layers_answer_grumble_action = function(){
 
 var app_layers_answer_grumble_1 = function(){
 	//http://jamescryer.github.io/grumble.js/
-	$('#app_content_top_home').grumble(
+	$('#app_content_top_title_select_pitches').grumble(
 		{
-			text: Lincko.Translation.get('app', 129, 'html'), //Main Menu
+			text: Lincko.Translation.get('app', 129, 'html'), //Go here to add a Quiz
 			size: 100,
 			sizeRange: [100],
 			angle: 140,

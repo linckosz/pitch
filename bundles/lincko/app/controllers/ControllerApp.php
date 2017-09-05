@@ -82,7 +82,7 @@ class ControllerApp extends Controller {
 			$lincko_url = false;
 			foreach ($questions as $question) {
 				$questionid_enc = STR::integer_map($question->id);
-				$lincko_url = $app->lincko->http_host.'/ppt/question/'.$questionid_enc.'/webviewer';
+				$lincko_url = $app->lincko->http_host.'/ppt/pitch/start/'.$pitchid_enc;
 				break;
 			}
 
@@ -129,7 +129,7 @@ class ControllerApp extends Controller {
 				$limit = $page_max - $slides;
 				$type = 'question';
 				while ($slides>0 && $page<=$limit) {
-					$lincko_url = $app->lincko->http_host.'/ppt/'.$type.'/'.$questionid_enc.'/webviewer';
+					$lincko_url = $app->lincko->http_host.'/ppt/'.$type.'/'.$questionid_enc;
 					$slide = 'ppt/slides/slide'.$page.'.xml';
 					$rels = 'ppt/slides/_rels/slide'.$page.'.xml.rels';
 					$slide_xml = $zip->getFromName($slide);
@@ -140,7 +140,7 @@ class ControllerApp extends Controller {
 								$content = 'ppt/webextensions/'.$match[1];
 								$xml = $zip->getFromName($content);
 								if(!empty($xml)){
-									$xml = preg_replace("/lincko_start_url.*?lincko_end_url/i", $lincko_url, $xml);
+									$xml = preg_replace("/lincko_start_url.*?lincko_end_url/i", $lincko_url.'/webviewer', $xml);
 									$zip->addFromString($content, $xml);
 								}
 							}

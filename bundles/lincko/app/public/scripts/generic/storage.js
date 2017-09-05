@@ -270,7 +270,7 @@ Lincko.storage.offlineCheck = function(){
 //Check every 60s
 setInterval(function(){
 	Lincko.storage.offlineCheck();
-}, 10000);
+}, 60000);
 
 //Function that update the localweb database
 Lincko.storage.update = function(data, info, refresh){
